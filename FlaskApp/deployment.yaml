@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mis-flask-api
+  labels:
+    app: mis-flask-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mis-flask-api
+  template:
+    metadata:
+      labels:
+        app: mis-flask-api
+    spec:
+      containers:
+      - name: mis-flask-api
+        image: himanshudas75/mis-flask-api:v4
+        ports:
+        - containerPort: 8080
+        env:
+        - name: FLASK_ENV
+          value: "production"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mis-flask-api-service
+  labels:
+    app: mis-flask-api
+spec:
+  selector:
+    app: mis-flask-api
+  ports:
+  - name: http
+    protocol: TCP
+    port: 9000
+    targetPort: 8080
+  type: LoadBalancer
