@@ -34,10 +34,10 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: mysite-nginx-ingress
+  name: protected-nginx
   annotations:
-    nginx.ingress.kubernetes.io/auth-url: http://mis-auth-api-service.default.svc.cluster.local/auth?code=401
-    nginx.ingress.kubernetes.io/auth-signin: https://google.com?rd=https://facebook.com
+    nginx.ingress.kubernetes.io/auth-url: http://mis-auth-api-service.default.svc.cluster.local/auth-z
+    nginx.ingress.kubernetes.io/auth-signin: /auth-n
     #     traefik.frontend.rule.type: PathPrefixStrip
     #    nginx.ingress.kubernetes.io/rewrite-target: /$2
     # nginx.ingress.kubernetes.io/affinity: "cookie"
@@ -58,5 +58,33 @@ spec:
             backend:
               service:
                 name: mysite-nginx-service
+                port:
+                  number: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: unprotected-nginx
+  annotations:
+    #     traefik.frontend.rule.type: PathPrefixStrip
+    #    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    # nginx.ingress.kubernetes.io/affinity: "cookie"
+spec:
+  tls:
+    - hosts:
+        - kubernetes.docker.internal
+      # This assumes tls-secret exists and the SSL
+      # certificate contains a CN for foo.bar.com
+      secretName: tls-secret
+  ingressClassName: nginx
+  rules:
+    - host: kubernetes.docker.internal
+      http:
+        paths:
+          - path: /auth-n
+            pathType: Prefix
+            backend:
+              service:
+                name: mis-auth-api-service
                 port:
                   number: 80

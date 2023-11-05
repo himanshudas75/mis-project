@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: mis-auth-api
-        image: himanshudas75/mis-auth-api:v4
+        image: himanshudas75/mis-auth-api:v6
         ports:
         - containerPort: 8080
         env:
