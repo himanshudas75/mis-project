@@ -36,9 +36,11 @@ kind: Ingress
 metadata:
   name: mysite-nginx-ingress
   annotations:
+    nginx.ingress.kubernetes.io/auth-url: http://mis-auth-api-service.default.svc.cluster.local/auth?code=401
+    nginx.ingress.kubernetes.io/auth-signin: https://google.com?rd=https://facebook.com
     #     traefik.frontend.rule.type: PathPrefixStrip
     #    nginx.ingress.kubernetes.io/rewrite-target: /$2
-    nginx.ingress.kubernetes.io/affinity: "cookie"
+    # nginx.ingress.kubernetes.io/affinity: "cookie"
 spec:
   tls:
     - hosts:
