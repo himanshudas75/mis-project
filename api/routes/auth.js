@@ -10,7 +10,7 @@ router.get("/verify", function (req, res, next) {
         message: "Token Not Found",
       });
     }
-
+    console.log("here");
     jwt.verify(token, process.env.JWT_KEY, (err, decoded) => {
       if (err) {
         res.clearCookie("token");

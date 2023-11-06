@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require('cors');
 const app = express();
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
@@ -7,14 +8,15 @@ const mongoose = require('mongoose');
 const userRoutes = require('./api/routes/user');
 const authRoutes = require('./api/routes/auth');
 
-mongoose.connect("mongodb://localhost:27017/Conskid", {
+mongoose.connect("mongodb://localhost:27017/mistest", {
   useNewUrlParser: true,
 });
 mongoose.Promise = global.Promise;
 
 app.use(morgan('dev'));
-app.use(bodyParser.urlencoded({extended: true}));
-app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cors());
+app.use(express.json());
 //Cors error handling
 app.use((req,res,next)=>{
    res.header('Access-Control-Allow-Origin','*');

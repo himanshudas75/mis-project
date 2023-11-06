@@ -7,30 +7,33 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 
 router.post("/signup", (req, res, next) => {
-  User.find({ user : req.body.username })
+  User.find({ username : req.body.username })
     .exec()
     .then((user) => {
       if (user.length >= 1) {
+        console.log(user);
         return res.status(409).json({
           message: "User exists",
         });
       } else {
         bcrypt.hash(req.body.password, 10, (err, hash) => {
-          if (err) {
-            return res.status(500).json({
-              error: err,
-            });
-          } else {
+          // if (err) {
+          //   return res.status(500).json({
+          //     message: "here",
+          //     error: err
+          //   });
+          // } else {
             const user = new User({
               _id: mongoose.Types.ObjectId(),
               username: req.body.username,
               password: hash,
-              name: req.body.name,
-              phone_number: req.body.number,
-              gender: req.body.name,
+              email: req.body.email,
               address: req.body.address,
+              phoneNumber: req.body.number,
+              name: req.body.name,          
+              gender: req.body.name,
               Dob: req.body.Dob,
-              email: req.body.email
+              
             });
             user
               .save()
@@ -38,25 +41,30 @@ router.post("/signup", (req, res, next) => {
                 if (err) {
                   return res.status(500).json({ msg: err.message });
                 }
-                res.status(201).json({
+                return res.status(201).json({
                   message: "User created",
                 });
               })
-              .catch((err) => {
-                console.log(err);
-                res.status(500).json({
-                  error: err,
-                });
-              });
+              // .catch((err) => {
+              //   res.status(500).json({
+              //     message: "here2",
+              //     error: err
+              //   });
+              // });
           }
-        });
+        );
       }
+    })
+    .catch((err) => {
+      res.status(500).json({
+        error: err
+      });
     });
 });
 
 
 router.post("/login", (req, res, next) => {
-  User.find({ username: req.body.username }) 
+  User.find({ username : req.body.username }) 
     .exec()
     .then((user) => {
       if (user.length < 1) {

@@ -23,11 +23,9 @@ const userSchema = mongoose.Schema({
     address:{
         type: String,
         trim: true
-
     },
-    phone_number:{
-        type: Number,
-        unique: true,
+    phoneNumber:{
+        type: String,
         trim: true
     },
     name:{
