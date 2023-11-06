@@ -1,0 +1,7 @@
+{
+  "env": {
+    "JWT_KEY": "my-32-character-ultra-secure-and-ultra-long-secret",
+    "CLIENT_ID": "522386542659-jq87n8rj3j5qudg6s8gk5k1qhea4o4td.apps.googleusercontent.com",
+    "CLIENT_SECRET": "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"
+  }
+}
