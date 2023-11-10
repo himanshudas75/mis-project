@@ -36,17 +36,13 @@ kind: Ingress
 metadata:
   name: protected-nginx
   annotations:
-    nginx.ingress.kubernetes.io/auth-url: http://mis-auth-api-service.default.svc.cluster.local/auth-z
-    nginx.ingress.kubernetes.io/auth-signin: /auth-n
-    #     traefik.frontend.rule.type: PathPrefixStrip
-    #    nginx.ingress.kubernetes.io/rewrite-target: /$2
-    # nginx.ingress.kubernetes.io/affinity: "cookie"
+    nginx.ingress.kubernetes.io/auth-url: http://login-flask-service.default.svc.cluster.local/verify
+    nginx.ingress.kubernetes.io/auth-signin: /login
+    nginx.ingress.kubernetes.io/affinity: "cookie"
 spec:
   tls:
     - hosts:
         - kubernetes.docker.internal
-      # This assumes tls-secret exists and the SSL
-      # certificate contains a CN for foo.bar.com
       secretName: tls-secret
   ingressClassName: nginx
   rules:
@@ -57,7 +53,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: mysite-nginx-service
+                name: login-flask-service
                 port:
                   number: 80
 ---
@@ -66,25 +62,28 @@ kind: Ingress
 metadata:
   name: unprotected-nginx
   annotations:
-    #     traefik.frontend.rule.type: PathPrefixStrip
-    #    nginx.ingress.kubernetes.io/rewrite-target: /$2
     # nginx.ingress.kubernetes.io/affinity: "cookie"
 spec:
   tls:
     - hosts:
         - kubernetes.docker.internal
-      # This assumes tls-secret exists and the SSL
-      # certificate contains a CN for foo.bar.com
       secretName: tls-secret
   ingressClassName: nginx
   rules:
     - host: kubernetes.docker.internal
       http:
         paths:
-          - path: /auth-n
+          - path: /login
             pathType: Prefix
             backend:
               service:
-                name: mis-auth-api-service
+                name: login-flask-service
+                port:
+                  number: 80
+          - path: /signup
+            pathType: Prefix
+            backend:
+              service:
+                name: login-flask-service
                 port:
                   number: 80

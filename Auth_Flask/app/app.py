@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, make_response, render_template
+from flask import Flask, request, jsonify, make_response, render_template, redirect
 from flask_pymongo import PyMongo
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity, decode_token
 from datetime import timedelta
@@ -19,7 +19,19 @@ jwt = JWTManager(app)
 # Flask routes
 @app.route('/')
 def home():
-    return render_template('login.html')
+    return "HELLO"
+    # token_cookie = request.cookies.get('access_token')
+
+    # if not token_cookie:
+    #     return redirect('/login', code=302)
+
+    # try:
+    #     decoded_token = decode_token(token_cookie)
+    #     identity = decoded_token[JWT_IDENTITY_CLAIM]
+    #     return "Hello, " +identity
+        
+    # except Exception as e:
+    #     return redirect('/login', code=302)
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -56,8 +68,11 @@ def login():
             # Create JWT token
             access_token = create_access_token(identity=username)
             # Set the token in a cookie
-            response = make_response(jsonify({'message': 'Login successful'}), 200)
+            # response = make_response(jsonify({'message': 'Login successful'}), 200)
+            redirect_to = '/'
+            response = make_response(redirect(redirect_to))
             response.set_cookie('access_token', value=access_token, httponly=True)
+
             return response
         else:
             return jsonify({'message': 'Invalid credentials'}), 401
