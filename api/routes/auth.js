@@ -10,12 +10,11 @@ router.get("/verify", function (req, res, next) {
         message: "Token Not Found",
       });
     }
-    console.log("here");
-    jwt.verify(token, process.env.JWT_KEY, (err, decoded) => {
+    jwt.verify(token, "my-32-character-ultra-secure-and-ultra-long-secret", (err, decoded) => {
       if (err) {
         res.clearCookie("token");
         return res.status(401).json({
-          message: err,
+          message: "Token not verified",
         });
       }
 

@@ -8,7 +8,7 @@ const mongoose = require('mongoose');
 const userRoutes = require('./api/routes/user');
 const authRoutes = require('./api/routes/auth');
 
-mongoose.connect("mongodb://localhost:27017/mistest", {
+mongoose.connect("mongodb+srv://Divij:Divij2002@cluster0.aj0dc.mongodb.net/todoListDatabase", {
   useNewUrlParser: true,
 });
 mongoose.Promise = global.Promise;

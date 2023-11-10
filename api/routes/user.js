@@ -11,7 +11,6 @@ router.post("/signup", (req, res, next) => {
     .exec()
     .then((user) => {
       if (user.length >= 1) {
-        console.log(user);
         return res.status(409).json({
           message: "User exists",
         });
@@ -45,19 +44,18 @@ router.post("/signup", (req, res, next) => {
                   message: "User created",
                 });
               })
-              // .catch((err) => {
-              //   res.status(500).json({
-              //     message: "here2",
-              //     error: err
-              //   });
-              // });
+              .catch((err) => {
+                res.status(500).json({
+                  message: "User not created, there must be something wrong with the credentials provided",
+                });
+              });
           }
         );
       }
     })
     .catch((err) => {
       res.status(500).json({
-        error: err
+        message: "User not created, there must be something wrong with the credentials provided",
       });
     });
 });
@@ -85,7 +83,7 @@ router.post("/login", (req, res, next) => {
               userId: user[0]._id,
               roles: user[0].roles,
             },
-            process.env.JWT_KEY,
+            "my-32-character-ultra-secure-and-ultra-long-secret",
             {
               expiresIn: "1h",
             }
@@ -101,9 +99,8 @@ router.post("/login", (req, res, next) => {
       });
     })
     .catch((err) => {
-      console.log(err);
       res.status(500).json({
-        error: err,
+        message: "User not created, there must be something wrong with the credentials provided",
       });
     });
 });
@@ -116,9 +113,8 @@ router.get("/logout",(req,res,next) => {
       })
     )
     .catch((err) => {
-      console.log(err);
       res.status(500).json({
-        error: err,
+        message: "Couldn't Logout"
       });
     }
     )

@@ -7,18 +7,21 @@ const userSchema = mongoose.Schema({
         required: true,
         unique: true,
         match: /[0-9][0-9][A-Z][A-Z][0-9]*/,
-        trim: true
+        trim: true,
+        set: username => username === '' ? undefined : username
     },
     password: {
         type: String,
         required: true,
-        trim: true
+        trim: true,
+        set: password => password === '' ? undefined : password
     },
     email:{
         type: String,
         unique: true,
         match: /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/,
-        trim: true
+        trim: true,
+        set: email => email === '' ? undefined : email
     },
     address:{
         type: String,
