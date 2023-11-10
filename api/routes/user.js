@@ -83,7 +83,7 @@ router.post("/login", (req, res, next) => {
               userId: user[0]._id,
               roles: user[0].roles,
             },
-            "my-32-character-ultra-secure-and-ultra-long-secret",
+            `${process.env.JWT_KEY}`,
             {
               expiresIn: "1h",
             }
