@@ -1,0 +1,5 @@
+{
+    "username":"mayank1222",
+    "userType":"admin"
+  }
+  Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTRkNTNkY2QyYjVmMTExZjc1ZjMxOTgiLCJpYXQiOjE2OTk1NjY1NTYsImV4cCI6MTY5OTU3MDE1Nn0.1IYeMlSnSb-X9QSt5HhNw7xm6EYJB1AWSawiQjZQ_rY
