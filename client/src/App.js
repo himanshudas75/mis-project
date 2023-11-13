@@ -42,7 +42,7 @@ export default function App() {
       <Route exact path ="/edit" element={<RequestEdits/>}/>
       <Route exact path="/" element={
         <ProtectedRoutes access={"view"}>
-          <ViewProfile key={1} profileData={profileData}/>
+          <ViewProfile key={1} profileData={profileData} setProfileData={setProfileData}/>
         </ProtectedRoutes>     
       }/>
       <Route exact path="/register" element={

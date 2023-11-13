@@ -48,4 +48,11 @@ function setCookie(cname, cvalue, exdays) {
           delete userData[key]
       })
   }
-  module.exports={setCookie,getCookie,checkCookie,formatResponse};
+  const filterArr={
+    "Basic Details":["Username","Name","EmployeeId","Address","Gender","Dob"],
+    "Employment Details":["Name","EmployeeId"],
+    "Family Member Details":["Address"],
+    "Educational Qualifications":["Gender"],
+    "Stay Details":["Name","Address"]
+  };
+  module.exports={setCookie,getCookie,checkCookie,formatResponse,filterArr};

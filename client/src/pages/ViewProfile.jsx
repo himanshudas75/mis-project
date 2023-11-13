@@ -3,20 +3,30 @@ import {
     MDBContainer,
     MDBRow,
     MDBCard,
-    MDBCardText,
     MDBCardBody,
     MDBCardImage,
     MDBBtn,
-    MDBIcon,
     MDBListGroup,
-    MDBListGroupItem
   } from 'mdb-react-ui-kit';
   import DetailRow from '../components/DetailRow';
 import { Link} from 'react-router-dom';
 import NavRow from '../components/NavRow';
+import { useEffect, useState } from 'react';
+import { filterArr } from '../utils/helper';
 
-const ViewProfile=({profileData})=>{
+const ViewProfile=({profileData,setProfileData})=>{
 
+  const [category,setCategory]=useState('Basic Details');
+  const [userData,setUserData]=useState(profileData);
+  useEffect(()=>{
+    const newUserData=Object.keys(profileData).filter((key)=>{
+        return filterArr[category].includes(key)
+    }).reduce((obj, key) => {
+      obj[key] = profileData[key];
+      return obj;
+    }, {})
+    setUserData(newUserData);
+  },[category,profileData])
   
     return (
         <section style={{ backgroundColor: '#eee' }}>
@@ -45,13 +55,44 @@ const ViewProfile=({profileData})=>{
   
               <MDBCard className="mb-4 mb-lg-0">
                 <MDBCardBody className="p-0">
-                  <MDBListGroup flush className="rounded-3" style={{cursor:'pointer'}}>
+                  <MDBListGroup flush className="rounded-3" >
 
-                    <NavRow icon={'fa-solid fa-circle-info fa-2xl'} title={'Basic Details'} iconColor={'#3b5998'}/>
-                    <NavRow icon={'fa-solid fa-file-invoice-dollar fa-2xl'} title={'Employment Details'} iconColor={'#D1D348'}/>
-                    <NavRow icon={'fa-solid fa-people-roof fa-2xl'} title={'Family Member Details'} iconColor={'#25AD90'}/>
-                    <NavRow icon={'fa-solid fa-user-graduate fa-2xl'} title={'Educational Qualifications'} iconColor={'#9625AD'}/>
-                    <NavRow icon={'fa-solid fa-house-chimney fa-2xl'} title={'Stay Details'} iconColor={'#3b5998'}/>
+                    <NavRow
+                        icon={'fa-solid fa-circle-info fa-2xl'} 
+                        title={'Basic Details'} 
+                        iconColor={'#3b5998'} 
+                        toggleState={setCategory} 
+                        category={category}
+                      />
+                    <NavRow 
+                      icon={'fa-solid fa-file-invoice-dollar fa-2xl'} 
+                      title={'Employment Details'} 
+                      iconColor={'#D1D348'} 
+                      toggleState={setCategory} 
+                      category={category}
+                      />
+                      
+                    <NavRow 
+                      icon={'fa-solid fa-people-roof fa-2xl'} 
+                      title={'Family Member Details'} 
+                      iconColor={'#25AD90'} 
+                      toggleState={setCategory} 
+                      category={category}
+                      />
+                    <NavRow 
+                      icon={'fa-solid fa-user-graduate fa-2xl'} 
+                      title={'Educational Qualifications'} 
+                      iconColor={'#9625AD'} 
+                      toggleState={setCategory}
+                      category={category}
+                      />
+                    <NavRow 
+                      icon={'fa-solid fa-house-chimney fa-2xl'} 
+                      title={'Stay Details'} 
+                      iconColor={'#3b5998'}
+                       toggleState={setCategory}
+                       category={category}
+                       />
                
                   </MDBListGroup>
                 </MDBCardBody>
@@ -60,7 +101,7 @@ const ViewProfile=({profileData})=>{
             <MDBCol lg="8">
               <MDBCard className="mb-4">
                 <MDBCardBody>
-                  { Object.keys(profileData).map((key,index) =>{
+                  { Object.keys(userData).map((key,index) =>{
                      if(!key.startsWith('_'))
                      return <DetailRow key={key} index={index} rowTitle={key} rowValue={profileData[key]} />
                       return <></>
