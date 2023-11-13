@@ -2,28 +2,28 @@
 apiVersion: mongodbcommunity.mongodb.com/v1
 kind: MongoDBCommunity
 metadata:
-  name: identity-service-mongodb
+  name: login-flask-db
 spec:
   members: 3
   type: ReplicaSet
-  version: "6.0.5"
+  version: "7.0.2"
   security:
     authentication:
       modes: ["SCRAM"]
   users:
     - name: mis-admin
-      db: admin
+      db: mis
       passwordSecretRef: # a reference to the secret that will be used to generate the user's password
         name: mis-admin-password
       roles:
-        - name: clusterAdmin
-          db: admin
-        - name: userAdminAnyDatabase
-          db: admin
-        - name: dbAdminAnyDatabase
-          db: admin
-        - name: readWriteAnyDatabase
-          db: admin
+        - name: root
+          db: mis
+        # - name: userAdminAnyDatabase
+        #   db: mis
+        # - name: dbAdminAnyDatabase
+        #   db: mis
+        # - name: readWriteAnyDatabase
+        #   db: mis
       scramCredentialsSecretName: my-scram
   additionalMongodConfig:
     storage.wiredTiger.engineConfig.journalCompressor: zlib
@@ -37,4 +37,4 @@ metadata:
   name: mis-admin-password
 type: Opaque
 stringData:
-  password: mis@2023
+  password: mis_2023

@@ -21,7 +21,7 @@ spec:
   selector:
     matchLabels:
       app: login-flask-app
-  replicas: 5
+  replicas: 1
   template:
     metadata:
       labels:
@@ -43,7 +43,7 @@ kind: ConfigMap
 metadata:
   name: login-flask-config
 data:
-  MONGO_URI: "mongodb+srv://root:root@mis-project.zhbphpd.mongodb.net/mis"
+  MONGO_URI: "mongodb+srv://mis-admin:mis_2023@login-flask-db-svc.default.svc.cluster.local/mis?ssl=true"
   JWT_SECRET_KEY: "very_secret_key"
   JWT_IDENTITY_CLAIM: "identity"
   JWT_ACCESS_TOKEN_EXPIRES: "600"

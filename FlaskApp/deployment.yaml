@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: mis-flask-api
-        image: himanshudas75/mis-flask-api:v4
+        image: himanshudas75/mis-flask-api:v6
         ports:
         - containerPort: 8080
         env:

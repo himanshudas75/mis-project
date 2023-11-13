@@ -3,12 +3,13 @@ from pymongo import MongoClient
 
 app = Flask(__name__)
 
-mongo_host = 'identity-service-mongodb-svc.default.svc.cluster.local'
+mongo_host = 'login-flask-db-svc.default.svc.cluster.local'
 mongo_port = 27017
 mongo_username = 'mis-admin'
-mongo_password = 'mis@2023'
+mongo_password = 'mis_2023'
+auth_db = 'mis'
 
-client = MongoClient(mongo_host, username=mongo_username, password=mongo_password)
+client = MongoClient(mongo_host, username=mongo_username, password=mongo_password, authsource=auth_db)
 
 @app.route("/show_databases", methods=['GET'])
 def get_databases():
