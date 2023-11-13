@@ -1,4 +1,3 @@
-// const jwt=require('jsonwebtoken')
 
 const checkAdmin=(req,res,next)=>{
     const userType=req.body.userType;

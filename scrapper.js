@@ -10,5 +10,5 @@ const scrapper=async ()=>{
         path: 'screenshot.jpg',
       });
     await browser.close();
-}
+} 
 scrapper();
