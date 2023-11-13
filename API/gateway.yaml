@@ -41,14 +41,14 @@ spec:
       http:
         paths:
           - path: /login
-            pathType: Prefix
+            pathType: Exact
             backend:
               service:
                 name: login-flask-service
                 port:
                   number: 80
           - path: /signup
-            pathType: Prefix
+            pathType: Exact
             backend:
               service:
                 name: login-flask-service
