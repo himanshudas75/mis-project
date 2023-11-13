@@ -11,7 +11,6 @@ app.config['MONGO_URI'] = os.environ['MONGO_URI']  # Replace with your MongoDB U
 app.config['SECRET_KEY'] = os.environ['JWT_SECRET_KEY']  # Change this to a secure key
 app.config['JWT_IDENTITY_CLAIM'] = JWT_IDENTITY_CLAIM = os.environ['JWT_IDENTITY_CLAIM']
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(seconds=int(os.environ['JWT_ACCESS_TOKEN_EXPIRES']))
-# app.config['MONGODB_SETTINGS'] = {'db': os.environ['DBNAME']}
 
 # Initialize extensions
 mongo = PyMongo(app)
@@ -62,22 +61,18 @@ def login():
         data = request.form
         username = data.get('username')
         password = data.get('password')
+        redirect_to = data.get('redirect_to')
 
         user = mongo.db.users.find_one({'username': username, 'password': password})
 
         if user:
-            # Create JWT token
             access_token = create_access_token(identity=username)
-            # Set the token in a cookie
-            # response = make_response(jsonify({'message': 'Login successful'}), 200)
-            redirect_to = '/'
             response = make_response(redirect(redirect_to))
             response.set_cookie('access_token', value=access_token, httponly=True)
-
             return response
         else:
             return jsonify({'message': 'Invalid credentials'}), 401
-
+        
     return render_template('login.html')
 
 @app.route('/verify', methods=['GET'])
