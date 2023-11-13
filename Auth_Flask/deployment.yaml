@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
         - name: login-flask-app
-          image: himanshudas75/login-flask-app:v5
+          image: himanshudas75/login-flask-app:v1
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 5000
@@ -43,7 +43,7 @@ kind: ConfigMap
 metadata:
   name: login-flask-config
 data:
-  MONGO_URI: "mongodb+srv://mis-admin:mis_2023@login-flask-db-svc.default.svc.cluster.local/mis?ssl=true"
+  MONGO_URI: "mongodb+srv://mis-admin:mis_2023@login-flask-db-svc.default.svc.cluster.local/mis?ssl=false&authSource=admin"
   JWT_SECRET_KEY: "very_secret_key"
   JWT_IDENTITY_CLAIM: "identity"
   JWT_ACCESS_TOKEN_EXPIRES: "600"

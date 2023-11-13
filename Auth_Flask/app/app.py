@@ -11,6 +11,7 @@ app.config['MONGO_URI'] = os.environ['MONGO_URI']  # Replace with your MongoDB U
 app.config['SECRET_KEY'] = os.environ['JWT_SECRET_KEY']  # Change this to a secure key
 app.config['JWT_IDENTITY_CLAIM'] = JWT_IDENTITY_CLAIM = os.environ['JWT_IDENTITY_CLAIM']
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(seconds=int(os.environ['JWT_ACCESS_TOKEN_EXPIRES']))
+# app.config['MONGODB_SETTINGS'] = {'db': os.environ['DBNAME']}
 
 # Initialize extensions
 mongo = PyMongo(app)

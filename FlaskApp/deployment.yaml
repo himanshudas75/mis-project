@@ -16,12 +16,15 @@ spec:
     spec:
       containers:
       - name: mis-flask-api
-        image: himanshudas75/mis-flask-api:v6
+        image: himanshudas75/mis-flask-api:v1
         ports:
         - containerPort: 8080
         env:
         - name: FLASK_ENV
           value: "production"
+        envFrom:
+            - configMapRef:
+                name: mis-flask-app-config
 ---
 apiVersion: v1
 kind: Service
@@ -38,3 +41,13 @@ spec:
     port: 9000
     targetPort: 8080
   type: LoadBalancer
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mis-flask-app-config
+data:
+  MONGO_URI: "mongodb://mis-admin:mis_2023@login-flask-db-svc.default.svc.cluster.local/mis?ssl=true"
+  JWT_SECRET_KEY: "very_secret_key"
+  JWT_IDENTITY_CLAIM: "identity"
+  JWT_ACCESS_TOKEN_EXPIRES: "600"

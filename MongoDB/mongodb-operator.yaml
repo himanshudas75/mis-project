@@ -6,24 +6,20 @@ metadata:
 spec:
   members: 3
   type: ReplicaSet
-  version: "7.0.2"
+  version: "6.0.5"
   security:
     authentication:
       modes: ["SCRAM"]
   users:
     - name: mis-admin
-      db: mis
+      db: admin
       passwordSecretRef: # a reference to the secret that will be used to generate the user's password
-        name: mis-admin-password
+        name: login-flask-db-mis-admin
       roles:
         - name: root
-          db: mis
-        # - name: userAdminAnyDatabase
-        #   db: mis
-        # - name: dbAdminAnyDatabase
-        #   db: mis
-        # - name: readWriteAnyDatabase
-        #   db: mis
+          db: admin
+        - name: wildcard
+          db: admin
       scramCredentialsSecretName: my-scram
   additionalMongodConfig:
     storage.wiredTiger.engineConfig.journalCompressor: zlib
@@ -34,7 +30,7 @@ spec:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: mis-admin-password
+  name: login-flask-db-mis-admin
 type: Opaque
 stringData:
   password: mis_2023
