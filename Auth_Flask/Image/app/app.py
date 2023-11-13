@@ -19,19 +19,17 @@ jwt = JWTManager(app)
 # Flask routes
 @app.route('/')
 def home():
-    return "HELLO"
-    # token_cookie = request.cookies.get('access_token')
+    token_cookie = request.cookies.get('access_token')
 
-    # if not token_cookie:
-    #     return redirect('/login', code=302)
+    if not token_cookie:
+        return redirect('/login', code=302)
 
-    # try:
-    #     decoded_token = decode_token(token_cookie)
-    #     identity = decoded_token[JWT_IDENTITY_CLAIM]
-    #     return "Hello, " +identity
-        
-    # except Exception as e:
-    #     return redirect('/login', code=302)
+    try:
+        decoded_token = decode_token(token_cookie)
+        identity = decoded_token[JWT_IDENTITY_CLAIM]
+        return render_template('home.html', username=identity)
+    except Exception as e:
+        return redirect('/login', code=302)
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -89,6 +87,12 @@ def verify():
         return jsonify(logged_in_as=identity), 200
     except Exception as e:
         return jsonify({'message': str(e)}), 401
+
+@app.route('/logout', methods=['GET'])
+def logout():
+    response = make_response(redirect('/'))
+    response.delete_cookie('access_token')
+    return response
 
 # Run the app
 if __name__ == '__main__':
