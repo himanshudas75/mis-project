@@ -16,17 +16,22 @@ export default function App() {
   setCookie('username','20je0550',10);
   setCookie('auth','admin',10);
   const username=getCookie('username');
+  const authType=getCookie('auth')
   const [profileData,setProfileData]=useState({});
 
   useEffect(()=>{
     
     async function fetchData(){
       if(Object.keys(profileData).length===0){
+      try{
       const res=await customFetch.post(base_url,{
         username
       });
       formatResponse(res)
       setProfileData(res.data.user); 
+    }catch(e){
+      console.log(e);
+        }
     }
      return profileData;  
       
@@ -42,7 +47,7 @@ export default function App() {
       <Route exact path ="/edit" element={<RequestEdits/>}/>
       <Route exact path="/" element={
         <ProtectedRoutes access={"view"}>
-          <ViewProfile key={1} profileData={profileData} setProfileData={setProfileData}/>
+          <ViewProfile key={1} profileData={profileData} userType={authType}/>
         </ProtectedRoutes>     
       }/>
       <Route exact path="/register" element={

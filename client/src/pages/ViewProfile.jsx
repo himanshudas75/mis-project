@@ -14,8 +14,8 @@ import NavRow from '../components/NavRow';
 import { useEffect, useState } from 'react';
 import { filterArr } from '../utils/helper';
 
-const ViewProfile=({profileData,setProfileData})=>{
-
+const ViewProfile=({profileData,userType})=>{
+  
   const [category,setCategory]=useState('Basic Details');
   const [userData,setUserData]=useState(profileData);
   useEffect(()=>{
@@ -45,11 +45,18 @@ const ViewProfile=({profileData,setProfileData})=>{
                   
                   <p className="text-muted mb-1">{profileData.Name}</p>
                   <p className="text-muted mb-4">{profileData.EmployeeId}</p>
-                  <div className="d-flex justify-content-center mb-2">
+                  {/* <div className="d-flex justify-content-center mb-2">
                     <Link to="/edit">
                     <MDBBtn color="secondary">Request Edits</MDBBtn>
                     </Link>
-                  </div>
+                  </div> */}
+                  {userType==='admin' ? (
+                      <div className="d-flex justify-content-center mb-2">
+                        <Link to="/register">
+                          <MDBBtn color="secondary">Register New User</MDBBtn>
+                        </Link>
+                      </div>
+                    ):<></>}
                 </MDBCardBody>
               </MDBCard>
   
