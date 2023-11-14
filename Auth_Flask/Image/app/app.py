@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, make_response, render_template, redirect
+from flask import Flask, request, jsonify, make_response, render_template, redirect, flash
 from flask_pymongo import PyMongo
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity, decode_token
 from datetime import timedelta
@@ -7,10 +7,11 @@ import os
 app = Flask(__name__)
 
 # Flask configuration
-app.config['MONGO_URI'] = os.environ['MONGO_URI']  # Replace with your MongoDB URI
-app.config['SECRET_KEY'] = os.environ['JWT_SECRET_KEY']  # Change this to a secure key
-app.config['JWT_IDENTITY_CLAIM'] = JWT_IDENTITY_CLAIM = os.environ['JWT_IDENTITY_CLAIM']
-app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(seconds=int(os.environ['JWT_ACCESS_TOKEN_EXPIRES']))
+app.config['MONGO_URI'] = os.environ.get('MONGO_URI', 'mongodb+srv://Divij:Divij2002@cluster0.aj0dc.mongodb.net/todoListDatabase')  # Replace with your MongoDB URI
+app.config['SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY', 'abcd')  # Change this to a secure key
+app.config['JWT_IDENTITY_CLAIM'] = JWT_IDENTITY_CLAIM = os.environ.get('JWT_IDENTITY_CLAIM', 'identity')
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(seconds=int(os.environ.get('JWT_ACCESS_TOKEN_EXPIRES', '300')))
+
 
 # Initialize extensions
 mongo = PyMongo(app)
@@ -34,22 +35,26 @@ def home():
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
-        data = request.form
-        username = data.get('username')
-        password = data.get('password')
+        try:
+            data = request.form
+            username = data.get('username')
+            password = data.get('password')
 
-        if not username or not password:
-            return jsonify({'message': 'Username and password are required'}), 400
+            if not username or not password:
+                return jsonify({'message': 'Username and password are required'}), 400
 
-        # Check if the username already exists
-        if mongo.db.users.find_one({'username': username}):
-            return jsonify({'message': 'Username already exists'}), 400
+            # Check if the username already exists
+            if mongo.db.users.find_one({'username': username}):
+                return jsonify({'message': 'Username already exists'}), 400
 
-        # Create a new user
-        new_user = {'username': username, 'password': password}
-        mongo.db.users.insert_one(new_user)
+            # Create a new user
+            new_user = {'username': username, 'password': password}
+            mongo.db.users.insert_one(new_user)
 
-        return jsonify({'message': 'User created successfully'}), 201
+            flash('User created successfully', 'success')
+        except Exception as e:
+            print(e)
+            flash('An error occurred', 'error')
 
     return render_template('signup.html')
 
@@ -69,7 +74,7 @@ def login():
             response.set_cookie('access_token', value=access_token, httponly=True)
             return response
         else:
-            return jsonify({'message': 'Invalid credentials'}), 401
+            flash('Invalid credentials. Please try again.', 'error')
         
     return render_template('login.html')
 

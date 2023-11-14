@@ -3,7 +3,7 @@ kind: Ingress
 metadata:
   name: protected-nginx
   annotations:
-    nginx.ingress.kubernetes.io/auth-url: http://login-node-service.default.svc.cluster.local/verify
+    nginx.ingress.kubernetes.io/auth-url: http://login-flask-service.default.svc.cluster.local/verify
     nginx.ingress.kubernetes.io/auth-signin: /login
     nginx.ingress.kubernetes.io/affinity: "cookie"
 spec:
@@ -20,7 +20,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: login-node-service
+                name: login-flask-service
                 port:
                   number: 80
 ---
@@ -44,14 +44,21 @@ spec:
             pathType: Exact
             backend:
               service:
-                name: login-node-service
+                name: login-flask-service
                 port:
                   number: 80
           - path: /signup
             pathType: Exact
             backend:
               service:
-                name: login-node-service
+                name: login-flask-service
+                port:
+                  number: 80
+          - path: /static
+            pathType: Prefix
+            backend:
+              service:
+                name: login-flask-service
                 port:
                   number: 80
 ---

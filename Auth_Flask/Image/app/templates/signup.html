@@ -2,28 +2,81 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Signup</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='stylesheets/login-signup.css') }}">
 </head>
 
 <body>
-  <h2>Signup</h2>
-  <form action="/signup" method="post">
-    <label for="username">Username:</label>
-    <input type="text" id="username" name="username" required />
-    <br />
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password" required />
-    <br />
-    <button type="submit">Signup</button>
-  </form>
 
-  <h4>OR</h4>
-  <!-- Log In button -->
-  <form action="/login" method="GET">
-    <button type="submit">Log In</button>
-  </form>
+  <!-- Add this block for styling flashed messages and the remove button -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+  <div class="flashes-container">
+    {% for category, message in messages %}
+    <div class="flash {{ category }}">
+      <span>{{ message }}</span>
+      <button class="remove-flash" onclick="removeFlashMessage(this)">&times;</button>
+    </div>
+    {% endfor %}
+  </div>
+  <script>
+    // Auto-remove flashed messages after 5 seconds (adjust the timeout as needed)
+    setTimeout(function () {
+      var flashes = document.querySelectorAll('.flashes-container .flash');
+      flashes.forEach(function (flash) {
+        flash.classList.add('fade-out');
+        setTimeout(function () {
+          flash.style.display = 'none';
+        }, 200); // adjust the timeout to match the transition duration
+      });
+    }, 2000);
+
+    function removeFlashMessage(button) {
+      var flash = button.parentElement;
+      flash.classList.add('fade-out');
+      setTimeout(function () {
+        flash.style.display = 'none';
+      }, 500); // adjust the timeout to match the transition duration
+    }
+  </script>
+  {% endif %}
+  {% endwith %}
+
+  <div class='containers'>
+    <div class='container1'>
+      <div class='head1'>
+        <img src="{{ url_for('static', filename='images/logo1.png') }}" alt='ism'>
+      </div>
+      <div class='head1text'>Management Information System</div>
+    </div>
+    <div class='container2'>
+      <div class="subclass">
+        <div class="header">
+          <div class="htext">Sign Up</div>
+        </div>
+        <form id="loginForm" action="/signup" method="post">
+          <div class="inputs">
+            <div class="input">
+              <input type="text" placeholder='username' name="username" id="username">
+            </div>
+            <div class="input">
+              <input type="password" placeholder='password' name="password" id="password">
+            </div>
+          </div>
+          <button class="submit" type="submit">
+            Sign Up
+          </button>
+        </form>
+        <a href="/login">
+          <button class="submit">
+            Sign In
+          </button>
+        </a>
+      </div>
+    </div>
+  </div>
 </body>
 
 </html>
