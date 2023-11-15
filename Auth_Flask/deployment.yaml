@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
         - name: login-flask-app
-          image: himanshudas75/login-flask-app:v3
+          image: himanshudas75/login-flask-app:v1
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 5000

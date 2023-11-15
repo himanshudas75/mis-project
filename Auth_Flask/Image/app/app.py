@@ -41,11 +41,13 @@ def signup():
             password = data.get('password')
 
             if not username or not password:
-                return jsonify({'message': 'Username and password are required'}), 400
+                flash('Username and password are required', 'error')
+                return render_template('signup.html')
 
             # Check if the username already exists
             if mongo.db.users.find_one({'username': username}):
-                return jsonify({'message': 'Username already exists'}), 400
+                flash('Username already exists', 'error')
+                return render_template('signup.html')
 
             # Create a new user
             new_user = {'username': username, 'password': password}
