@@ -8,3 +8,4 @@ If using find change the mount paths in fluentd-daemonset.yaml to where the logs
 
 access kibana at http://{minikube_ip}:30009/ and select the logstash index pattern, go to discover, you might see container logs anytime now
 
+> START THE CLUSTER WITH A MINIMUM OF 8GB RAM AND 4 cpus
