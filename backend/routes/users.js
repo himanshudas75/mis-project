@@ -10,13 +10,13 @@ router.route('/login').post(catchAsync(users.login));
 
 router.route('/verify').get(isAuthenticated, users.verify);
 
-// router
-//     .route('/changePassword')
-//     .put(isAuthenticated, catchAsync(users.changePassword));
+router
+    .route('/changePassword')
+    .put(isAuthenticated, catchAsync(users.changePassword));
 
-// router
-//     .route('/deleteUser')
-//     .delete(isAuthenticated, catchAsync(users.deleteUser));
+router
+    .route('/deleteUser')
+    .delete(isAuthenticated, catchAsync(users.deleteUser));
 
 router.route('/logout').get(catchAsync(users.logout));
 

@@ -2,6 +2,11 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
+    registration_number: {
+        type: String,
+        required: true,
+        unique: true,
+    },
     first_name: {
         type: String,
         required: true,

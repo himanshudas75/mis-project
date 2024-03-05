@@ -1,6 +1,7 @@
 const User = require('../models/user');
 const { hashSync, compareSync } = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 
 const generateToken = (user, token_type) => {
     const payload = {
@@ -18,6 +19,14 @@ const generateToken = (user, token_type) => {
     return token;
 };
 
+const generateRegistrationNumber = () => {
+    return crypto.randomBytes(8).toString('hex');
+};
+
+const generatePassword = () => {
+    return crypto.randomBytes(8).toString('hex');
+};
+
 module.exports.register = async (req, res, next) => {
     const {
         first_name,
@@ -32,8 +41,6 @@ module.exports.register = async (req, res, next) => {
         blood_group,
         father_name,
         color_blindness,
-        password,
-        createdAt,
     } = req.body;
 
     const check_email = await User.findOne({ email });
@@ -43,6 +50,9 @@ module.exports.register = async (req, res, next) => {
             message: 'A user with this email already exists',
         });
     }
+
+    const registration_number = generateRegistrationNumber();
+    const password = generatePassword();
 
     const user = new User({
         first_name: first_name,
@@ -57,8 +67,8 @@ module.exports.register = async (req, res, next) => {
         blood_group: blood_group,
         father_name: father_name,
         color_blindness: color_blindness,
+        registration_number: registration_number,
         password: hashSync(password, 12),
-        createdAt: createdAt,
     });
 
     const accessToken = generateToken(user);
@@ -76,15 +86,16 @@ module.exports.register = async (req, res, next) => {
         success: true,
         message: 'User created successfully',
         user: {
-            user_id: savedUser._id,
+            registration_number: registration_number,
+            password: password,
         },
         accessToken: accessToken,
     });
 };
 
 module.exports.login = async (req, res, next) => {
-    const { email, password } = req.body;
-    const user = await User.findOne({ email: email });
+    const { registration_number, password } = req.body;
+    const user = await User.findOne({ registration_number });
 
     if (!user || !compareSync(password, user.password)) {
         return next({
@@ -106,7 +117,7 @@ module.exports.login = async (req, res, next) => {
         success: true,
         message: 'Logged in successfully',
         user: {
-            user_id: user._id,
+            registration_number,
         },
         accessToken: accessToken,
     });
@@ -117,7 +128,7 @@ module.exports.verify = (req, res) => {
         success: true,
         message: 'User verified successfully',
         user: {
-            user_id: req.user._id,
+            registration_number: req.user.registration_number,
         },
     });
 };
@@ -136,50 +147,43 @@ module.exports.logout = async (req, res, next) => {
     });
 };
 
-// module.exports.changePassword = async (req, res) => {
-//     const { password } = req.body;
-//     const user = await User.findById(req.user._id);
-//     user.password = hashSync(password, 12);
-//     await user.save();
+module.exports.changePassword = async (req, res) => {
+    const { password } = req.body;
+    const registration_number = req.user.registration_number;
+    const user = await User.findOne({ registration_number });
+    user.password = hashSync(password, 12);
+    await user.save();
 
-//     res.json({
-//         success: true,
-//         message: 'Password changed successfully',
-//         user: {
-//             user_id: req.user._id,
-//             username: req.user.username,
-//         },
-//     });
-// };
+    res.json({
+        success: true,
+        message: 'Password changed successfully',
+        user: {
+            registration_number,
+        },
+    });
+};
 
-// module.exports.deleteUser = async (req, res) => {
-//     const cookies = req.cookies;
-//     const user = await User.findById(req.user._id);
-//     const tourspots = await Tourspot.find({
-//         author: {
-//             $eq: user._id,
-//         },
-//     });
+module.exports.deleteUser = async (req, res) => {
+    const cookies = req.cookies;
 
-//     for (let tourspot of tourspots) {
-//         for (let image of tourspot.images) {
-//             await cloudinary.uploader.destroy(image.filename);
-//         }
-//     }
+    const registration_number = req.user.registration_number;
 
-//     await User.findByIdAndDelete(req.user._id);
-//     if (cookies?.jwt)
-//         res.clearCookie('jwt', {
-//             httpOnly: true,
-//             sameSite: 'None',
-//             secure: true,
-//         });
-//     res.json({
-//         success: true,
-//         message: 'User deleted successfully',
-//         user: {
-//             user_id: req.user._id,
-//             username: req.user.username,
-//         },
-//     });
-// };
+    const user = await User.findOne({ registration_number });
+
+    await User.findOneAndDelete(registration_number);
+
+    if (cookies?.jwt) {
+        res.clearCookie('jwt', {
+            httpOnly: true,
+            sameSite: 'None',
+            secure: true,
+        });
+    }
+    res.json({
+        success: true,
+        message: 'User deleted successfully',
+        user: {
+            registration_number,
+        },
+    });
+};

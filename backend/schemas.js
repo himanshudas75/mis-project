@@ -24,7 +24,7 @@ const extension = (joi) => ({
 
 const Joi = BaseJoi.extend(extension);
 
-module.exports.userSchema = Joi.object({
+module.exports.registerSchema = Joi.object({
     first_name: Joi.string().required().escapeHTML(),
     middle_name: Joi.string().escapeHTML(),
     last_name: Joi.string().escapeHTML(),
@@ -44,5 +44,4 @@ module.exports.userSchema = Joi.object({
         .valid('A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'),
     father_name: Joi.string().escapeHTML(),
     color_blindness: Joi.boolean().required(),
-    password: Joi.string().required().min(8).max(50),
 });
