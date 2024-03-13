@@ -17,13 +17,18 @@ app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(seconds=int(os.environ.get('J
 mongo = PyMongo(app)
 jwt = JWTManager(app)
 
+def check_authz(username):
+    user = mongo.db.users.find_one({'username': username})
+    # Check if the user has the admin role
+    # Return true/false
+
 def get_roles(username):
     user = mongo.db.users.find_one({'username': username})
     # Get the roles of the user
     # JSON Object - Prolly Hierarchial
 
 # Flask routes
-@app.route('/')
+@app.route('/admin')
 def home():
     token_cookie = request.cookies.get('access_token')
 
@@ -34,43 +39,15 @@ def home():
         decoded_token = decode_token(token_cookie)
         identity = decoded_token[JWT_IDENTITY_CLAIM]
 
-        # Add authorizations here and specific page redirects
-        # Why this is not in React????
-        # Please change to react instead of static html pages
+        if not check_authz(identity):
+            flash('You are not authorized to access this page', 'error')
+            return redirect('/login', code=401)
 
-        return render_template('home.html', username=identity)
+        return render_template('admin.html', username=identity)
     except Exception as e:
         return redirect('/login', code=302)
 
-# @app.route('/signup', methods=['GET', 'POST'])
-# def signup():
-#     if request.method == 'POST':
-#         try:
-#             data = request.form
-#             username = data.get('username')
-#             password = data.get('password')
-
-#             if not username or not password:
-#                 flash('Username and password are required', 'error')
-#                 return render_template('signup.html')
-
-#             # Check if the username already exists
-#             if mongo.db.users.find_one({'username': username}):
-#                 flash('Username already exists', 'error')
-#                 return render_template('signup.html')
-
-#             # Create a new user
-#             new_user = {'username': username, 'password': password}
-#             mongo.db.users.insert_one(new_user)
-
-#             flash('User created successfully', 'success')
-#         except Exception as e:
-#             print(e)
-#             flash('An error occurred', 'error')
-
-#     return render_template('signup.html')
-
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/admin/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         data = request.form
@@ -91,7 +68,7 @@ def login():
         
     return render_template('login.html')
 
-@app.route('/verify', methods=['GET'])
+@app.route('/admin/verify', methods=['GET'])
 def verify():
     token_cookie = request.cookies.get('access_token')
 
@@ -99,7 +76,6 @@ def verify():
         return jsonify({'message': 'Token not found in the cookie'}), 401
 
     try:
-        # Decode the token manually and get the identity
         decoded_token = decode_token(token_cookie)
         identity = decoded_token[JWT_IDENTITY_CLAIM]
         return jsonify(logged_in_as=identity), 200
@@ -112,6 +88,5 @@ def logout():
     response.delete_cookie('access_token')
     return response
 
-# Run the app
 if __name__ == '__main__':
     app.run(debug=True)
