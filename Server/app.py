@@ -24,7 +24,7 @@ mail = Mail(app)
 def index():
     return "WELCOME",200
 
-@app.route('/signup', methods=['GET', 'POST'])
+@app.route('/register', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
         username = request.form['username'] #Fields to be added
