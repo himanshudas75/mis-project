@@ -20,7 +20,7 @@ mongo = PyMongo(app)
 mail = Mail(app)
 
 # Routes
-@app.route('/')
+@app.route('/home')
 def index():
     return "WELCOME",200
 
@@ -71,7 +71,7 @@ def verify_email(token):
     else:
         return  400 #'Email verification link has expired or is invalid.',
 
-@app.route('/login', methods=['POST'])
+@app.route('/', methods=['POST'])
 def login():
     if request.method == 'POST':
         username = request.form['username']
