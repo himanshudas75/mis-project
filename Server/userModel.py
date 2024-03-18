@@ -72,7 +72,7 @@ user_data = {
             # }
 
             # page 3 ka info add hoga
-            
+
 
 
             'details_of_sponsored_projects': details_of_sponsored_projects, #list of objects
