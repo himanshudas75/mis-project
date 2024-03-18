@@ -1,0 +1,105 @@
+/* RegistrationForm.css */
+
+.container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background-color: #F2F5FF;
+  height: 100vh;
+}
+
+.registration-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 50%;
+  padding: 0 3rem;
+  margin: auto;
+  background-color: #F2F5FF;
+}
+
+.registration-form label {
+  font-weight: bold;
+  font-size: large;
+  padding: 0 1.2rem;
+  color: #2C3D8F;
+}
+
+.registration-form input {
+  padding: 5px;
+  width: 20rem;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+.registration-form select {
+  padding: 5px;
+  margin: 0 1.2rem;
+  width: 20.75rem;
+  border: 1px solid #A8B1CE;
+  border-radius: 3px;
+  background-color: white;
+  color: #A8B1CE;
+}
+
+.registration-form input[type="submit"] {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 15px;
+  width: 15rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.registration-form input[type="submit"]:hover {
+  background-color: #45A049;
+}
+
+.registration-form button {
+  background-color: #2C3D8F;
+  font-size: large;
+  color: white;
+  padding: 10px 15px;
+  width: 15rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 20px auto;
+}
+
+.institution img {
+  width: 10rem;
+  padding-bottom: 1.5rem;
+}
+
+div .institution {
+  padding: 8rem 5rem;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #2C3D8F;
+  color: white;
+  z-index: 1;
+  box-shadow: 1px 1px 5px 5px #A8B1CE;
+}
+
+.institution h2 {
+  margin: 0;
+}
+
+.institution p {
+  font-size: larger;
+  font-weight: lighter;
+  padding-top: 2.1rem;
+}
+
+.institution h1{
+  padding-top: 1.2rem;
+}
+
+.values {
+  display: flex;
+  justify-content: space-between;
+}

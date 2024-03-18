@@ -1,0 +1,47 @@
+.navbar{
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    width: 20%;
+    background-color: #2C3D8F;
+    padding: auto;
+    box-shadow: 1px 1px 5px 5px #a8b1ce7b;
+}
+
+.navbar ul{
+    display: flex;
+    flex-direction: column;
+    padding: 0rem 1.2rem;
+}
+.navbar li{
+    list-style: none;
+    font-size: large;
+    font-weight: 400;
+    margin: 0.2rem auto;
+    padding: 0.4rem 1.5rem;
+    border-radius: 3rem;
+}
+
+.navbar li:hover{
+    background-color: #a8b1ce7b;
+}
+
+.navbar a{
+    text-decoration: none;
+    font-size: larger;
+    color: white;
+}
+
+.navbar h2{
+    color: white;
+    margin: 0 auto;
+    padding-bottom: 0.5rem;
+}
+
+.navbar img{
+    width: 9rem;
+    margin-top: 1.2rem;
+}
+.logo{
+    margin: 1.2rem auto;
+}

@@ -1,0 +1,119 @@
+[
+  {"page": [
+    {
+      "label": "Salutation",
+      "name": "salutation",
+      "type": "select",
+      "options": [
+        "Mr.",
+        "Ms.",
+        "Mx.",
+        "Dr."
+      ],
+      "count":1
+    },
+    {
+      "label": "Name",
+      "name": "name",
+      "type": "text",
+      "required": [true,false,false],
+      "count":3
+    },
+    {
+      "label": "Father's Name",
+      "name": "fathersName",
+      "type": "text",
+      "required": [true],
+      "count":1
+    },
+    {
+      "label": "Mother's Name",
+      "name": "mothersName",
+      "type": "text",
+      "required": [true],
+      "count":1
+    },
+    {
+      "label": "Date of Birth",
+      "name": "dateOfBirth",
+      "type": "date"
+    },
+    {
+      "label": "Gender",
+      "name": "gender",
+      "type": "select",
+      "options": [
+        "Male",
+        "Female",
+        "Other"
+      ],
+      "count":1
+    },
+    {
+      "label":"Address",
+      "name": "address",
+      "type": "address"
+    },
+    {
+      "type": "table",
+      "parts": [
+        {
+          "columns": ["Column 1", "'Column 2'", "'Column 3'"],
+          "columnsType": ["text", "number", "date"],
+          "required": [true, true, true],
+          "options":[[],[],[]],
+          "rows":1,
+          "id":"right"
+        },
+        {
+          "columns": ["'Column A'", "'Column B'", "'Column C'"],
+          "columnsType": ["text", "select", "select"],
+          "options" : [[],["Yes","No"],["'Option A'", "'Option B'", "'Option C'"]],
+          "required": [true, true, true],
+          "rows":2,
+          "id":"left"
+        }
+      ]
+    }
+  ]},
+  {"page": [
+    {
+      "label": "Name",
+      "name": "name",
+      "type": "text",
+      "required": [true,false,false],
+      "count":3
+    },
+    {
+      "label": "Father's Name",
+      "name": "fathersName",
+      "type": "text",
+      "required": [true],
+      "count":1
+    },
+    {
+      "label": "Mother's Name",
+      "name": "mothersName",
+      "type": "text",
+      "required": [true],
+      "count":1
+    },
+    {
+      "label": "Date of Birth",
+      "name": "dateOfBirth",
+      "type": "date",
+       "count":1
+    },
+    {
+      "label": "Gender",
+      "name": "gender",
+      "type": "select",
+      "options": [
+        "Male",
+        "Female",
+        "Other"
+      ],
+      "count":1
+    }
+  ]}
+]

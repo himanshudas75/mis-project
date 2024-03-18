@@ -1,0 +1,41 @@
+form button {
+    background-color: #2C3D8F;
+    font-size: large;
+    color: white;
+    padding: 10px 5px;
+    width: 15rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+form select {
+    padding: 5px;
+    width: 20.75rem;
+    border: 1px solid #A8B1CE;
+    border-radius: 3px;
+    background-color: white;
+    color: #A8B1CE;
+}
+
+form label {
+    font-size: large;
+    color: #1C2864;
+}
+
+form input {
+    padding: 5px;
+    margin-right: 20px;
+    width: 10rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.fields{
+    display: flex;
+    justify-content: space-between;
+}
+
+#submit-button{
+    margin: auto;
+}

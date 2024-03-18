@@ -1,0 +1,40 @@
+*{
+    margin: 0;
+}
+
+.main-body{
+    display: flex;
+    background-color: #F2F5FF;
+}
+
+.application-form{
+    display: flex;
+    flex-direction: column;
+    margin: 4.5rem ;
+}
+.application-form select{
+    width: 18rem;
+    margin: 1.2rem;
+}
+.application-form input{
+    width: 17.25rem;
+    margin: 1.2rem;
+}
+
+.application-form h2{
+    font-size: xx-large;
+    color: #1C2864;
+    margin: 0.7rem 1.2rem;
+}
+
+.application-form label{
+    width: 5rem;
+    margin: 1.2rem;
+    width: 12rem;
+}
+
+.application-form button{
+    margin-top: 1.2rem;
+    margin-left: auto;
+    margin-right: 1.2rem;
+}
