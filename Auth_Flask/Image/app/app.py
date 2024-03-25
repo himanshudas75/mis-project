@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify, make_response, render_template, redir
 from flask_pymongo import PyMongo
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity, decode_token
 from datetime import timedelta
+from hashlib import sha256
 import os
 
 app = Flask(__name__)
@@ -19,8 +20,15 @@ jwt = JWTManager(app)
 
 def get_roles(username):
     user = mongo.db.users.find_one({'username': username})
-    # Get the roles of the user
-    # JSON Object - Prolly Hierarchial
+    if user:
+        return user.get('roles', {})
+    return {}
+
+def get_last_role_update_hash(username):
+    user = mongo.db.users.find_one({'username': username})
+    if user:
+        return user.get('last_role_update_hash', '')
+    return ''
 
 # Flask routes
 @app.route('/')
@@ -34,41 +42,10 @@ def home():
         decoded_token = decode_token(token_cookie)
         identity = decoded_token[JWT_IDENTITY_CLAIM]
 
-        # Add authorizations here and specific page redirects
-        # Why this is not in React????
-        # Please change to react instead of static html pages
-
         return render_template('home.html', username=identity)
     except Exception as e:
         return redirect('/login', code=302)
 
-# @app.route('/signup', methods=['GET', 'POST'])
-# def signup():
-#     if request.method == 'POST':
-#         try:
-#             data = request.form
-#             username = data.get('username')
-#             password = data.get('password')
-
-#             if not username or not password:
-#                 flash('Username and password are required', 'error')
-#                 return render_template('signup.html')
-
-#             # Check if the username already exists
-#             if mongo.db.users.find_one({'username': username}):
-#                 flash('Username already exists', 'error')
-#                 return render_template('signup.html')
-
-#             # Create a new user
-#             new_user = {'username': username, 'password': password}
-#             mongo.db.users.insert_one(new_user)
-
-#             flash('User created successfully', 'success')
-#         except Exception as e:
-#             print(e)
-#             flash('An error occurred', 'error')
-
-#     return render_template('signup.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -76,13 +53,15 @@ def login():
         data = request.form
         username = data.get('username')
         password = data.get('password')
-        redirect_to = data.get('redirect_to')
+        redirect_to = data.get('redirect_to', '/')
 
         user = mongo.db.users.find_one({'username': username, 'password': password})
 
         if user:
             roles = get_roles(username)
-            access_token = create_access_token(identity=username, user_claims={'roles': roles})
+            additional_claims = {'roles': roles, "last_role_update_hash" : sha256(user.get('roles', {}).encode()).hexdigest()}
+
+            access_token = create_access_token(identity=username, additional_claims=additional_claims)
             response = make_response(redirect(redirect_to))
             response.set_cookie('access_token', value=access_token, httponly=True)
             return response
@@ -102,6 +81,13 @@ def verify():
         # Decode the token manually and get the identity
         decoded_token = decode_token(token_cookie)
         identity = decoded_token[JWT_IDENTITY_CLAIM]
+        
+        if mongo.db.users.find_one({'username': identity}) is None:
+            return jsonify({'message': 'User not found'}), 401
+
+        if decoded_token.get('last_role_update_hash') != get_last_role_update_hash(identity):
+            return jsonify({'message': 'Roles have been updated. Please login again'}), 401
+        
         return jsonify(logged_in_as=identity), 200
     except Exception as e:
         return jsonify({'message': str(e)}), 401

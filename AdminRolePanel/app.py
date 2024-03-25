@@ -19,13 +19,20 @@ jwt = JWTManager(app)
 
 def check_authz(username):
     user = mongo.db.users.find_one({'username': username})
-    # Check if the user has the admin role
-    # Return true/false
+    roles = get_roles(username)
+    
 
 def get_roles(username):
     user = mongo.db.users.find_one({'username': username})
-    # Get the roles of the user
-    # JSON Object - Prolly Hierarchial
+    if user:
+        return user.get('roles', {})
+    return {}
+
+def get_last_role_update_hash(username):
+    user = mongo.db.users.find_one({'username': username})
+    if user:
+        return user.get('last_role_update_hash', '')
+    return ''
 
 # Flask routes
 @app.route('/admin')
@@ -47,7 +54,7 @@ def home():
     except Exception as e:
         return redirect('/login', code=302)
 
-@app.route('/admin/login', methods=['GET', 'POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         data = request.form
@@ -68,7 +75,7 @@ def login():
         
     return render_template('login.html')
 
-@app.route('/admin/verify', methods=['GET'])
+@app.route('/verify', methods=['GET'])
 def verify():
     token_cookie = request.cookies.get('access_token')
 
