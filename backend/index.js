@@ -38,8 +38,10 @@ app.use(
 app.use(passport.initialize());
 
 const userRoutes = require('./routes/users');
+const complaintRoutes = require('./routes/complaints');
 
 // Routes
+app.use('/api/complaint/', complaintRoutes);
 app.use('/api/', userRoutes);
 
 app.use((err, req, res, next) => {

@@ -1,4 +1,4 @@
-const { registerSchema } = require('./schemas');
+const { registerSchema, complaintSchema } = require('./schemas');
 const ExpressError = require('./utils/ExpressError');
 const passport = require('passport');
 
@@ -19,6 +19,16 @@ module.exports.isAuthenticated = (req, res, next) => {
 
 module.exports.validateUser = (req, res, next) => {
     const { error } = registerSchema.validate(req.body);
+    if (error) {
+        const msg = error.details.map((el) => el.message).join(',');
+        throw new ExpressError(400, msg);
+    } else {
+        next();
+    }
+};
+
+module.exports.validateComplaint = (req, res, next) => {
+    const { error } = complaintSchema.validate(req.body);
     if (error) {
         const msg = error.details.map((el) => el.message).join(',');
         throw new ExpressError(400, msg);

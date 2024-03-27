@@ -45,3 +45,15 @@ module.exports.registerSchema = Joi.object({
     father_name: Joi.string().escapeHTML(),
     color_blindness: Joi.boolean().required(),
 });
+
+module.exports.complaintSchema = Joi.object({
+    order_number: Joi.string().required().escapeHTML(),
+    registered_mobile_number: Joi.string()
+        .required()
+        .escapeHTML()
+        .pattern(/^(\+)([1-9]{2})(\d{10})$/),
+    registered_email: Joi.string().email().required().escapeHTML(),
+    complaint_type: Joi.string().required().valid('Civil', 'Electric'),
+    complaint_details: Joi.string().required().escapeHTML(),
+    payment_type: Joi.string().required().valid('PayTM', 'GPay'),
+});

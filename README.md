@@ -14,3 +14,9 @@ PORT=<OPTIONAL: SPECIFY PORT FOR SERVER (DEFAULT IS 3000)>
 ```js
 console.log(require('crypto').randomBytes(32).toString('hex'));
 ```
+
+### To Modify
+
+-   Change image type in complaint scheme
+-   Add image uploading feature
+-   Currently any user can add a complaint for any user
