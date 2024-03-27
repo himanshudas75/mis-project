@@ -2,6 +2,7 @@ const User = require('../models/user');
 const { hashSync, compareSync } = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
+const { transporter, registerBody } = require('../utils/nodemailer');
 
 const generateToken = (user, token_type) => {
     const payload = {
@@ -81,6 +82,20 @@ module.exports.register = async (req, res, next) => {
         secure: true,
         maxAge: 24 * 60 * 60 * 1000,
     });
+
+    transporter
+        .sendMail({
+            from: 'No Reply <noreply@iitism.ac.in',
+            to: email,
+            subject: 'Registration Success',
+            html: registerBody
+                .replace('REGNO_PLACEHOLDER', registration_number)
+                .replace('PASS_PLACEHOLDER', password),
+        })
+        .then((info) => {
+            console.log({ info });
+        })
+        .catch(console.error);
 
     res.json({
         success: true,
