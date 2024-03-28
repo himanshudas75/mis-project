@@ -39,8 +39,12 @@ app.use(passport.initialize());
 
 const userRoutes = require('./routes/users');
 const complaintRoutes = require('./routes/complaints');
+const adminRoutes = require('./routes/admin');
+const actionRoutes = require('./routes/actions');
 
 // Routes
+app.use('/api/admin', adminRoutes);
+app.use('/api/actions', actionRoutes);
 app.use('/api/complaint/', complaintRoutes);
 app.use('/api/', userRoutes);
 

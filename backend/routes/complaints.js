@@ -10,4 +10,6 @@ router
 
 router.route('/fetch').get(isAuthenticated, catchAsync(complaints.fetch));
 
+router.route('/reset').delete(isAuthenticated, catchAsync(complaints.reset));
+
 module.exports = router;

@@ -57,3 +57,8 @@ module.exports.complaintSchema = Joi.object({
     complaint_details: Joi.string().required().escapeHTML(),
     payment_type: Joi.string().required().valid('PayTM', 'GPay'),
 });
+
+module.exports.eventDateSchema = Joi.object({
+    event_name: Joi.string().required().escapeHTML(),
+    date: Joi.string().escapeHTML(),
+});

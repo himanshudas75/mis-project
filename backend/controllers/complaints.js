@@ -75,3 +75,28 @@ module.exports.fetch = async (req, res, next) => {
         complaint: complaint,
     });
 };
+
+module.exports.reset = async (req, res, next) => {
+    let complaint = null;
+    if (req.query.order_number) {
+        const order_number = req.query.order_number;
+        complaint = await Complaint.findOneAndDelete({ order_number });
+        if (!complaint) {
+            return next({
+                statusCode: 404,
+                message: 'Complaint not found',
+            });
+        }
+    } else {
+        return next({
+            statusCode: 404,
+            message: 'Missing query parameters',
+        });
+    }
+
+    res.json({
+        success: true,
+        message: 'Complaint deleted successfully',
+        complaint: complaint,
+    });
+};
