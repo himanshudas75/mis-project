@@ -7,11 +7,8 @@ const { validateUser, isAuthenticated, isAdmin } = require('../middleware');
 router.route('/verify').get(isAuthenticated, isAdmin, admin.verify);
 
 router
-    .route('/setEventDate')
-    .post(isAuthenticated, isAdmin, catchAsync(admin.setEventDates));
-
-router
-    .route('/deleteEventDate')
+    .route('/eventDate')
+    .post(isAuthenticated, isAdmin, catchAsync(admin.setEventDates))
     .delete(isAuthenticated, isAdmin, catchAsync(admin.deleteEventDate));
 
 module.exports = router;

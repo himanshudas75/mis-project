@@ -5,7 +5,7 @@ const action = require('../controllers/actions');
 const { isAuthenticated } = require('../middleware');
 
 router
-    .route('/getEventDates')
+    .route('/eventDates')
     .get(isAuthenticated, catchAsync(action.getEventDates));
 
 module.exports = router;
