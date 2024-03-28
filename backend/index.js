@@ -49,11 +49,11 @@ app.use('/api/complaint/', complaintRoutes);
 app.use('/api/', userRoutes);
 
 app.use((err, req, res, next) => {
-    if (!err.statusCode) err.statusCode = 500;
-    if (!err.message) err.message = 'Something went wrong';
-    res.status(err.statusCode).json({
+    const status = err.statusCode || 500;
+    const message = err.message || 'Something went wrong';
+    res.status(status).json({
         success: false,
-        message: err.message,
+        message: message,
     });
 });
 

@@ -1,5 +1,6 @@
 const Complaint = require('../models/complaint');
 const User = require('../models/user');
+const { cloudinary } = require('../utils/cloudinary');
 
 module.exports.register = async (req, res, next) => {
     const {
@@ -9,14 +10,15 @@ module.exports.register = async (req, res, next) => {
         complaint_type,
         complaint_details,
         payment_type,
-        screenshot,
     } = req.body;
 
     const check_user = await User.findOne({
         email: registered_email,
         mobile_number: registered_mobile_number,
     });
+
     if (!check_user) {
+        await cloudinary.uploader.destroy(req.file.filename);
         return next({
             statusCode: 404,
             message: 'Mobile number or email address not registered',
@@ -25,6 +27,7 @@ module.exports.register = async (req, res, next) => {
 
     const check_complaint = await Complaint.findOne({ order_number });
     if (check_complaint) {
+        await cloudinary.uploader.destroy(req.file.filename);
         return next({
             statusCode: 409,
             message: 'A complaint with this Order Number already exists',
@@ -38,8 +41,12 @@ module.exports.register = async (req, res, next) => {
         complaint_details: complaint_details,
         payment_type: payment_type,
         user: req.user._id,
-        screenshot: screenshot,
     });
+
+    complaint.screenshot = {
+        url: req.file.path,
+        filename: req.file.filename,
+    };
 
     const savedComplaint = await complaint.save();
 
@@ -94,6 +101,7 @@ module.exports.reset = async (req, res, next) => {
         });
     }
 
+    await cloudinary.uploader.destroy(complaint.screenshot.filename);
     res.json({
         success: true,
         message: 'Complaint deleted successfully',

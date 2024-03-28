@@ -43,7 +43,11 @@ module.exports.validateUser = (req, res, next) => {
 };
 
 module.exports.validateComplaint = (req, res, next) => {
-    const { error } = complaintSchema.validate(req.body);
+    const combined_req = { ...req.body, screenshot: req.file };
+    console.log(combined_req);
+    const { error } = complaintSchema.validate(combined_req);
+    console.log(error);
+
     if (error) {
         const msg = error.details.map((el) => el.message).join(',');
         throw new ExpressError(400, msg);

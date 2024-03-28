@@ -1,6 +1,15 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+const imageSchema = new Schema({
+    url: String,
+    filename: String,
+    createdAt: {
+        type: Date,
+        default: Date.now,
+    },
+});
+
 const complaintSchema = new Schema({
     order_number: {
         type: String,
@@ -25,10 +34,10 @@ const complaintSchema = new Schema({
         required: true,
         enum: ['PayTM', 'GPay'],
     },
-    // screenshot: {
-    //     type: String,
-    //     required: true,
-    // },
+    screenshot: {
+        type: imageSchema,
+        required: true,
+    },
 });
 
 module.exports = mongoose.model('Complaint', complaintSchema);

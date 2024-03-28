@@ -4,9 +4,18 @@ const catchAsync = require('../utils/catchAsync');
 const complaints = require('../controllers/complaints');
 const { validateComplaint, isAuthenticated } = require('../middleware');
 
+const multer = require('multer');
+const { storage } = require('../utils/cloudinary');
+const upload = multer({ storage: storage });
+
 router
     .route('/register')
-    .post(isAuthenticated, validateComplaint, catchAsync(complaints.register));
+    .post(
+        isAuthenticated,
+        upload.single('screenshot'),
+        validateComplaint,
+        catchAsync(complaints.register)
+    );
 
 router.route('/fetch').get(isAuthenticated, catchAsync(complaints.fetch));
 
