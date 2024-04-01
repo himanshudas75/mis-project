@@ -83,6 +83,7 @@ const RegistrationFrom = () => {
                   label="Divyang"
                   name="divyang"
                   options={divyangOptions}
+                  type="select"
                 />
                 <FormikControl
                   control="input"
@@ -96,6 +97,7 @@ const RegistrationFrom = () => {
                   label="Do you have a B.Tech Degree ?"
                   name="btechdegree"
                   options={btechRadioOptions}
+                  type="radio"
                 />
                 {formik.values.btechdegree === "false" && (
                   <FormikControl
@@ -103,6 +105,7 @@ const RegistrationFrom = () => {
                     label="Do you have a Bachelor's degree with mathematics or statistics as subject?"
                     name="mathorstatdegree"
                     options={btechRadioOptions}
+                    type="radio"
                   />
                 )}
               </VStack>
@@ -119,12 +122,14 @@ const RegistrationFrom = () => {
                   control="input"
                   label="Mobile Number"
                   name="mobilenumber"
+                  type="text"
                 />
                 <FormikControl
                   control="select"
                   label="Category"
                   name="category"
                   options={categoryOptions}
+                  type="text"
                 />
 
                 <FormikControl
