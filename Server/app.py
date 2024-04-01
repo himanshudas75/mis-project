@@ -16,9 +16,11 @@ app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USERNAME'] = 'your_email@example.com'  # SMTP server username
 app.config['MAIL_PASSWORD'] = 'your_password'  # SMTP server password
 # app.secret_key = 'your_secret_key'  # Change this to a secret key for session management
-mongo = PyMongo(app)
+mongo = PyMongo(app, uri="MONGO_URI")
 mail = Mail(app)
 
+app.config['MONGO_URI_2'] = 'mongodb://localhost:27017/database2'
+mongo1 = PyMongo(app, uri="MONGO_URI_2")
 # Routes
 @app.route('/home')
 def index():
@@ -145,6 +147,66 @@ def reset_password(token):
     else:
         # return render_template('password_reset_expired.html')
         return 401 #TOKEN EXPIRED
+
+        
+        
+@app.rout('/form',methods=['POST'])
+def form():
+    json_data = request.get_json()    
+    email = json_data.get('email')
+    if email:
+        for key, value in json_data:
+            if key != 'email':  # Skip the 'email' key
+                mongo.db.users.update_one({'email': email}, {'$set': {key: value}})
+
+        return 'Data Inserted Successfully',200
+    # Insert JSON data into MongoDB if email ID does not exist
+    # mongo.db.users.insert_one(json_data)
+    
+    return 'User Not Found', 404
+
+
+
+@app.rout('/edit',methods=['POST'])
+def edit():
+    json_data = request.get_json()    
+    email = json_data.get('email')
+    if email:
+        for key, value in json_data:
+            if key != 'email':  # Skip the 'email' key
+                mongo.db.users.update_one({'email': email}, {'$set': {key: value}})
+
+        return 'Data Updated Successfully',200
+    # Insert JSON data into MongoDB if email ID does not exist
+    # mongo.db.users.insert_one(json_data)
+    
+    return 'User Not Found', 404
+
+@app.rout('/details',methods=['GET'])
+def details():
+    json_data = request.get_json()    
+    email = json_data.get('email')
+    if email:
+        data = mongo.db.users.find_one({'email': email})
+        return data,200
+    # Insert JSON data into MongoDB if email ID does not exist
+    # mongo.db.users.insert_one(json_data)
+    
+    return 'User Not Found', 404
+
+@app.rout('/apply',methods=['POST'])
+def apply():
+    json_data= request.get_json()
+    # mongo1.db.users.insert_one(json_data)
+    email = json_data.get('email')
+    department = json_data.get('department')
+    data=mongo1.db.users.find_one({'email': email},{'department':department})
+
+    if data:
+        return "Cannot Apply for this Department",400
+    mongo1.db.users.insert_one(json_data)
+    return "Application Submitted Successfully",200
+
 
 
 if __name__ == '__main__':
