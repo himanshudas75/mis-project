@@ -9,3 +9,10 @@ module.exports.getEventDates = async (req, res, next) => {
         event_dates: eventDates,
     });
 };
+
+module.exports.keepAlive = async (req, res, next) => {
+    res.json({
+        success: true,
+        message: 'Server up and running',
+    });
+};

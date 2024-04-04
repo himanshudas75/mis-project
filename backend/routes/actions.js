@@ -8,4 +8,6 @@ router
     .route('/eventDates')
     .get(isAuthenticated, catchAsync(action.getEventDates));
 
+router.route('/keepAlive').get(catchAsync(action.keepAlive));
+
 module.exports = router;
