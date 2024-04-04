@@ -2,7 +2,8 @@ import { Field, Formik, Form } from "formik";
 import React from "react";
 import FormikControl from "./FormikControl";
 import * as Yup from "yup";
-import { Button, VStack, HStack } from "@chakra-ui/react";
+import { Button, VStack, HStack, Text, Box } from "@chakra-ui/react";
+import { Link } from "react-router-dom";
 ``;
 const RegisterComplaint = (props) => {
   const initialValues = {
@@ -69,69 +70,84 @@ const RegisterComplaint = (props) => {
     >
       {(formik) => {
         return (
-          <Form>
-            <HStack>
-              <VStack>
-                <FormikControl
-                  control="input"
-                  label="Order Numer (Please enter NA if the order number is not available)"
-                  name="order_no"
-                  type="text"
-                  placeholder="please enter the order number"
-                />
-                <FormikControl
-                  control="input"
-                  label="Registered Contact number"
-                  name="contact_no"
-                  type="text"
-                  placeholder="please enter the registered contact number"
-                />
-                <FormikControl
-                  control="select"
-                  label="Complaint Type"
-                  name="complaint_type"
-                  options={complaintTypeOptions}
-                  type="select"
-                />
-              </VStack>
+          <>
+            <Box>
+              <HStack>
+                <Link to="/mba_admission/home">
+                  <Button>Back to Applicant Home</Button>
+                </Link>
+                <Link to="/mba_admission/track_complaint">
+                  <Button>Track Complaint</Button>
+                </Link>
+              </HStack>
+            </Box>
+            <Text>Register Complaint</Text>
+            <Form>
+              <HStack>
+                <VStack>
+                  <FormikControl
+                    control="input"
+                    label="Order Numer (Please enter NA if the order number is not available)"
+                    name="order_no"
+                    type="text"
+                    placeholder="please enter the order number"
+                  />
+                  <FormikControl
+                    control="input"
+                    label="Registered Contact number"
+                    name="contact_no"
+                    type="text"
+                    placeholder="please enter the registered contact number"
+                  />
+                  <FormikControl
+                    control="select"
+                    label="Complaint Type"
+                    name="complaint_type"
+                    options={complaintTypeOptions}
+                    type="select"
+                  />
+                </VStack>
 
-              <VStack>
-                <FormikControl
-                  control="input"
-                  label="Registered Email Id"
-                  name="registered_email_id"
-                  type="email"
-                  placeholder="please enter the registered email id"
-                />
+                <VStack>
+                  <FormikControl
+                    control="input"
+                    label="Registered Email Id"
+                    name="registered_email_id"
+                    type="email"
+                    placeholder="please enter the registered email id"
+                  />
 
-                <FormikControl
-                  control="select"
-                  label="Payment Type"
-                  name="payment_type"
-                  type="select"
-                  options={paymentTypeOptions}
-                />
+                  <FormikControl
+                    control="select"
+                    label="Payment Type"
+                    name="payment_type"
+                    type="select"
+                    options={paymentTypeOptions}
+                  />
 
-                <FormikControl
-                  control="input"
-                  label="Upload Screenshot of the payment (image or pdf, max size 1MB)"
-                  name="payment_screenshot"
-                  type="file"
-                />
-              </VStack>
-            </HStack>
+                  <FormikControl
+                    control="input"
+                    label="Upload Screenshot of the payment (image or pdf, max size 1MB)"
+                    name="payment_screenshot"
+                    type="file"
+                  />
+                </VStack>
+              </HStack>
 
-            <FormikControl
-              control="textarea"
-              label="Complaint Details"
-              name="complaint_details"
-              type="textarea"
-              placeholder="Please breifly describe your issue along with all the details"
-            />
+              <FormikControl
+                control="textarea"
+                label="Complaint Details"
+                name="complaint_details"
+                type="textarea"
+                placeholder="Please breifly describe your issue along with all the details"
+              />
 
-            <Button type="submit">Submit</Button>
-            <Button type="reset">Reset</Button>
-          </Form>
+              <HStack>
+                <Button type="submit">Submit</Button>
+                <Button type="reset">Reset</Button>
+              </HStack>
+            </Form>
+          </>
         );
       }}
     </Formik>

@@ -9,6 +9,7 @@ import { Routes, Route, BrowserRouter } from "react-router-dom";
 import LoginForm from "./components/LoginForm";
 import NotFound from "./components/NotFound";
 import RegisterComplaint from "./components/RegisterComplaint";
+import TrackComplaint from "./components/TrackComplaint";
 function App() {
   return (
     <BrowserRouter>
@@ -19,7 +20,11 @@ function App() {
         <Route
           path="/mba_admission/register_complaint"
           element={<RegisterComplaint />}
-        ></Route>
+        />
+        <Route
+          path="/mba_admission/track_complaint"
+          element={<TrackComplaint />}
+        />
         <Route path="*" element={<NotFound />}></Route>
       </Routes>
     </BrowserRouter>
