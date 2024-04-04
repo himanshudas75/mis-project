@@ -7,6 +7,8 @@ import RegistrationFrom from "./components/RegistrationFrom";
 import Home from "./components/Home";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import LoginForm from "./components/LoginForm";
+import NotFound from "./components/NotFound";
+import RegisterComplaint from "./components/RegisterComplaint";
 function App() {
   return (
     <BrowserRouter>
@@ -14,6 +16,11 @@ function App() {
         <Route path="/mba_admission/home" element={<Home />} />
         <Route path="/mba_admission/register" element={<RegistrationFrom />} />
         <Route path="/mba_admission/login" element={<LoginForm />} />
+        <Route
+          path="/mba_admission/register_complaint"
+          element={<RegisterComplaint />}
+        ></Route>
+        <Route path="*" element={<NotFound />}></Route>
       </Routes>
     </BrowserRouter>
   );

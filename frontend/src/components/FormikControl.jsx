@@ -9,13 +9,14 @@ import RadioButton from "./RadioButton";
 /// decide which of the differnet form fields
 //are to be rendered based on the one particular prop
 import DropDown from "./DropDown";
+import TextArea from "./TextArea";
 const FormikControl = (props) => {
   const { control, ...rest } = props;
   switch (control) {
     case "input":
       return <InputField {...rest} />;
-    // case "textarea":
-    //   return <TextArea {...rest} />;
+    case "textarea":
+      return <TextArea {...rest} />;
     case "select":
       return <DropDown {...rest} />;
     case "radio":
