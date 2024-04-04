@@ -9,11 +9,6 @@ const transporter = nodemailer.createTransport({
     },
 });
 
-console.log(process.env.SMTP_HOST);
-console.log(process.env.SMTP_PORT);
-console.log(process.env.SMTP_USER);
-console.log(process.env.SMTP_PASSWORD);
-
 transporter
     .verify()
     .then(console.log('Connected to SMTP!'))
