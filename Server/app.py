@@ -21,6 +21,15 @@ mail = Mail(app)
 
 app.config['MONGO_URI_2'] = 'mongodb://localhost:27017/database2'
 mongo1 = PyMongo(app, uri="MONGO_URI_2")
+
+##Admin Database
+app.config['ADMIN']='mongodb://localhost:27017/database3'
+mongo2= PyMongo(app,uri ="ADMIN")
+
+##JOB's DB
+app.config['JOB']='mongodb://localhost:27017/database4'
+mongo3= PyMongo(app,uri='JOB')
+
 # Routes
 @app.route('/home')
 def index():
@@ -89,6 +98,7 @@ def login():
             return 'hii',400 #INVALID
 
     # return render_template('login.html')
+        
 ## HOME PAGE
         
 # @app.route('/profile')
@@ -207,7 +217,63 @@ def apply():
     mongo1.db.users.insert_one(json_data)
     return "Application Submitted Successfully",200
 
+@app.rout('/viewStatus',methods=['GET'])
+def view():
+    json_data= request.get_json()
+    # mongo1.db.users.insert_one(json_data)
+    email = json_data.get('email')
+    data=mongo1.db.users.find_one({'email':email})
+    if data:
+        return data,200
+    else:
+        return 400,"BAD REQUEST"
+    
 
+##ADMIN API
+@app.route('/adminlogin',methods=['POST'])
+def login():
+    username = request.form['username']
+    password = request.form['password']
+
+    user = mongo2.db.user.find_one({'username':username})
+    if user and check_password_hash(user['password'],password):
+        return 200,"Admin Logged in"
+    else:
+        return 400,"Don't Try to hack"
+
+@app.route('/updatestatus',methods=['POST'])
+def edit():
+    json_data = request.get_json()    
+    email = json_data.get('email')
+    if email:
+        for key, value in json_data:
+            if key != 'email':  # Skip the 'email' key
+                mongo1.db.users.update_one({'email': email}, {'$set': {key: value}})
+
+        return 'statues Updated Successfully',200
+    # Insert JSON data into MongoDB if email ID does not exist
+    # mongo.db.users.insert_one(json_data)
+    
+    return 'BAD REQUEST', 404
+
+## JOB OPENING
+@app.rout('/jobopening',methods=['POST','GET'])
+def job():
+    if request.method=='POST':
+        json_data=request.get_json()
+        mongo3.db.users.insert_one(json_data)
+        return 200
+    else:
+        data=mongo3.db.users.find()
+        return data,200
+
+## JOB CLOSING
+@app.rout('/jobclosing',methods=['POST'])
+def job():
+    json_data=request.get_json()
+    job_id=json_data.get('id')
+    mongo3.db.users.delete_one({'id':job_id})
+    return 200,"JOB OPENING CLOSED"
 
 if __name__ == '__main__':
     app.run(debug=True)
