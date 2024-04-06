@@ -39,3 +39,279 @@ form input {
 #submit-button{
     margin: auto;
 }
+
+/* Page1 */
+
+.page1{
+    display: flex;
+    flex-direction: column;
+    margin: 0 20%;
+    background-color: #F2F5FF;
+}
+
+.page1 button{
+    margin: auto;
+    margin-top: 1.2rem;
+}
+
+.page1 .values{
+    margin: 0.5rem;
+}
+
+.page1 .values input{
+    width: 20rem;
+    margin-right: 0;
+}
+
+.page1 .values .collection input{
+    width: 9.4rem;
+    margin-left: 0.5rem;
+}
+
+.page1 h1{
+    color: #1C2864;
+    font-weight: 500;
+}
+
+.page1 h2{
+    color: #1C2864;
+    font-weight: 300;
+    padding-top: 1rem;
+}
+
+.containerpage1{
+    background-color: #F2F5FF;
+    padding-bottom: 2rem;
+}
+
+hr{
+    margin: 1rem 0;
+    color: #CDDEFF;
+}
+
+/* Page2 */
+
+.page2{
+    display: flex;
+    flex-direction: column;
+    background-color: #F2F5FF;
+    padding-bottom: 2rem;
+}
+
+.page2 form input{
+    padding: 0.19rem;
+    margin: auto;
+    display:block;
+    width: 95%;
+}
+.page2 form select{
+    width: 95%;
+    margin: auto;
+    display:block;
+}
+
+.page2 table{
+    width: 100%
+}
+
+.page2 table button{
+    width: 1.5rem;
+    padding: 0;
+    background-color: red;
+    margin: auto;
+    display:block;
+}
+
+.page2 table button span{
+    display: inline-block;
+    transform: rotate(-45deg);
+}
+
+.page2 form{
+    margin: 0 17%;
+}
+
+.page2 form .add{
+    margin-top: 1rem;
+    width: 1.5rem;
+    padding: 0;
+    border-radius: 0;
+}
+.page2 form p{
+    display: inline;
+    color: #1C2864;
+    padding-left: 0.5rem;
+}
+
+.page2 form .next{
+    margin: 0 40%;
+}
+
+.page2 thead{
+    background-color: #2C3D8F;
+    color: white;
+}
+.page2 th{
+    padding: 0.5rem 0;
+}
+.page2 tbody{
+    background-color: #a8b1ce7e;
+}
+.page2 tbody td{
+    padding: 0.8rem;
+}
+.page2 h2{
+    color: #1C2864;
+    font-weight: 300;
+    padding-bottom: 1.1rem;
+}
+
+.page2 .values input{
+    width: 15rem;
+    margin: 0;
+}
+.page2 form .values{
+    display: flex;
+    justify-content: space-between;
+    margin: 0.5rem 0;
+}
+
+/* Page6 and page5 */
+
+.page3 .align{
+    display: flex;
+    flex-direction: column;
+}
+
+.page3{
+    display: flex;
+    flex-direction: column;
+    background-color: #F2F5FF;
+    min-height: 100vh;
+    padding-bottom: 2rem;
+}
+
+.page3 table button{
+    background: none;
+    background-repeat: no-repeat;
+    background-size: 2rem 2rem;
+    width: 2rem;
+    height: 2rem;
+    margin: 0 1.1rem;
+}
+
+#delete{
+    background-image: url('../Resources/delete.png');
+}
+#edit{
+    background-image: url('../Resources/edit.png');
+    align-items: center;
+}
+#remove{
+    background-image: url('../Resources/remove.png');
+}
+#view-btn{
+    background-image: url('../Resources/view.png');
+}
+.page3 form .next{
+    margin: 0 40%;
+    margin-top: 2rem;
+}
+.page3 form .add{
+    margin-top: 1rem;
+    width: 1.5rem;
+    padding: 0;
+    border-radius: 0;
+}
+.page3 form p{
+    display: inline;
+    color: #1C2864;
+    padding-left: 0.5rem;
+}
+.page3 table{
+    width: 100%;
+    border: 1px #1C2864;
+}
+td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.page3 form{
+    margin: 0 17%;
+}
+.page3 thead{
+    background-color: #2C3D8F;
+    color: white;
+}
+.page3 thead th{
+    padding: 0.5rem 0;
+    font-weight: 200;
+}
+.page3 tbody td{
+    padding: 0.5rem 0;
+    color: #1C2864;
+}
+.instruct{
+    display: flex;
+    flex-direction: column;
+    color: #1C2864;
+    font-size: large;
+    font-weight: 100;
+    margin: 1rem 17%;
+}
+.page3 table {
+    border: 1px solid #A8B1CE;
+}
+
+#upload-label{
+    background-color: #a8b1ce7b;
+    color: #1c2864c8;
+    padding: 0.3rem 0.7rem;
+    border-radius: 0.2rem;
+    cursor: pointer;
+}
+
+.page3 h2{
+    margin: 0.5rem 17%;
+    font-weight: 400;
+    color: #1C2864;
+}
+
+.form-fill{
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    color: #1C2864;
+    font-size: larger;
+}
+.form-fill div{
+    display: flex;
+    gap: 2rem;
+}
+.form-fill{
+    margin: 2rem;
+}
+.form-fill .active{
+    background-color: #1C2864;
+    border-radius: 2rem;
+    height: 2rem;
+    width: 2rem;
+    box-shadow: none;
+    color: #1C2864;
+}
+.form-fill button{
+    background-color: white;
+    border: #1C2864 2px solid;
+    border-radius: 2rem;
+    height: 2rem;
+    width: 2rem;
+    box-shadow: none;
+    color: white;
+}
+.form-fill a{
+    display: block;
+    color: transparent; 
+    width: 2rem;
+    height: 2rem;
+}

@@ -45,3 +45,56 @@
 .logo{
     margin: 1.2rem auto;
 }
+
+/* Navbar Small */
+
+.navbar-small{
+    display: flex;
+    justify-content: space-between;
+    background-color: #2C3D8F;
+    padding: 0.5rem 4rem;
+    margin-bottom: 2rem;
+}
+.navbar-small ul{
+    display: flex;
+    gap: 2rem;
+    text-decoration: none;
+    list-style-type: none;
+    align-items: center;
+}
+.navbar-small ul a{
+    text-decoration: none;
+    color: white;
+    font-size: large;
+}
+.buttons{
+    display: flex;
+    gap: 8rem;
+    margin: 0 30%;
+    margin-bottom: 4rem;
+}
+.buttons button{
+    position: absolute;
+    height: 2rem;
+    width: 2rem;
+    border-radius: 2rem;
+    color: white;
+    border: #2C3D8F 2px solid;
+    z-index: 5;
+}
+.buttons a{
+    color: transparent;
+    display: block;
+    width: 2rem;
+    height: 2rem;
+}
+.active{
+    background-color: #2C3D8F;
+}
+#hr{
+    position: absolute;
+    border: #2C3D8F 2px solid;
+    width: 40rem;
+    margin: 14px 31%;
+    z-index: 2;
+}
