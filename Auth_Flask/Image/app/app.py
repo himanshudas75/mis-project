@@ -24,10 +24,10 @@ def get_roles(username):
         return user.get('roles', {})
     return {}
 
-def get_last_role_update_hash(username):
+def get_role_hash(username):
     user = mongo.db.users.find_one({'username': username})
     if user:
-        return user.get('last_role_update_hash', '')
+        return user.get('role_hash', '')
     return ''
 
 import hashlib

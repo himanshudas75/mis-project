@@ -1,0 +1,114 @@
+JWT Cookie Format - 
+
+Header - Default
+Payload - 
+{
+  "username": "1392",                                      //Whatever username is stored in DB - for students it can be 2XJEYYYY and for employees some employee code perhaps
+  "roles": ["SuperAdmin", "FIC - Automation", "Professor - Associate"]  
+  "roles_hash":93740608qr78q9w7r07q      
+}
+Signature - Default
+
+
+Roles - 
+SuperAdmin - sudo 
+Dean - Automation - D - Au
+FIC - Automation - FIC - Au
+CSE - Professor - Associate
+CSE - Professor - Assistant
+CSE - Professor - Emeritus
+CSE - HOD
+Dean - Academic
+Dean - Student Welfare
+Student
+IT Support
+
+"OR"
+
+Planning to define it as a JSON Object - 
+for student                                //Need to check whether searching happens within JSON Objects
+{
+    Dean : None,
+    FIC : None,
+    CSE : Student,
+    Professor : None,
+    HOD : None
+}
+
+for professor eg - Saurabh Srivastava
+
+{
+    Dean : None,
+    FIC : Automation,
+    CSE : Professor,
+    Professor : Associate,
+    HOD : None
+}
+
+
+Expected Roles Schema - 
+
+{   
+    Dept : {
+            Dept_Name :
+            Status :
+            HOD : Boolean
+            Professor : Boolean****
+            Associate Professor : Boolean****
+            Assistant Professor : Boolean****
+            Student : {
+                Btech : Boolean
+                MTech : Specialization/False*
+                MSc : Specialization/False*
+                PhD/JRF : {
+                    Guide : 
+                    Specialization :
+                } / False
+
+            }
+        }
+    Staff : {
+            SuperAdmin : Boolean 
+            Developer : ServiceName/False
+            View_Logs : Boolean
+            //
+            // More stuff to enter here
+            //
+        }
+    Executive : {
+            Director : Boolean
+            Secretary : Boolean
+            Assistant Director : Boolean
+            //
+            // More stuff to enter here
+            //
+        }
+    Temp : {
+        Delegate_roles_from : UserID/False
+        Faculty Recruitment : Application Number/False
+        Student_admission : {
+            UG : Application Number/False
+            PG : Application Number/False
+            Phd/JRF : Application Number/False
+        } 
+        // Temporary Accounts
+    }
+}
+
+------------------------------------------------------------------------------
+
+DB Schema
+
+{
+    username : xxxxxxxx,
+    name : aaaaaaaaaa,
+    roles :{ // object,}
+    email : yyyyyyyyyyy@xxxx.iitism.ac.in,
+    phno : 11111111111,
+    pass_reset_flag : false,
+    expiry : 31/06/2024,
+    password_hash : af628649dc89628525230,
+    roles_hash:70907409709w990q97r0q07904q9,
+}
+
+-----------------------------------------------------------------------------

@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify, make_response, render_template, redir
 from flask_pymongo import PyMongo
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity, decode_token
 from datetime import timedelta
+from hashlib import sha256
 import os
 
 app = Flask(__name__)
@@ -28,10 +29,10 @@ def get_roles(username):
         return user.get('roles', {})
     return {}
 
-def get_last_role_update_hash(username):
+def get_role_hash(username):
     user = mongo.db.users.find_one({'username': username})
     if user:
-        return user.get('last_role_update_hash', '')
+        return user.get('role_hash', '')
     return ''
 
 # Flask routes
@@ -60,9 +61,12 @@ def login():
         data = request.form
         username = data.get('username')
         password = data.get('password')
+        password_hash = password
+        if password is not None:
+            password_hash = sha256(password.encode()).hexdigest()
         redirect_to = data.get('redirect_to')
 
-        user = mongo.db.users.find_one({'username': username, 'password': password})
+        user = mongo.db.users.find_one({'username': username, 'password_hash': password_hash})
 
         if user:
             roles = get_roles(username)
