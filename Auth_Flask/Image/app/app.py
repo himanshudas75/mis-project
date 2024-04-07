@@ -30,6 +30,23 @@ def get_last_role_update_hash(username):
         return user.get('last_role_update_hash', '')
     return ''
 
+import hashlib
+
+def sha256_hash(list1):
+  """Calculates the SHA-256 hash of a list.
+
+  Args:
+    list1: The list to hash.
+
+  Returns:
+    The SHA-256 hash of the list as a hexadecimal string.
+  """
+
+  sha256 = hashlib.sha256()
+  for item in list1:
+    sha256.update(item.encode())
+  return sha256.hexdigest()
+
 # Flask routes
 @app.route('/')
 def home():
@@ -41,7 +58,8 @@ def home():
     try:
         decoded_token = decode_token(token_cookie)
         identity = decoded_token[JWT_IDENTITY_CLAIM]
-
+        flash(f"Logged in as {identity}")
+        flash(token_cookie)
         return render_template('home.html', username=identity)
     except Exception as e:
         return redirect('/login', code=302)
@@ -55,12 +73,13 @@ def login():
         password = data.get('password')
         redirect_to = data.get('redirect_to', '/')
 
-        user = mongo.db.users.find_one({'username': username, 'password': password})
+        password_hash = sha256(password.encode()).hexdigest()
+
+        user = mongo.db.users.find_one({'username': username, 'password_hash': password_hash})
 
         if user:
             roles = get_roles(username)
-            additional_claims = {'roles': roles, "last_role_update_hash" : sha256(user.get('roles', {}).encode()).hexdigest()}
-
+            additional_claims = {'roles': roles, "last_role_update_hash" : sha256_hash(user.get('roles', {}))}
             access_token = create_access_token(identity=username, additional_claims=additional_claims)
             response = make_response(redirect(redirect_to))
             response.set_cookie('access_token', value=access_token, httponly=True)
@@ -101,3 +120,5 @@ def logout():
 # Run the app
 if __name__ == '__main__':
     app.run(debug=True)
+
+# Test
