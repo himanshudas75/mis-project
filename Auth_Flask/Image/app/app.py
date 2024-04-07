@@ -80,7 +80,6 @@ def login():
         if user:
             roles = get_roles(username)
             additional_claims = {'roles': roles, "last_role_update_hash" : sha256_hash(user.get('roles', {}))}
-
             access_token = create_access_token(identity=username, additional_claims=additional_claims)
             response = make_response(redirect(redirect_to))
             response.set_cookie('access_token', value=access_token, httponly=True)
@@ -121,3 +120,5 @@ def logout():
 # Run the app
 if __name__ == '__main__':
     app.run(debug=True)
+
+# Test
