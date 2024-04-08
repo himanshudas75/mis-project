@@ -90,14 +90,14 @@ const RegisterComplaint = (props) => {
                     label="Order Numer (Please enter NA if the order number is not available)"
                     name="order_no"
                     type="text"
-                    placeholder="please enter the order number"
+                    placeholder="Please enter the order number"
                   />
                   <FormikControl
                     control="input"
                     label="Registered Contact number"
                     name="contact_no"
                     type="text"
-                    placeholder="please enter the registered contact number"
+                    placeholder="Please enter the registered contact number"
                   />
                   <FormikControl
                     control="select"
@@ -114,7 +114,7 @@ const RegisterComplaint = (props) => {
                     label="Registered Email Id"
                     name="registered_email_id"
                     type="email"
-                    placeholder="please enter the registered email id"
+                    placeholder="Please enter the registered email id"
                   />
 
                   <FormikControl

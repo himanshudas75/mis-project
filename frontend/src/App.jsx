@@ -10,6 +10,7 @@ import LoginForm from "./components/LoginForm";
 import NotFound from "./components/NotFound";
 import RegisterComplaint from "./components/RegisterComplaint";
 import TrackComplaint from "./components/TrackComplaint";
+import Apply from "./components/ApplicationForm";
 function App() {
   return (
     <BrowserRouter>
@@ -25,6 +26,7 @@ function App() {
           path="/mba_admission/track_complaint"
           element={<TrackComplaint />}
         />
+        <Route path="/mba_admission/apply" element={<Apply />} />
         <Route path="*" element={<NotFound />}></Route>
       </Routes>
     </BrowserRouter>

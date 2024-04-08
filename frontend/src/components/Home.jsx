@@ -18,10 +18,10 @@ const Home = () => {
   return (
     <>
       <Menu>
-        <MenuButton>Applicant Home</MenuButton>
+        <MenuButton as={Button}>Applicant Home</MenuButton>
         <MenuList>
           <Link to="/mba_admission/apply">
-            <MenuItem>Apply</MenuItem>
+            <MenuItem>Start Application</MenuItem>
           </Link>
           <Link to="/mba_admission/instructions">
             <MenuItem>Instruction</MenuItem>
