@@ -72,8 +72,8 @@ def login():
         username = data.get('username')
         password = data.get('password')
         redirect_to = data.get('redirect_to', '/')
-
-        password_hash = sha256(password.encode()).hexdigest()
+        if password is not None:
+            password_hash = sha256(password.encode()).hexdigest()
 
         user = mongo.db.users.find_one({'username': username, 'password_hash': password_hash})
 
@@ -104,7 +104,7 @@ def verify():
         if mongo.db.users.find_one({'username': identity}) is None:
             return jsonify({'message': 'User not found'}), 401
 
-        if decoded_token.get('last_role_update_hash') != get_last_role_update_hash(identity):
+        if decoded_token.get('last_role_update_hash') != get_role_hash(identity):
             return jsonify({'message': 'Roles have been updated. Please login again'}), 401
         
         return jsonify(logged_in_as=identity), 200
@@ -117,8 +117,5 @@ def logout():
     response.delete_cookie('access_token')
     return response
 
-# Run the app
 if __name__ == '__main__':
     app.run(debug=True)
-
-# Test

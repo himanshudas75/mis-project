@@ -19,8 +19,10 @@ mongo = PyMongo(app)
 jwt = JWTManager(app)
 
 def check_authz(username):
-    user = mongo.db.users.find_one({'username': username})
     roles = get_roles(username)
+
+    if 'ADMIN' in roles:
+        return True
     
 
 def get_roles(username):
@@ -37,7 +39,7 @@ def get_role_hash(username):
 
 # Flask routes
 @app.route('/admin')
-def home():
+def admin():
     token_cookie = request.cookies.get('access_token')
 
     if not token_cookie:
@@ -51,7 +53,7 @@ def home():
             flash('You are not authorized to access this page', 'error')
             return redirect('/login', code=401)
 
-        return render_template('admin.html', username=identity)
+        return render_template('admin.html', username=identity) # Change this to the required frontend
     except Exception as e:
         return redirect('/login', code=302)
 
@@ -64,7 +66,7 @@ def login():
         password_hash = password
         if password is not None:
             password_hash = sha256(password.encode()).hexdigest()
-        redirect_to = data.get('redirect_to')
+        redirect_to = '/admin'
 
         user = mongo.db.users.find_one({'username': username, 'password_hash': password_hash})
 
@@ -87,8 +89,16 @@ def verify():
         return jsonify({'message': 'Token not found in the cookie'}), 401
 
     try:
+        # Decode the token manually and get the identity
         decoded_token = decode_token(token_cookie)
         identity = decoded_token[JWT_IDENTITY_CLAIM]
+        
+        if mongo.db.users.find_one({'username': identity}) is None:
+            return jsonify({'message': 'User not found'}), 401
+
+        if decoded_token.get('last_role_update_hash') != get_role_hash(identity):
+            return jsonify({'message': 'Roles have been updated. Please login again'}), 401
+        
         return jsonify(logged_in_as=identity), 200
     except Exception as e:
         return jsonify({'message': str(e)}), 401
