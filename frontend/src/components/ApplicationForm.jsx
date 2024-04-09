@@ -1,8 +1,8 @@
-import { React, useEffect, useState } from "react";
+import { React, useEffect, useState, useRef } from "react";
 import { Formik, Form } from "formik";
 import FormikControl from "./FormikControl";
 import * as Yup from "yup";
-import { Button, Text, HStack, Box } from "@chakra-ui/react";
+import { Button, Text, HStack, Box, useDisclosure } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 // import
 import { useToast } from "@chakra-ui/react";
@@ -17,8 +17,19 @@ import {
   TableCaption,
   TableContainer,
 } from "@chakra-ui/react";
+import {
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogContent,
+  AlertDialogOverlay,
+  AlertDialogCloseButton,
+} from "@chakra-ui/react";
 //for now I am storing in an array, need to store in localstorage or backend
 const Apply = () => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const cancelRef = useRef();
   const [appliedPrograms, setappliedPrograms] = useState([]);
   const [disableAddButton, setdisableAddButton] = useState(false);
   const initialValues = {
@@ -32,7 +43,8 @@ const Apply = () => {
     course: Yup.string().required("Required"),
   });
   const handleFinalSubmit = () => {
-    //use the above declared state variables here
+    console.log("final applied programs", appliedPrograms);
+    onClose();
   };
   const departmentOptions = [
     { key: "Please select the Department", value: "" },
@@ -203,13 +215,48 @@ const Apply = () => {
                 </Tbody>
               </Table>
             </TableContainer>
-            <Button onClick={handleFinalSubmit} type="button">
+            <Button
+              onClick={onOpen}
+              type="button"
+              isDisabled={appliedPrograms < 1}
+            >
               Submit Final Programme Selection
             </Button>
             <Text color={"red"}>
               Disclaimer :Once you click on "Submit Final Programme Selection",
               You cannot change your selection later.
             </Text>
+
+            <AlertDialog
+              isOpen={isOpen}
+              leastDestructiveRef={cancelRef}
+              onClose={onClose}
+            >
+              <AlertDialogOverlay>
+                <AlertDialogContent>
+                  <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                    Final Programme Submission
+                  </AlertDialogHeader>
+
+                  <AlertDialogBody>
+                    Are you sure? You can't undo this action afterwards.
+                  </AlertDialogBody>
+
+                  <AlertDialogFooter>
+                    <Button ref={cancelRef} onClick={onClose}>
+                      Cancel
+                    </Button>
+                    <Button
+                      colorScheme="red"
+                      onClick={handleFinalSubmit}
+                      ml={3}
+                    >
+                      Submit
+                    </Button>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialogOverlay>
+            </AlertDialog>
           </>
         );
       }}
