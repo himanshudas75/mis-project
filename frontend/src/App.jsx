@@ -11,6 +11,7 @@ import NotFound from "./components/NotFound";
 import RegisterComplaint from "./components/RegisterComplaint";
 import TrackComplaint from "./components/TrackComplaint";
 import Apply from "./components/ApplicationForm";
+import MultiStepForm from "./components/MultiStepForm";
 function App() {
   return (
     <BrowserRouter>
@@ -27,6 +28,8 @@ function App() {
           element={<TrackComplaint />}
         />
         <Route path="/mba_admission/apply" element={<Apply />} />
+
+        <Route path="/mba_admission/details" element={<MultiStepForm />} />
         <Route path="*" element={<NotFound />}></Route>
       </Routes>
     </BrowserRouter>
