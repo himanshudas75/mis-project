@@ -14,6 +14,9 @@ import Page4 from './page4';
 import Page6 from './page6';
 import Page5 from './page5';
 import Details from './details_';
+import AdminLogin from './Admin/adminLogin';
+import AdminDashboard from './Admin/applications';
+import AdminJobOpenings from './Admin/jobOpening';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -31,6 +34,9 @@ root.render(
         <Route path="/details/page4" element={<Page4 />} />
         <Route path="/details/page5" element={<Page5 />} />
         <Route path="/details/page6" element={<Page6 />} />
+        <Route path="/admin" element={<AdminLogin />} />
+        <Route path="/admin/applications" element={<AdminDashboard />} />
+        <Route path="/admin/jobs" element={<AdminJobOpenings />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>

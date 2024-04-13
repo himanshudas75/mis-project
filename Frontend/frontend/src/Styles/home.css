@@ -53,3 +53,12 @@
     font-size: x-large;
     font-weight: 200;
 }
+
+.main-body table select {
+    padding: 5px;
+    width: 10.75rem;
+    border: 1px solid #A8B1CE;
+    border-radius: 3px;
+    background-color: white;
+    color: #A8B1CE;
+}
