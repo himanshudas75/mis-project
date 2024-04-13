@@ -4,11 +4,13 @@ const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const { transporter, registerBody } = require('../utils/nodemailer');
 
-const generateToken = (user, token_type) => {
+const generateToken = (registration_number, token_type) => {
     const payload = {
-        user_id: user._id,
-        username: user.username,
+        identity: registration_number,
+        roles: ['phd_admission'],
     };
+
+    console.log(payload);
 
     const options = {
         expiresIn: '1d',
@@ -72,7 +74,7 @@ module.exports.register = async (req, res, next) => {
         password: hashSync(password, 12),
     });
 
-    const accessToken = generateToken(user);
+    const accessToken = generateToken(registration_number);
 
     const savedUser = await user.save();
 
@@ -119,7 +121,7 @@ module.exports.login = async (req, res, next) => {
         });
     }
 
-    const accessToken = generateToken(user);
+    const accessToken = generateToken(registration_number);
 
     res.cookie('jwt', accessToken, {
         httpOnly: true,
@@ -142,9 +144,7 @@ module.exports.verify = (req, res) => {
     res.json({
         success: true,
         message: 'User verified successfully',
-        user: {
-            registration_number: req.user.registration_number,
-        },
+        user: req.user,
     });
 };
 
@@ -164,7 +164,7 @@ module.exports.logout = async (req, res, next) => {
 
 module.exports.changePassword = async (req, res) => {
     const { password } = req.body;
-    const registration_number = req.user.registration_number;
+    const registration_number = req.user.identity;
     const user = await User.findOne({ registration_number });
     user.password = hashSync(password, 12);
     await user.save();
@@ -181,7 +181,7 @@ module.exports.changePassword = async (req, res) => {
 module.exports.deleteUser = async (req, res) => {
     const cookies = req.cookies;
 
-    const registration_number = req.user.registration_number;
+    const registration_number = req.user.identity;
 
     const user = await User.findOne({ registration_number });
 
