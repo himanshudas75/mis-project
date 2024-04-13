@@ -7,70 +7,81 @@ import random
 import string
 from datetime import datetime, timedelta
 from flask_mail import Mail, Message
+import json
+from bson.json_util import dumps
 
 app = Flask(__name__)
-app.config['MONGO_URI'] = 'mongodb://localhost:27017/mydatabase'  # MongoDB URI
-app.config['MAIL_SERVER'] = 'smtp.example.com'  # SMTP server address
-app.config['MAIL_PORT'] = 587
-app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'your_email@example.com'  # SMTP server username
-app.config['MAIL_PASSWORD'] = 'your_password'  # SMTP server password
+app.config['MONGO_URI'] = "mongodb://localhost:27017/mydatabase"  # MongoDB URI
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'  # SMTP server address   ye verify karna hai sir se ki domain kya use karein
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
+app.config['MAIL_USERNAME'] = '20je0337@cse.iitism.ac.in'  # SMTP server username
+app.config['MAIL_PASSWORD'] = 'Divij@2002'  # SMTP server password
 # app.secret_key = 'your_secret_key'  # Change this to a secret key for session management
-mongo = PyMongo(app, uri="MONGO_URI")
+mongo = PyMongo(app)
 mail = Mail(app)
 
-app.config['MONGO_URI_2'] = 'mongodb://localhost:27017/database2'
-mongo1 = PyMongo(app, uri="MONGO_URI_2")
+app.config['MONGO_URI'] = 'mongodb://localhost:27017/database2'
+mongo1 = PyMongo(app)
 
 ##Admin Database
-app.config['ADMIN']='mongodb://localhost:27017/database3'
-mongo2= PyMongo(app,uri ="ADMIN")
+app.config['MONGO_URI']='mongodb://localhost:27017/database3'
+mongo2= PyMongo(app)
 
 ##JOB's DB
-app.config['JOB']='mongodb://localhost:27017/database4'
-mongo3= PyMongo(app,uri='JOB')
+app.config['MONGO_URI']='mongodb://localhost:27017/database4'
+mongo3= PyMongo(app)
 
 # Routes
 @app.route('/home')
 def index():
     return "WELCOME",200
 
-@app.route('/register', methods=['GET', 'POST'])
+@app.route('/register', methods=['POST'])
 def signup():
-    if request.method == 'POST':
-        username = request.form['username'] #Fields to be added
-        email = request.form['email']
-        password = request.form['password']
-        hashed_password = generate_password_hash(password)
 
-        # if mongo.db.users.find_one({'username': username}):
-        #     return 'Username already exists! Please choose another username.', 200
+    try:
+            username = request.form['username'] #Fields to be added
+            email = request.form['email']
+            password = request.form['password']
+            hashed_password = generate_password_hash(password)
+            
+            # if mongo.db.users.find_one({'username': username}):
+            #     return 'Username already exists! Please choose another username.', 200
 
-        if mongo.db.users.find_one({'email': email}):
-            return 'Email already exists! Please use another email address.', 200
-
-        verification_token = ''.join(random.choices(string.ascii_letters + string.digits, k=50))
-        expiry_time = datetime.now() + timedelta(hours=1)
-        mongo.db.email_verification.insert_one({'email': email, 'token': verification_token, 'expiry_time': expiry_time})
-
-        verification_link = url_for('verify_email', token=verification_token, _external=True)
-        send_verification_email(email, verification_link) # verification link
-
-        user_data = {
-            'username': username,
-            'email': email,
-            'password': hashed_password,
-            'verified': False  # Set user as unverified initially
-        }
-        mongo.db.users.insert_one(user_data)
-        return 'Signup successful! Please check your email to verify your account.', 200 #RESPONSE
-
+            if mongo.db.users.find_one({'email': email}):
+                return 'Email already exists! Please use another email address.', 200
+            
+            verification_token = ''.join(random.choices(string.ascii_letters + string.digits, k=50))
+            
+            expiry_time = datetime.now() + timedelta(hours=1)
+            
+            mongo.db.email_verification.insert_one({'email': email, 'token': verification_token, 'expiry_time': expiry_time})
+            
+            verification_link = url_for('verify_email', token=verification_token, _external=True)
+            
+            # msg = Message('Verify Your Email', sender='20je0337@cse.iitism.ac.in', recipients=[email])
+            
+            # msg.body = f'Click the following link to verify your email address: {verification_link}'
+            
+            # mail.send(msg)
+            
+            user_data = {
+                'username': username,
+                'email': email,
+                'password': hashed_password,
+                'verified': False  # Set user as unverified initially
+            }
+            mongo.db.users.insert_one(user_data)
+            return 'Signup successful! Please check your email to verify your account.', 200 #RESPONSE
+    except: 
+        print("error occured")
     # return render_template('signup.html') FRONTEND WORK
 
-def send_verification_email(email, verification_link):
-    msg = Message('Verify Your Email', sender='noreply@example.com', recipients=[email])
-    msg.body = f'Click the following link to verify your email address: {verification_link}'
-    mail.send(msg)
+# def send_verification_email(email, verification_link):
+    
+#     return 'ok'
 
 @app.route('/verify_email/<token>')
 def verify_email(token):
@@ -78,25 +89,26 @@ def verify_email(token):
     if token_data and datetime.now() < token_data['expiry_time']:
         mongo.db.users.update_one({'email': token_data['email']}, {'$set': {'verified': True}}) #USER VERIFIED
         mongo.db.email_verification.delete_one({'token': token})
-        return  200 #'Email verification successful! You can now login.',
+        return 'verification complete', 200 #'Email verification successful! You can now login.',
     else:
-        return  400 #'Email verification link has expired or is invalid.',
+        return 'error in verification', 400 #'Email verification link has expired or is invalid.',
 
 @app.route('/', methods=['POST'])
 def login():
-    if request.method == 'POST':
+    try:
         username = request.form['username']
         password = request.form['password']
-        
         user = mongo.db.users.find_one({'username': username})
         
         if user and check_password_hash(user['password'], password):
             # session['username'] = username
-            # return redirect(url_for('profile'))
-            return 200
-        else:
-            return 'hii',400 #INVALID
 
+            # return redirect(url_for('profile'))
+            return 'login successfull', 200
+        else:
+            return 'login unsuccessfull',400 #INVALID
+    except:
+        print("error occured")
     # return render_template('login.html')
         
 ## HOME PAGE
@@ -119,161 +131,209 @@ def login():
 
 @app.route('/forgot_password', methods=['POST'])
 def forgot_password():
-    if request.method == 'POST':
+    try:
         email = request.form.get('email')
         user = mongo.db.users.find_one({'email': email})
+        
         if user:
             token = ''.join(random.choices(string.ascii_letters + string.digits, k=50))
             expiry_time = datetime.now() + timedelta(hours=1)
             mongo.db.password_reset_tokens.insert_one({'email': email, 'token': token, 'expiry_time': expiry_time})
             
             reset_link = url_for('reset_password', token=token, _external=True)
-            send_reset_email(email, reset_link)
+            msg = Message('Reset Your Password', sender='noreply@example.com', recipients=[email])
+            msg.body = f'Click the following link to reset your password: {reset_link}'
+            # mail.send(msg)
+            
             # return render_template('password_reset_link_sent.html')
             return jsonify(reset_link),205 # FOR FRONTEND **
         else:
             # return render_template('invalid_email.html')
-            return 401 # WRONG EMAIL ID
+            return 'error in mongo', 401 # WRONG EMAIL ID
+    except:
+        print('error occured')    
     # return render_template('forgot_password.html')
     # return 200
-
-def send_reset_email(email, reset_link):
-    msg = Message('Reset Your Password', sender='noreply@example.com', recipients=[email])
-    msg.body = f'Click the following link to reset your password: {reset_link}'
-    mail.send(msg)
+    
 
 @app.route('/reset_password/<token>', methods=[ 'POST'])
 def reset_password(token):
-    token_data = mongo.db.password_reset_tokens.find_one({'token': token})
-    if token_data and datetime.now() < token_data['expiry_time']:
-        if request.method == 'POST':
-            new_password = request.form.get('new_password')
-            hashed_password = generate_password_hash(new_password)
-            mongo.db.users.update_one({'email': token_data['email']}, {'$set': {'password': hashed_password}})
-            mongo.db.password_reset_tokens.delete_one({'token': token})
-            # return render_template('password_reset_successful.html')
-            return 200
-        # return render_template('reset_password.html')
-    else:
-        # return render_template('password_reset_expired.html')
-        return 401 #TOKEN EXPIRED
+    try:
+        token_data = mongo.db.password_reset_tokens.find_one({'token': token})
+        
+        if token_data and datetime.now() < token_data['expiry_time']:
+                new_password = request.form['new_password']
+                print(new_password)
+                hashed_password = generate_password_hash(new_password)
+                mongo.db.users.update_one({'email': token_data['email']}, {'$set': {'password': hashed_password}})
+                mongo.db.password_reset_tokens.delete_one({'token': token})
+                
+                # return render_template('password_reset_successful.html')
+                return 'password reset complete', 200
+            # return render_template('reset_password.html')
+        else:
+            # return render_template('password_reset_expired.html')
+            return 'error in mongo', 401 #TOKEN EXPIRED
+    except:
+        print('error occured')    
 
         
         
-@app.rout('/form',methods=['POST'])
+@app.route('/form',methods=['POST'])
 def form():
-    json_data = request.get_json()    
-    email = json_data.get('email')
-    if email:
-        for key, value in json_data:
-            if key != 'email':  # Skip the 'email' key
-                mongo.db.users.update_one({'email': email}, {'$set': {key: value}})
+    try:
+        json_data = request.get_json()    
+        email = json_data.get('email')
+        print(json_data.get('dob'))
+        if email:
+            for key in json_data:
+                if key != 'email':  # Skip the 'email' key
+                    mongo.db.users.update_one({'email': email}, {'$set': {key: json_data.get(key)}})
 
-        return 'Data Inserted Successfully',200
-    # Insert JSON data into MongoDB if email ID does not exist
-    # mongo.db.users.insert_one(json_data)
-    
-    return 'User Not Found', 404
+            return 'Data Inserted Successfully',200
+        # Insert JSON data into MongoDB if email ID does not exist
+        # mongo.db.users.insert_one(json_data)
+        
+        return 'User Not Found', 404
+    except:
+        print('error occurred')
 
 
 
-@app.rout('/edit',methods=['POST'])
+@app.route('/edit',methods=['POST'])
 def edit():
-    json_data = request.get_json()    
-    email = json_data.get('email')
-    if email:
-        for key, value in json_data:
-            if key != 'email':  # Skip the 'email' key
-                mongo.db.users.update_one({'email': email}, {'$set': {key: value}})
+    try: 
+        json_data = request.get_json()    
+        email = json_data.get('email')
+        if email:
+            for key in json_data:
+                if key != 'email':  # Skip the 'email' key
+                    mongo.db.users.update_one({'email': email}, {'$set': {key: json_data.get(key)}})
 
-        return 'Data Updated Successfully',200
-    # Insert JSON data into MongoDB if email ID does not exist
-    # mongo.db.users.insert_one(json_data)
-    
-    return 'User Not Found', 404
+            return 'Data Updated Successfully',200
+        # Insert JSON data into MongoDB if email ID does not exist
+        # mongo.db.users.insert_one(json_data)
+        
+        return 'User Not Found', 404
+    except:
+        print('error occurred')
 
-@app.rout('/details',methods=['GET'])
+@app.route('/details',methods=['POST'])
 def details():
-    json_data = request.get_json()    
-    email = json_data.get('email')
-    if email:
-        data = mongo.db.users.find_one({'email': email})
-        return data,200
-    # Insert JSON data into MongoDB if email ID does not exist
-    # mongo.db.users.insert_one(json_data)
-    
-    return 'User Not Found', 404
+    try:
+        json_data = request.get_json()    
+        email = json_data.get('email')
+        
+        if email:
+            data = mongo.db.users.find_one({'email': email},{'_id':0})
+            return jsonify(data),200
+        # Insert JSON data into MongoDB if email ID does not exist
+        # mongo.db.users.insert_one(json_data)
+        
+        return 'User Not Found', 404
+    except:
+        print('error occurred')
 
-@app.rout('/apply',methods=['POST'])
+@app.route('/apply',methods=['POST'])
 def apply():
-    json_data= request.get_json()
-    # mongo1.db.users.insert_one(json_data)
-    email = json_data.get('email')
-    department = json_data.get('department')
-    data=mongo1.db.users.find_one({'email': email},{'department':department})
+    try:
+        json_data= request.get_json()
+        # mongo1.db.users.insert_one(json_data)
+        email = json_data.get('email')
+        department = json_data.get('department')
+        data=mongo1.db.users.find_one({'email': email},{'department':department})
 
-    if data:
-        return "Cannot Apply for this Department",400
-    mongo1.db.users.insert_one(json_data)
-    return "Application Submitted Successfully",200
+        if data:
+            return "Cannot Apply for this Department",400
+        mongo1.db.users.insert_one(json_data)
+        return "Application Submitted Successfully",200
+    except:
+        print('error occurred')
 
-@app.rout('/viewStatus',methods=['GET'])
+@app.route('/viewStatus',methods=['POST'])
 def view():
-    json_data= request.get_json()
-    # mongo1.db.users.insert_one(json_data)
-    email = json_data.get('email')
-    data=mongo1.db.users.find_one({'email':email})
-    if data:
-        return data,200
-    else:
-        return 400,"BAD REQUEST"
+    try:
+
+        json_data= request.get_json()
+        # mongo1.db.users.insert_one(json_data)
+        email = json_data.get('email')
+        data=mongo1.db.users.find_one({'email':email},{"_id":0})
+        if data:
+            return data,200
+        else:
+            return "BAD REQUEST",400
+    except: 
+        print("error occurred")
     
 
 ##ADMIN API
 @app.route('/adminlogin',methods=['POST'])
-def login():
-    username = request.form['username']
-    password = request.form['password']
+def adminLogin():
+    try:
 
-    user = mongo2.db.user.find_one({'username':username})
-    if user and check_password_hash(user['password'],password):
-        return 200,"Admin Logged in"
-    else:
-        return 400,"Don't Try to hack"
+        username = request.form['username']
+        password = request.form['password']
+        print("haha")
+        user = mongo2.db.user.find_one({'username':username})
+        if user and check_password_hash(user['password'],password):
+            return "Admin Logged in",200
+        else:
+            return "Don't Try to hack",400
+    except:
+        print("error occurred")
 
 @app.route('/updatestatus',methods=['POST'])
-def edit():
-    json_data = request.get_json()    
-    email = json_data.get('email')
-    if email:
-        for key, value in json_data:
-            if key != 'email':  # Skip the 'email' key
-                mongo1.db.users.update_one({'email': email}, {'$set': {key: value}})
+def adminEdit():
+    try:
 
-        return 'statues Updated Successfully',200
-    # Insert JSON data into MongoDB if email ID does not exist
-    # mongo.db.users.insert_one(json_data)
-    
-    return 'BAD REQUEST', 404
+        json_data = request.get_json()    
+        email = json_data.get('email')
+        if email:
+            for key in json_data:
+                if key != 'email':  # Skip the 'email' key
+                    mongo1.db.users.update_one({'email': email}, {'$set': {key: json_data.get(key)}})
+
+            return 'statues Updated Successfully',200
+        # Insert JSON data into MongoDB if email ID does not exist
+        # mongo.db.users.insert_one(json_data)
+        
+        return 'BAD REQUEST', 404
+    except:
+        print('error occurred')
 
 ## JOB OPENING
-@app.rout('/jobopening',methods=['POST','GET'])
-def job():
-    if request.method=='POST':
-        json_data=request.get_json()
-        mongo3.db.users.insert_one(json_data)
-        return 200
-    else:
-        data=mongo3.db.users.find()
-        return data,200
+@app.route('/jobopeningpost',methods=['POST'])
+def jobOpeningPost():
+    try:
+
+        if request.method=='POST':
+            json_data=request.get_json()
+            mongo3.db.users.insert_one(json_data)
+            return "job opening posted successfully", 200
+    except:
+        print("error occurred")    
+
+@app.route('/jobopeningget',methods=['GET'])
+def jobOpeningGet():
+    try:
+
+            data=mongo3.db.users.find()
+            serialized_results = dumps(data)
+            return serialized_results,200
+    except:
+        print("error occurred")   
 
 ## JOB CLOSING
-@app.rout('/jobclosing',methods=['POST'])
-def job():
-    json_data=request.get_json()
-    job_id=json_data.get('id')
-    mongo3.db.users.delete_one({'id':job_id})
-    return 200,"JOB OPENING CLOSED"
+@app.route('/jobclosing',methods=['POST'])
+def jobClosing():
+    try:
+
+        json_data=request.get_json()
+        job_id=json_data.get('id')
+        mongo3.db.users.delete_one({'id':job_id})
+        return "JOB OPENING CLOSED",200
+    except:
+        print('error occurred')
 
 if __name__ == '__main__':
     app.run(debug=True)
