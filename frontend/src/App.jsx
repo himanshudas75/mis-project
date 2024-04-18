@@ -12,6 +12,7 @@ import RegisterComplaint from "./components/RegisterComplaint";
 import TrackComplaint from "./components/TrackComplaint";
 import Apply from "./components/ApplicationForm";
 import MultiStepForm from "./components/MultiStepForm";
+import PersonalDetails from "./components/PersonalDetails";
 function App() {
   return (
     <BrowserRouter>

@@ -2,7 +2,6 @@ import React from "react";
 // import TextArea from "./components/TextArea";
 // import Select from "./components/Select";
 // import Radio from "./components/Radio";
-// import CheckBox from "./components/CheckBox";
 // import DateSelector from "./components/DateSelector";
 import InputField from "./InputField";
 import RadioButton from "./RadioButton";
@@ -10,19 +9,26 @@ import RadioButton from "./RadioButton";
 //are to be rendered based on the one particular prop
 import DropDown from "./DropDown";
 import TextArea from "./TextArea";
+import CheckBoxField from "./CheckBoxField";
+import NestedInputField from "./NestedInputField";
+import NestedDropDown from "./NestedDropDown";
 const FormikControl = (props) => {
   const { control, ...rest } = props;
   switch (control) {
     case "input":
       return <InputField {...rest} />;
+    case "nestedinput":
+      return <NestedInputField {...rest} />;
     case "textarea":
       return <TextArea {...rest} />;
     case "select":
       return <DropDown {...rest} />;
+    case "nestedselect":
+      return <NestedDropDown {...rest} />;
     case "radio":
       return <RadioButton {...rest} />;
-    // case "checkbox":
-    //   return <CheckBox {...rest} />;
+    case "checkbox":
+      return <CheckBoxField {...rest} />;
     // case "date":
     //   return <DateSelector {...rest} />;
     default:
