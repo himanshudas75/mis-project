@@ -22,10 +22,17 @@ passport.use(
     'access',
     new JwtStrategy(accessOptions, async (jwt_payload, done) => {
         try {
-            const user = await User.findOne({ _id: jwt_payload.user_id });
+            const user = await User.findOne({
+                registration_number: jwt_payload.identity,
+            });
+
+            const payload = {
+                identity: jwt_payload.identity,
+                roles: jwt_payload.roles,
+            };
 
             if (user) {
-                return done(null, user);
+                return done(null, payload);
             } else {
                 return done(null, false);
             }

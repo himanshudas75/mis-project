@@ -41,8 +41,10 @@ const userRoutes = require('./routes/users');
 const complaintRoutes = require('./routes/complaints');
 const adminRoutes = require('./routes/admin');
 const actionRoutes = require('./routes/actions');
+const applicationRoutes = require('./routes/application');
 
 // Routes
+app.use('/api/application', applicationRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/actions', actionRoutes);
 app.use('/api/complaint/', complaintRoutes);

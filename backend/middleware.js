@@ -7,8 +7,8 @@ const ExpressError = require('./utils/ExpressError');
 const passport = require('passport');
 
 module.exports.isAuthenticated = (req, res, next) => {
-    passport.authenticate('access', { session: false }, (err, user) => {
-        if (err || !user) {
+    passport.authenticate('access', { session: false }, (err, payload) => {
+        if (err || !payload) {
             const error = {
                 statusCode: 401,
                 message: 'Unauthorized',
@@ -16,13 +16,13 @@ module.exports.isAuthenticated = (req, res, next) => {
             return next(error);
         }
 
-        req.user = user;
+        req.user = payload;
         next();
     })(req, res, next);
 };
 
 module.exports.isAdmin = (req, res, next) => {
-    if (req.user.admin) {
+    if (req.user.roles.includes('admin')) {
         next();
     } else {
         return next({
