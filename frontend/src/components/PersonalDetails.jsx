@@ -12,7 +12,6 @@ import {
   AlertDialogOverlay,
   AlertDialogCloseButton,
 } from "@chakra-ui/react";
-import { Field } from "formik";
 const PersonalDetails = ({ moveToNext }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef();

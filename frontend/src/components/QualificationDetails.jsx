@@ -1,7 +1,7 @@
 import { Formik } from "formik";
 import React from "react";
 import FormikControl from "./FormikControl";
-import { Button, HStack, Text, VStack, Box } from "@chakra-ui/react";
+import { Button, HStack, Text, VStack, Box, Divider } from "@chakra-ui/react";
 import * as Yup from "yup";
 import { Form } from "formik";
 const QualificationDetails = () => {
@@ -22,6 +22,10 @@ const QualificationDetails = () => {
     { key: "Percentage", value: "percentage" },
     { key: "CGPA (out of 10)", value: "cgpa" },
   ];
+  const resultStatusOptions = [
+    { key: "Passed", value: "passed" },
+    { key: "Appearing", value: "appearing" },
+  ];
   const initialValues = {
     cat_registration_number: "",
     cat_percentile: "",
@@ -41,23 +45,23 @@ const QualificationDetails = () => {
       result_status: "passed",
       grade_type: "percentage", //percentage or cgpa
       year_of_passing: "",
+      score: 0, //percentage or cgpa
+    },
+    twelfth_class: {
+      college_name: "",
+      result_status: "passed",
+      grade_type: "percentage", //percentage or cgpa
+      year_of_passing: "",
       score: "", //percentage or cgpa
     },
-    // twelfth_class: {
-    //   college_name: "",
-    //   result_status: "passed",
-    //   grade_type: "percentage", //percentage or cgpa
-    //   year_of_passing: "",
-    //   score: "", //percentage or cgpa
-    // },
-    // ug: {
-    //   name_of_the_exam: "",
-    //   college_name: "",
-    //   result_status: "",
-    //   grade_type: "percentage",
-    //   year_of_passing: "",
-    //   score: "",
-    // },
+    ug: {
+      name_of_the_exam: "",
+      college_name: "",
+      result_status: "passed",
+      grade_type: "percentage",
+      year_of_passing: "",
+      score: "",
+    },
   };
   const validationSchema = Yup.object({
     cat_registration_number: Yup.string().required("Required"),
@@ -78,21 +82,37 @@ const QualificationDetails = () => {
       result_status: Yup.string().required("Required"),
       grade_type: Yup.string().required("Required"),
       year_of_passing: Yup.string().required("Required"),
-      score: Yup.number().when(
-        "grade_type",
-        {
-          is: "percentage",
-          then: () => {
-            Yup.number().min(1).max(100).required("Required");
-          },
-        },
-        {
-          is: "cgpa",
-          then: () => {
-            Yup.number().min(1).max(10).required("Required");
-          },
-        }
-      ),
+      // score: Yup.number().when(
+      //   "grade_type",
+      //   {
+      //     is: "percentage",
+      //     then: () => {
+      //       Yup.number().min(1).max(100).required("Required");
+      //     },
+      //   },
+      //   {
+      //     is: "cgpa",
+      //     then: () => {
+      //       Yup.number().min(1).max(10).required("Required");
+      //     },
+      //   }
+      // ),
+      score: Yup.string().required("Required"),
+    }),
+    twelfth_class: Yup.object({
+      college_name: Yup.string().required("Required"),
+      result_status: Yup.string().required("Required"),
+      grade_type: Yup.string().required("Required"),
+      year_of_passing: Yup.string().required("Required"),
+      score: Yup.string().required("Required"),
+    }),
+    ug: Yup.object({
+      name_of_the_exam: Yup.string().required("Required"),
+      college_name: Yup.string().required("Required"),
+      result_status: Yup.string().required("Required"),
+      grade_type: Yup.string().required("Required"),
+      year_of_passing: Yup.string().required("Required"),
+      score: Yup.string().required("Required"),
     }),
     //write correct validations for score field - it is still being accepted as  a string
     //need to see dyanmic inputs - add pg education fields etc
@@ -227,6 +247,8 @@ const QualificationDetails = () => {
               including space."
             </Text>
 
+            {/* class 10 details */}
+
             <Box>
               <Text>Details of Class 10th</Text>
               <FormikControl
@@ -265,6 +287,103 @@ const QualificationDetails = () => {
                 name="tenth_class.score"
               />
             </Box>
+            <Divider orientation="horizontal" />
+
+            {/* class 12th details */}
+
+            <Box>
+              <Text>Details of Class 12th</Text>
+              <FormikControl
+                control="nestedinput"
+                label="Name of the college"
+                name="twelfth_class.college_name"
+              />
+
+              <FormikControl
+                control="input"
+                label="Result"
+                name="twelfth_class.result_status"
+                isDisabled={true}
+              />
+
+              <FormikControl
+                control="nestedselect"
+                label="Type of Grade"
+                name="twelfth_class.grade_type"
+                options={gradeTypeOptions}
+              />
+
+              <FormikControl
+                control="nestedinput"
+                label="Year of Passing"
+                name="twelfth_class.year_of_passing"
+              />
+
+              <FormikControl
+                control="nestedinput"
+                label={
+                  formik.values.twelfth_class.grade_type === "percentage"
+                    ? "Enter Percentage"
+                    : "Enter CGPA(out of 10)"
+                }
+                name="twelfth_class.score"
+              />
+            </Box>
+
+            {/* ug details */}
+
+            <Box>
+              <Text>Details of Under Graduate education</Text>
+
+              <FormikControl
+                control="nestedinput"
+                label="Name of the Exam"
+                name="ug.name_of_the_exam"
+              />
+              <FormikControl
+                control="nestedinput"
+                label="Name of the College"
+                name="ug.college_name"
+              />
+
+              <FormikControl
+                control="nestedselect"
+                label="Result"
+                name="ug.result_status"
+                options={resultStatusOptions}
+              />
+
+              <FormikControl
+                control="nestedselect"
+                label="Type of Grade"
+                name="ug.grade_type"
+                options={gradeTypeOptions}
+              />
+
+              <FormikControl
+                control="nestedinput"
+                label="Year of Passing"
+                name="ug.year_of_passing"
+              />
+
+              <FormikControl
+                control="nestedinput"
+                label={
+                  formik.values.ug.grade_type === "percentage"
+                    ? "Enter Percentage"
+                    : "Enter CGPA(out of 10)"
+                }
+                name="ug.score"
+              />
+            </Box>
+
+            {/* need to add dyanmic fields for pg education details */}
+            {/* need to resolve the errors in here */}
+            {/* <FormikControl
+              control="arrayfield"
+              label="PG Education Details"
+              name="pg"
+            /> */}
 
             <Button
               type="submit"
