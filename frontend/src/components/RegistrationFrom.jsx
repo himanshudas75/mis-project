@@ -2,7 +2,7 @@ import React from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import FormikControl from "./FormikControl";
-import { HStack, VStack } from "@chakra-ui/react";
+import { Button, HStack, VStack } from "@chakra-ui/react";
 const RegistrationFrom = () => {
   const categoryOptions = [
     { key: "Please Select Your Category", value: "" },
@@ -140,7 +140,12 @@ const RegistrationFrom = () => {
                 />
               </VStack>
             </HStack>
-            <button type="submit">Submit</button>
+            <Button
+              type="submit"
+              isDisabled={!(formik.isValid && formik.dirty)}
+            >
+              Submit
+            </Button>
           </Form>
         );
       }}

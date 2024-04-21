@@ -143,7 +143,12 @@ const RegisterComplaint = (props) => {
               />
 
               <HStack>
-                <Button type="submit">Submit</Button>
+                <Button
+                  type="submit"
+                  isDisabled={!(formik.isValid && formik.dirty)}
+                >
+                  Submit
+                </Button>
                 <Button type="reset">Reset</Button>
               </HStack>
             </Form>

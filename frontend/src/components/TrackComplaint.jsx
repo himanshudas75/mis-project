@@ -77,7 +77,12 @@ const TrackComplaint = () => {
                   />
                 )}
                 <HStack>
-                  <Button type="submit">Track Status</Button>
+                  <Button
+                    type="submit"
+                    isDisabled={!(formik.isValid && formik.dirty)}
+                  >
+                    Track Status
+                  </Button>
                   <Button type="reset">Reset</Button>
                 </HStack>
               </Form>

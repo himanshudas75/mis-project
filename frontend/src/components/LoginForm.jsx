@@ -2,7 +2,7 @@ import React from "react";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import FormikControl from "./FormikControl";
-import { VStack } from "@chakra-ui/react";
+import { Button, VStack } from "@chakra-ui/react";
 const LoginForm = () => {
   const initialValues = {
     registrationnumber: "",
@@ -49,8 +49,13 @@ const LoginForm = () => {
                 type="password"
               />
 
-              <button type="submit">Login</button>
-              <button type="button">Forgot Your Password?</button>
+              <Button
+                type="submit"
+                isDisabled={!(formik.isValid && formik.dirty)}
+              >
+                Login
+              </Button>
+              <Button type="button">Forgot Your Password?</Button>
             </VStack>
           </Form>
         );

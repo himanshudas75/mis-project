@@ -1,8 +1,4 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
-import { ChakraProvider } from "@chakra-ui/react";
 import RegistrationFrom from "./components/RegistrationFrom";
 import Home from "./components/Home";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
@@ -12,7 +8,7 @@ import RegisterComplaint from "./components/RegisterComplaint";
 import TrackComplaint from "./components/TrackComplaint";
 import Apply from "./components/ApplicationForm";
 import MultiStepForm from "./components/MultiStepForm";
-import PersonalDetails from "./components/PersonalDetails";
+import QualificationDetails from "./components/QualificationDetails";
 function App() {
   return (
     <BrowserRouter>
@@ -31,6 +27,7 @@ function App() {
         <Route path="/mba_admission/apply" element={<Apply />} />
 
         <Route path="/mba_admission/details" element={<MultiStepForm />} />
+        <Route path="/mba_admission/qn" element={<QualificationDetails />} />
         <Route path="*" element={<NotFound />}></Route>
       </Routes>
     </BrowserRouter>
