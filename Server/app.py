@@ -11,7 +11,7 @@ import json
 from bson.json_util import dumps
 
 app = Flask(__name__)
-app.config['MONGO_URI'] = "mongodb://localhost:27017/mydatabase"  # MongoDB URI
+app.config['MONGO_URI'] = "mongodb://localhost:27017/userDB"  # MongoDB URI
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'  # SMTP server address   ye verify karna hai sir se ki domain kya use karein
 app.config['MAIL_PORT'] = 465
 app.config['MAIL_USE_TLS'] = False
@@ -22,16 +22,19 @@ app.config['MAIL_PASSWORD'] = 'Divij@2002'  # SMTP server password
 mongo = PyMongo(app)
 mail = Mail(app)
 
-app.config['MONGO_URI'] = 'mongodb://localhost:27017/database2'
+app.config['MONGO_URI'] = 'mongodb://localhost:27017/applicationDB'
 mongo1 = PyMongo(app)
 
 ##Admin Database
-app.config['MONGO_URI']='mongodb://localhost:27017/database3'
+app.config['MONGO_URI']='mongodb://localhost:27017/adminDB'
 mongo2= PyMongo(app)
 
 ##JOB's DB
-app.config['MONGO_URI']='mongodb://localhost:27017/database4'
+app.config['MONGO_URI']='mongodb://localhost:27017/jobDB'
 mongo3= PyMongo(app)
+
+app.config['MONGO_URI']='mongodb://localhost:27017/tempDB'
+mongo4= PyMongo(app)
 
 # Routes
 @app.route('/home')
@@ -241,11 +244,21 @@ def apply():
         # mongo1.db.users.insert_one(json_data)
         email = json_data.get('email')
         department = json_data.get('department')
+        jobId = json_data.get('jobId')
+        status = json_data.get('status')
+        applicationId = json_data.get('applicationId')
         data=mongo1.db.users.find_one({'email': email},{'department':department})
 
         if data:
             return "Cannot Apply for this Department",400
-        mongo1.db.users.insert_one(json_data)
+        data = {
+            'email': email,
+            'jobId': jobId,
+            'status': status,
+            'applicationId': applicationId,
+            'data': json_data
+        }
+        mongo1.db.users.insert_one(data)
         return "Application Submitted Successfully",200
     except:
         print('error occurred')
@@ -307,8 +320,15 @@ def jobOpeningPost():
     try:
 
         if request.method=='POST':
-            json_data=request.get_json()
-            mongo3.db.users.insert_one(json_data)
+            json_data = request.get_json()
+            jobId = json_data.get('jobId')
+            jobStatus = json_data.get('jobStatus')
+            data = {
+                'jobId': jobId,
+                'jobStatus': jobStatus,
+                'data': json_data
+            }
+            mongo3.db.jobs.insert_one(data)
             return "job opening posted successfully", 200
     except:
         print("error occurred")    
@@ -317,7 +337,7 @@ def jobOpeningPost():
 def jobOpeningGet():
     try:
 
-            data=mongo3.db.users.find()
+            data=mongo3.db.jobs.find()
             serialized_results = dumps(data)
             return serialized_results,200
     except:
@@ -329,11 +349,41 @@ def jobClosing():
     try:
 
         json_data=request.get_json()
-        job_id=json_data.get('id')
-        mongo3.db.users.delete_one({'id':job_id})
+        job_id=json_data.get('jobId')
+        mongo3.db.jobs.delete_one({'jobId':job_id})
         return "JOB OPENING CLOSED",200
     except:
         print('error occurred')
+
+##  TEMP DB
+@app.route('/tempstore',methods=['POST'])
+def tempStore():
+    try:
+
+            json_data = request.get_json()
+            email = json_data.get('email')
+            data = mongo4.db.tempdata.find_one({'email':email},{"id":0})
+            if data:
+               mongo4.db.tempdata.update_one({'email': email}, {'$set': {'data':json_data.get('data')}})
+            else:
+               mongo4.db.tempdata.insert_one({'email':email,"data":json_data})
+            return "temporary data updated succesfully", 200
+    except:
+        print("error occurred")    
+
+@app.route('/tempget',methods=['POST'])
+def tempGet():
+    try:
+
+        json_data= request.get_json()
+        email = json_data.get('email')
+        data=mongo4.db.tempdata.find_one({'email':email},{"_id":0})
+        if data:
+            return data,200
+        else:
+            return "data not found",404
+    except:
+        print("error occurred")   
 
 if __name__ == '__main__':
     app.run(debug=True)
