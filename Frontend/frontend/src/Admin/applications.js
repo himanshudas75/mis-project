@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 // import axios from 'axios';
 import AdminNavbar from '../Components/AdminNavbar';
-
+// Fetch
 const AdminDashboard = () => {
     const [applications, setApplications] = useState([
         { id: 1, name: 'Abcd', application: 'view', status: 'submitted' },

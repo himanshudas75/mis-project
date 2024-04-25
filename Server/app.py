@@ -10,12 +10,12 @@ from flask_mail import Mail, Message
 import json
 from bson.json_util import dumps
 from flask_cors import CORS
-from flask_cors import cross_origin
+# from flask_cors import cross_origin
 
 app = Flask(__name__)
 CORS(app)
 # app.config['CORS_HEADERS']= 'Content-Type'
-app.config['MONGO_URI'] = "mongodb://localhost:27017/userDB"  # MongoDB URI
+app.config['MONGO_URI'] = "mongodb+srv://Divij:Divij2002@cluster0.aj0dc.mongodb.net/userDB"  # MongoDB URI
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'  # SMTP server address   ye verify karna hai sir se ki domain kya use karein
 app.config['MAIL_PORT'] = 465
 app.config['MAIL_USE_TLS'] = False
@@ -26,18 +26,18 @@ app.config['MAIL_PASSWORD'] = 'Divij@2002'  # SMTP server password
 mongo = PyMongo(app)
 mail = Mail(app)
 
-app.config['MONGO_URI'] = 'mongodb://localhost:27017/applicationDB'
+app.config['MONGO_URI'] = 'mongodb+srv://Divij:Divij2002@cluster0.aj0dc.mongodb.net/applicationDB'
 mongo1 = PyMongo(app)
 
 ##Admin Database
-app.config['MONGO_URI']='mongodb://localhost:27017/adminDB'
+app.config['MONGO_URI']='mongodb+srv://Divij:Divij2002@cluster0.aj0dc.mongodb.net/adminDB'
 mongo2= PyMongo(app)
 
 ##JOB's DB
-app.config['MONGO_URI']='mongodb://localhost:27017/jobDB'
+app.config['MONGO_URI']='mongodb+srv://Divij:Divij2002@cluster0.aj0dc.mongodb.net/jobDB'
 mongo3= PyMongo(app)
 
-app.config['MONGO_URI']='mongodb://localhost:27017/tempDB'
+app.config['MONGO_URI']='mongodb+srv://Divij:Divij2002@cluster0.aj0dc.mongodb.net/tempDB'
 mongo4= PyMongo(app)
 
 # Routes
@@ -59,7 +59,7 @@ def signup():
             #     return 'Username already exists! Please choose another username.', 200
 
             if mongo.db.users.find_one({'email': email}):
-                return 'Email already exists! Please use another email address.', 200
+                return 'Email already exists! Please use another email address.', 400
             # print("mongo")
             verification_token = ''.join(random.choices(string.ascii_letters + string.digits, k=50))
             

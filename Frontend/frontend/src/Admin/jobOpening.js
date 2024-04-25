@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 // import axios from 'axios';
 import AdminNavbar from '../Components/AdminNavbar';
-
+//FETCH
 const AdminJobOpenings = () => {
     const [jobOpenings, setJobOpenings] = useState([
         {id: 1, title: 'abcd', status: 'Open'}
