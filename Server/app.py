@@ -60,7 +60,7 @@ def signup():
 
             if mongo.db.users.find_one({'email': email}):
                 return 'Email already exists! Please use another email address.', 400
-            # print("mongo")
+            print("mongo")
             verification_token = ''.join(random.choices(string.ascii_letters + string.digits, k=50))
             
             expiry_time = datetime.now() + timedelta(hours=1)
@@ -117,6 +117,7 @@ def login():
         user = mongo.db.users.find_one({'username': username})
         
         if user and check_password_hash(user['password'], password):
+        # if user:
             # session['username'] = username
 
             # return redirect(url_for('profile'))
@@ -166,7 +167,8 @@ def forgot_password():
             # return render_template('invalid_email.html')
             return 'error in mongo', 401 # WRONG EMAIL ID
     except:
-        print('error occured')    
+        print('error occured') 
+        return "Something Happen",500   
     # return render_template('forgot_password.html')
     # return 200
     
@@ -191,6 +193,7 @@ def reset_password(token):
             return 'error in mongo', 401 #TOKEN EXPIRED
     except:
         print('error occured')    
+        return "Something Happen",500
 
         
         
@@ -212,6 +215,7 @@ def form():
         return 'User Not Found', 404
     except:
         print('error occurred')
+        return "Something Happen",500
 
 
 
@@ -232,6 +236,7 @@ def edit():
         return 'User Not Found', 404
     except:
         print('error occurred')
+        return "Something Happen",500
 
 @app.route('/details',methods=['POST'])
 def details():
@@ -248,6 +253,7 @@ def details():
         return 'User Not Found', 404
     except:
         print('error occurred')
+        return "Something Happen",500
 
 @app.route('/apply',methods=['POST'])
 def apply():
@@ -274,6 +280,7 @@ def apply():
         return "Application Submitted Successfully",200
     except:
         print('error occurred')
+        return "Something Happen",500
 
 @app.route('/viewStatus',methods=['POST'])
 def view():
@@ -289,6 +296,7 @@ def view():
             return "BAD REQUEST",400
     except: 
         print("error occurred")
+        return "Something Happen",500
     
 
 ##ADMIN API
@@ -306,6 +314,7 @@ def adminLogin():
             return "Don't Try to hack",400
     except:
         print("error occurred")
+        return "Something Happen",500
 
 @app.route('/updatestatus',methods=['POST'])
 def adminEdit():
@@ -325,6 +334,7 @@ def adminEdit():
         return 'BAD REQUEST', 404
     except:
         print('error occurred')
+        return "Something Happen",500
 
 ## JOB OPENING
 @app.route('/jobopeningpost',methods=['POST'])
@@ -343,7 +353,8 @@ def jobOpeningPost():
             mongo3.db.jobs.insert_one(data)
             return "job opening posted successfully", 200
     except:
-        print("error occurred")    
+        print("error occurred") 
+        return "Something Happen",500   
 
 @app.route('/jobopeningget',methods=['GET'])
 def jobOpeningGet():
@@ -354,6 +365,7 @@ def jobOpeningGet():
             return serialized_results,200
     except:
         print("error occurred")   
+        return "Something Happen",500
 
 ## JOB CLOSING
 @app.route('/jobclosing',methods=['POST'])
@@ -366,6 +378,7 @@ def jobClosing():
         return "JOB OPENING CLOSED",200
     except:
         print('error occurred')
+        return "Something Happen",500
 
 ##  TEMP DB
 @app.route('/tempstore',methods=['POST'])
@@ -381,7 +394,8 @@ def tempStore():
                mongo4.db.tempdata.insert_one({'email':email,"data":json_data})
             return "temporary data updated succesfully", 200
     except:
-        print("error occurred")    
+        print("error occurred")  
+        return "Something Happen",500  
 
 @app.route('/tempget',methods=['POST'])
 def tempGet():
@@ -395,7 +409,8 @@ def tempGet():
         else:
             return "data not found",404
     except:
-        print("error occurred")   
+        print("error occurred")  
+        return "Something Happen",500 
 
 if __name__ == '__main__':
     app.run(debug=True)
