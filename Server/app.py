@@ -9,8 +9,12 @@ from datetime import datetime, timedelta
 from flask_mail import Mail, Message
 import json
 from bson.json_util import dumps
+from flask_cors import CORS
+from flask_cors import cross_origin
 
 app = Flask(__name__)
+CORS(app)
+# app.config['CORS_HEADERS']= 'Content-Type'
 app.config['MONGO_URI'] = "mongodb://localhost:27017/userDB"  # MongoDB URI
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'  # SMTP server address   ye verify karna hai sir se ki domain kya use karein
 app.config['MAIL_PORT'] = 465
@@ -43,11 +47,12 @@ def index():
 
 @app.route('/register', methods=['POST'])
 def signup():
-
     try:
-            username = request.form['username'] #Fields to be added
-            email = request.form['email']
-            password = request.form['password']
+            print("hello")
+            username = request.json['username'] #Fields to be added
+            print(username)
+            email = request.json['email']
+            password = request.json['password']
             hashed_password = generate_password_hash(password)
             
             # if mongo.db.users.find_one({'username': username}):
@@ -55,7 +60,7 @@ def signup():
 
             if mongo.db.users.find_one({'email': email}):
                 return 'Email already exists! Please use another email address.', 200
-            
+            # print("mongo")
             verification_token = ''.join(random.choices(string.ascii_letters + string.digits, k=50))
             
             expiry_time = datetime.now() + timedelta(hours=1)
@@ -80,6 +85,7 @@ def signup():
             return 'Signup successful! Please check your email to verify your account.', 200 #RESPONSE
     except: 
         print("error occured")
+        return "Something Happen",500
     # return render_template('signup.html') FRONTEND WORK
 
 # def send_verification_email(email, verification_link):
@@ -98,9 +104,16 @@ def verify_email(token):
 
 @app.route('/', methods=['POST'])
 def login():
+    # response = jsonify({'message': 'POST request handled successfully'})
+    # response.headers.add('Access-Control-Allow-Origin', '*') 
+    # response = jsonify({'message': 'POST request handled successfully'})
+    # response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
     try:
-        username = request.form['username']
-        password = request.form['password']
+        # print("hello")
+        username = request.json['username']
+        print(username)
+        password = request.json['password']
+        print(password)
         user = mongo.db.users.find_one({'username': username})
         
         if user and check_password_hash(user['password'], password):
@@ -112,8 +125,7 @@ def login():
             return 'login unsuccessfull',400 #INVALID
     except:
         print("error occured")
-    # return render_template('login.html')
-        
+        return 'something went wrong', 500      
 ## HOME PAGE
         
 # @app.route('/profile')
