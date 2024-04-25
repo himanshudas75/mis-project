@@ -23,7 +23,26 @@ const Apply = () => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        // Handle form submission here (e.g., send data to server)
+        // Handle login form submission here (e.g., send data to server)
+        fetch('http://127.0.0.1:5000/apply', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json', // Ensure 'Content-Type' header is set
+                },
+                body: JSON.stringify({
+                    adv: formData.adv,
+                    post: formData.post,
+                    dept: formData.dept,
+                }),
+            })
+            .then(response => {
+                // Handle response
+                console.log(response);
+            })
+            .catch(error => {
+                // Handle error
+                console.log(error);
+            });
         console.log('Form Data:', formData);
     };
 

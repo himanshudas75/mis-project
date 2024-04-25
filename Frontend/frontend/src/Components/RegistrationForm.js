@@ -19,7 +19,26 @@ const RegistrationForm = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // Form submission logic here
+    // Handle login form submission here (e.g., send data to server)
+    fetch('http://127.0.0.1:5000/register', {
+method: 'POST',
+headers: {
+    'Content-Type': 'application/json', // Ensure 'Content-Type' header is set
+},
+body: JSON.stringify({
+    username: formData.name,
+    email: formData.email,
+    password: formData.password,
+}),
+})
+.then(response => {
+// Handle response
+console.log(response);
+})
+.catch(error => {
+// Handle error
+console.log(error);
+});
     console.log('Form Data:', formData);
   };
 
