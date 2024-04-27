@@ -1,9 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
-import { redirect } from "react-router-dom";
-const redirectToPage = (page) => {
-  window.location.href = page;
-};
+
 const LoginForm = () => {
   const [formData, setFormData] = useState({
     username: "",
@@ -30,7 +26,7 @@ const LoginForm = () => {
       .then((response) => {
         // Handle response
         if (response.status === 200) {
-          response.redirect("/register");
+          window.location.href = "/home";
           console.log(200);
         }
       })

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-// import axios from 'axios';
+import axios from 'axios';
 import AdminNavbar from '../Components/AdminNavbar';
 // Fetch
 const AdminDashboard = () => {
@@ -9,19 +9,22 @@ const AdminDashboard = () => {
         { id: 3, name: 'Ijkl', application: 'view', status: 'submitted' },
     ]);
 
-    // Fetch applications from API
-    //   useEffect(() => {
-    //     fetchApplications();
-    //   }, []);
+    useEffect(() => {
+        fetchApplications();
+    }, []);
 
-    //   const fetchApplications = async () => {
-    //     try {
-    //       const response = await axios.get('API_ENDPOINT'); // Replace 'API_ENDPOINT' with your actual API endpoint
-    //       setApplications(response.data.applications);
-    //     } catch (error) {
-    //       console.error('Error fetching applications:', error);
-    //     }
-    //   };
+    const fetchApplications = async () => {
+        try {
+            const response = await fetch('API_ENDPOINT'); // Replace 'API_ENDPOINT' with your actual API endpoint
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const data = await response.json();
+            setApplications(data.applications);
+        } catch (error) {
+            console.error('Error fetching applications:', error);
+        }
+    };
 
     const handleChangeStatus = async (id, newStatus) => {
         try {
@@ -46,9 +49,9 @@ const AdminDashboard = () => {
                     <thead>
                         <tr>
                             <th>Id</th>
-                            <th style={{width: '10rem'}}>Name</th>
+                            <th style={{ width: '10rem' }}>Name</th>
                             <th>Application</th>
-                            <th style={{width: '10rem'}}>Status</th>
+                            <th style={{ width: '10rem' }}>Status</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -56,9 +59,9 @@ const AdminDashboard = () => {
                         {applications.map((application) => (
                             <tr key={application.id}>
                                 <td>{application.id}</td>
-                                <td style={{width: '10rem'}}>{application.name}</td>
+                                <td style={{ width: '10rem' }}>{application.name}</td>
                                 <td><a href='#'>{application.application}</a></td>
-                                <td style={{width: '10rem'}}>{application.status}</td>
+                                <td style={{ width: '10rem' }}>{application.status}</td>
                                 <td>
                                     <select
                                         value={application.status}

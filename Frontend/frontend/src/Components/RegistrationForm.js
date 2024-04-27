@@ -21,24 +21,30 @@ const RegistrationForm = () => {
     event.preventDefault();
     // Handle login form submission here (e.g., send data to server)
     fetch('http://127.0.0.1:5000/register', {
-method: 'POST',
-headers: {
-    'Content-Type': 'application/json', // Ensure 'Content-Type' header is set
-},
-body: JSON.stringify({
-    username: formData.name,
-    email: formData.email,
-    password: formData.password,
-}),
-})
-.then(response => {
-// Handle response
-console.log(response);
-})
-.catch(error => {
-// Handle error
-console.log(error);
-});
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json', // Ensure 'Content-Type' header is set
+      },
+      body : JSON.stringify({
+        salutation: formData.salutation,
+        name: formData.name,
+        gender: formData.gender,
+        contactNo: formData.contactNo,
+        email: formData.email,
+        password: formData.password,
+        retypePassword: formData.retypePassword,
+        captcha: formData.captcha
+      }),
+    })
+      .then(response => {
+        // Handle response
+        window.location.href = "/";
+        console.log(response);
+      })
+      .catch(error => {
+        // Handle error
+        console.log(error);
+      });
     console.log('Form Data:', formData);
   };
 
@@ -123,7 +129,7 @@ console.log(error);
         />
       </div>
       <div className='values'>
-      <label htmlFor="captcha">Captcha *</label>
+        <label htmlFor="captcha">Captcha *</label>
         <input type="text" id="captcha" name="captcha" required />
       </div>
       <button type="submit" src='src/Login.js'>Register</button>

@@ -15,7 +15,29 @@ const AdminLogin = () => {
     const handleSubmit = (event) => {
         event.preventDefault();
         // Handle login form submission here (e.g., send data to server)
-        console.log('Login Form Data:', formData);
+        fetch("http://127.0.0.1:5000/adminlogin", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json", // Ensure 'Content-Type' header is set
+            },
+            body: JSON.stringify({
+                username: formData.username,
+                password: formData.password,
+            }),
+        })
+            .then((response) => {
+                // Handle response
+                if (response.status === 200) {
+                    window.location.href = "admin/applications";
+                    console.log(200);
+                }
+            })
+            .catch((error) => {
+                // Handle error
+                console.log(error);
+            });
+
+        console.log("Login Form Data:", formData);
     };
 
     return (
@@ -53,7 +75,7 @@ const AdminLogin = () => {
                         required
                     />
                 </div>
-                <button type="submit" style={{marginBottom: '2rem'}}>Sign in</button>
+                <button type="submit" style={{ marginBottom: '2rem' }}>Sign in</button>
             </form>
         </div>
     );

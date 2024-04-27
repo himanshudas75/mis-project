@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import NavbarSmall from './Components/Navbar-small'
 
-const Page2 = () => {
+const Page2 = ({form}) => {
     const [formData, setFormData] = useState({
         payScaleDate: '',
         Detained: '',
