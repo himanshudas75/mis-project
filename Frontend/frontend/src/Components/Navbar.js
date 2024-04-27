@@ -11,8 +11,8 @@ const Navbar = () => {
         "Content-Type": "application/json", // Ensure 'Content-Type' header is set
       },
       body: JSON.stringify({
-        username: formData.username,
-        password: formData.password,
+        // username: formData.username,
+        // password: formData.password,
       }),
     })
       .then((response) => {
