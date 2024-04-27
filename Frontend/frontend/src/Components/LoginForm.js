@@ -26,6 +26,7 @@ const LoginForm = () => {
       .then((response) => {
         // Handle response
         if (response.status === 200) {
+          localStorage.setItem('user', response.data)
           window.location.href = "/home";
           console.log(200);
         }

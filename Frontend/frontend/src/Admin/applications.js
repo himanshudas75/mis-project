@@ -3,11 +3,7 @@ import axios from 'axios';
 import AdminNavbar from '../Components/AdminNavbar';
 // Fetch
 const AdminDashboard = () => {
-    const [applications, setApplications] = useState([
-        { id: 1, name: 'Abcd', application: 'view', status: 'submitted' },
-        { id: 2, name: 'Efgh', application: 'view', status: 'submitted' },
-        { id: 3, name: 'Ijkl', application: 'view', status: 'submitted' },
-    ]);
+    const [applications, setApplications] = useState([]);
 
     useEffect(() => {
         fetchApplications();
@@ -15,26 +11,47 @@ const AdminDashboard = () => {
 
     const fetchApplications = async () => {
         try {
-            const response = await fetch('API_ENDPOINT'); // Replace 'API_ENDPOINT' with your actual API endpoint
+            const response = await fetch('http://127.0.0.1:5000/getAllApply', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+                throw new Error('Failed to fetch job openings');
             }
             const data = await response.json();
-            setApplications(data.applications);
+            // var dataArray = data.map((ele)=>{return ele.data})
+            setApplications(data); 
         } catch (error) {
-            console.error('Error fetching applications:', error);
+            console.error('Error fetching job openings:', error);
         }
     };
 
     const handleChangeStatus = async (id, newStatus) => {
         try {
-            // await axios.put(`API_ENDPOINT/${id}`, { status: newStatus }); // Replace 'API_ENDPOINT' with your actual API endpoint
-            // Update the status in the local state
             setApplications((prevApplications) =>
                 prevApplications.map((app) =>
                     app.id === id ? { ...app, status: newStatus } : app
                 )
             );
+            var email = localStorage.getItem('user')
+            fetch('http://127.0.0.1:5000/updatestatus', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: email,
+                    status: newStatus,
+                }),
+            }).then((response) => {
+                // Handle response
+                if (response.status === 200) {
+                    window.location.reload();
+                    console.log(200);
+                }
+            })
         } catch (error) {
             console.error('Error updating status:', error);
         }
