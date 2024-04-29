@@ -1,37 +1,57 @@
 import React, { useState, useEffect } from 'react';
-// import axios from 'axios';
+import axios from 'axios';
 import AdminNavbar from '../Components/AdminNavbar';
 // Fetch
 const AdminDashboard = () => {
-    const [applications, setApplications] = useState([
-        { id: 1, name: 'Abcd', application: 'view', status: 'submitted' },
-        { id: 2, name: 'Efgh', application: 'view', status: 'submitted' },
-        { id: 3, name: 'Ijkl', application: 'view', status: 'submitted' },
-    ]);
+    const [applications, setApplications] = useState([]);
 
-    // Fetch applications from API
-    //   useEffect(() => {
-    //     fetchApplications();
-    //   }, []);
+    useEffect(() => {
+        fetchApplications();
+    }, []);
 
-    //   const fetchApplications = async () => {
-    //     try {
-    //       const response = await axios.get('API_ENDPOINT'); // Replace 'API_ENDPOINT' with your actual API endpoint
-    //       setApplications(response.data.applications);
-    //     } catch (error) {
-    //       console.error('Error fetching applications:', error);
-    //     }
-    //   };
+    const fetchApplications = async () => {
+        try {
+            const response = await fetch('http://127.0.0.1:5000/getAllApply', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            if (!response.ok) {
+                throw new Error('Failed to fetch job openings');
+            }
+            const data = await response.json();
+            // var dataArray = data.map((ele)=>{return ele.data})
+            setApplications(data); 
+        } catch (error) {
+            console.error('Error fetching job openings:', error);
+        }
+    };
 
     const handleChangeStatus = async (id, newStatus) => {
         try {
-            // await axios.put(`API_ENDPOINT/${id}`, { status: newStatus }); // Replace 'API_ENDPOINT' with your actual API endpoint
-            // Update the status in the local state
             setApplications((prevApplications) =>
                 prevApplications.map((app) =>
                     app.id === id ? { ...app, status: newStatus } : app
                 )
             );
+            var email = localStorage.getItem('user')
+            fetch('http://127.0.0.1:5000/updatestatus', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: email,
+                    status: newStatus,
+                }),
+            }).then((response) => {
+                // Handle response
+                if (response.status === 200) {
+                    window.location.reload();
+                    console.log(200);
+                }
+            })
         } catch (error) {
             console.error('Error updating status:', error);
         }
@@ -46,9 +66,9 @@ const AdminDashboard = () => {
                     <thead>
                         <tr>
                             <th>Id</th>
-                            <th style={{width: '10rem'}}>Name</th>
+                            <th style={{ width: '10rem' }}>Name</th>
                             <th>Application</th>
-                            <th style={{width: '10rem'}}>Status</th>
+                            <th style={{ width: '10rem' }}>Status</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -56,9 +76,9 @@ const AdminDashboard = () => {
                         {applications.map((application) => (
                             <tr key={application.id}>
                                 <td>{application.id}</td>
-                                <td style={{width: '10rem'}}>{application.name}</td>
+                                <td style={{ width: '10rem' }}>{application.name}</td>
                                 <td><a href='#'>{application.application}</a></td>
-                                <td style={{width: '10rem'}}>{application.status}</td>
+                                <td style={{ width: '10rem' }}>{application.status}</td>
                                 <td>
                                     <select
                                         value={application.status}

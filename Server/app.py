@@ -321,6 +321,19 @@ def adminLogin():
         print("error occurred")
         return "Something Happen",500
 
+@app.route('/getAllApply',methods=['GET'])
+def view_all():
+    try:
+
+        data=mongo1.db.users.find_one({},{"_id":0})
+        if data:
+            return data,200
+        else:
+            return "BAD REQUEST",400
+    except: 
+        print("error occurred")
+        return "Something Happen",500
+
 @app.route('/updatestatus',methods=['POST'])
 def adminEdit():
     try:

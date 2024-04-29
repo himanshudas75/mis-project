@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import NavbarSmall from './Components/Navbar-small';
 
-const Page1 = () => {
+const Page1 = ({data}) => {
 
     const [formData, setFormData] = useState({
         current_address: {},

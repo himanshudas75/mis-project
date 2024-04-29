@@ -1,17 +1,41 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import Navbar from './Components/Navbar';
 import './Styles/home.css'
 
 const Dashboard = () => {
-  const activityData = [
+  const [activityData,setActivityData] = useState([
     // Replace with your actual data
     { id: 1, post: 'Post 1', department: 'Department 1', advtNo: '12345', status: 'Active' },
     { id: 2, post: 'Post 2', department: 'Department 2', advtNo: '54321', status: 'Inactive' },
     { id: 3, post: 'Post 3', department: 'Department 3', advtNo: '12346', status: 'Active' },
     // ... more data
-  ];
+  ]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [filteredData, setFilteredData] = useState(activityData);
+  const [filteredData, setFilteredData] = useState([activityData]);
+
+  useEffect(() => {
+    fetchApplications();
+  }, []);
+
+  const fetchApplications = async () => {
+    try {
+      const response = await fetch('http://127.0.0.1:5000/viewStatus', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch job openings');
+      }
+      const data = await response.json();
+      // var dataArray = data.map((ele)=>{return ele.data})
+      setActivityData(data);
+      setFilteredData(data);
+    } catch (error) {
+      console.error('Error fetching job openings:', error);
+    }
+  };
 
   const handleChange = (event) => {
     setSearchTerm(event.target.value);

@@ -62,3 +62,22 @@
     background-color: white;
     color: #A8B1CE;
 }
+
+.activity-center button{
+    width: 10rem;
+    margin-left: 5rem;
+    margin-top: 1rem;
+    background-color: #2C3D8F;
+    font-size: large;
+    color: white;
+    padding: 10px 5px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.activity-center input {
+    padding: 5px;
+    width: 8rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
