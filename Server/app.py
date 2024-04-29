@@ -16,6 +16,7 @@ app = Flask(__name__)
 CORS(app)
 # app.config['CORS_HEADERS']= 'Content-Type'
 app.config['MONGO_URI'] = "mongodb+srv://Divij:Divij2002@cluster0.aj0dc.mongodb.net/userDB"  # MongoDB URI
+# app.config['MONGO_URI'] = "mongodb://localhost:27017/userDB"
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'  # SMTP server address   ye verify karna hai sir se ki domain kya use karein
 app.config['MAIL_PORT'] = 465
 app.config['MAIL_USE_TLS'] = False
@@ -27,17 +28,21 @@ mongo = PyMongo(app)
 mail = Mail(app)
 
 app.config['MONGO_URI'] = 'mongodb+srv://Divij:Divij2002@cluster0.aj0dc.mongodb.net/applicationDB'
+# app.config['MONGO_URI'] = 'mongodb://localhost:27017/applicationDB'
 mongo1 = PyMongo(app)
 
 ##Admin Database
 app.config['MONGO_URI']='mongodb+srv://Divij:Divij2002@cluster0.aj0dc.mongodb.net/adminDB'
+# app.config['MONGO_URI']='mongodb://localhost:27017/adminDB'
 mongo2= PyMongo(app)
 
 ##JOB's DB
 app.config['MONGO_URI']='mongodb+srv://Divij:Divij2002@cluster0.aj0dc.mongodb.net/jobDB'
+# app.config['MONGO_URI']='mongodb://localhost:27017/jobDB'
 mongo3= PyMongo(app)
 
 app.config['MONGO_URI']='mongodb+srv://Divij:Divij2002@cluster0.aj0dc.mongodb.net/tempDB'
+# app.config['MONGO_URI']='mongodb://localhost:27017/tempDB'
 mongo4= PyMongo(app)
 
 # Routes
@@ -57,9 +62,9 @@ def signup():
             
             # if mongo.db.users.find_one({'username': username}):
             #     return 'Username already exists! Please choose another username.', 200
-
+            print("mongo")
             if mongo.db.users.find_one({'email': email}):
-                return 'Email already exists! Please use another email address.', 400
+                return 'Email already exists! Please use another email address.', 403
             print("mongo")
             verification_token = ''.join(random.choices(string.ascii_letters + string.digits, k=50))
             
@@ -100,7 +105,7 @@ def verify_email(token):
         mongo.db.email_verification.delete_one({'token': token})
         return 'verification complete', 200 #'Email verification successful! You can now login.',
     else:
-        return 'error in verification', 400 #'Email verification link has expired or is invalid.',
+        return 'token not found', 404 #'Email verification link has expired or is invalid.',
 
 @app.route('/', methods=['POST'])
 def login():
@@ -123,7 +128,7 @@ def login():
             # return redirect(url_for('profile'))
             return 'login successfull', 200
         else:
-            return 'login unsuccessfull',400 #INVALID
+            return 'login unsuccessfull',401 #INVALID
     except:
         print("error occured")
         return 'something went wrong', 500      
@@ -148,7 +153,7 @@ def login():
 @app.route('/forgot_password', methods=['POST'])
 def forgot_password():
     try:
-        email = request.form.get('email')
+        email = request.json.get('email')
         user = mongo.db.users.find_one({'email': email})
         
         if user:
@@ -162,10 +167,10 @@ def forgot_password():
             # mail.send(msg)
             
             # return render_template('password_reset_link_sent.html')
-            return jsonify(reset_link),205 # FOR FRONTEND **
+            return jsonify(reset_link),200 # FOR FRONTEND **
         else:
             # return render_template('invalid_email.html')
-            return 'error in mongo', 401 # WRONG EMAIL ID
+            return 'error in mongo', 404 # WRONG EMAIL ID
     except:
         print('error occured') 
         return "Something Happen",500   
@@ -179,7 +184,7 @@ def reset_password(token):
         token_data = mongo.db.password_reset_tokens.find_one({'token': token})
         
         if token_data and datetime.now() < token_data['expiry_time']:
-                new_password = request.form['new_password']
+                new_password = request.json['new_password']
                 print(new_password)
                 hashed_password = generate_password_hash(new_password)
                 mongo.db.users.update_one({'email': token_data['email']}, {'$set': {'password': hashed_password}})
@@ -268,7 +273,7 @@ def apply():
         data=mongo1.db.users.find_one({'email': email},{'department':department})
 
         if data:
-            return "Cannot Apply for this Department",400
+            return "Cannot Apply for this Department",403
         data = {
             'email': email,
             'jobId': jobId,
@@ -293,7 +298,7 @@ def view():
         if data:
             return data,200
         else:
-            return "BAD REQUEST",400
+            return "no positioned applied to",404
     except: 
         print("error occurred")
         return "Something Happen",500
@@ -304,14 +309,14 @@ def view():
 def adminLogin():
     try:
 
-        username = request.form['username']
-        password = request.form['password']
+        username = request.json['username']
+        password = request.json['password']
         print("haha")
         user = mongo2.db.user.find_one({'username':username})
         if user and check_password_hash(user['password'],password):
             return "Admin Logged in",200
         else:
-            return "Don't Try to hack",400
+            return "Login unsuccessful",401
     except:
         print("error occurred")
         return "Something Happen",500
@@ -331,9 +336,22 @@ def adminEdit():
         # Insert JSON data into MongoDB if email ID does not exist
         # mongo.db.users.insert_one(json_data)
         
-        return 'BAD REQUEST', 404
+        return 'Email not found', 404
     except:
         print('error occurred')
+        return "Something Happen",500
+    
+@app.route('/getAllApply',methods=['POST'])
+def adminView():
+    try:
+
+        data=mongo1.db.users.find_one({},{"_id":0})
+        if data:
+            return data,200
+        else:
+            return "No application found",404
+    except: 
+        print("error occurred")
         return "Something Happen",500
 
 ## JOB OPENING
