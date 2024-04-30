@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-const DynamicFormBuilder = ({ formConfig }) => {
+const DynamicFormBuilder = ({ formConfig ,onNextPage, isreview}) => {
   const initialFormData = formConfig.reduce((acc, curr) => {
     if (curr.type !== "table") {
       acc[curr.id] = curr.initialValue || "";
@@ -19,6 +19,27 @@ const DynamicFormBuilder = ({ formConfig }) => {
     formData: initialFormData,
     tableData: initialTableData,
   });
+
+  useEffect(() => {
+    const newFormData = formConfig.reduce((acc, curr) => {
+      if (curr.type !== "table") {
+        acc[curr.id] = curr.initialValue || "";
+      }
+      return acc;
+    }, {});
+
+    const newTableData = formConfig.reduce((acc, curr) => {
+      if (curr.type === "table") {
+        acc[curr.id] = curr.initialRows || [];
+      }
+      return acc;
+    }, {});
+
+    setFormState({
+      formData: newFormData,
+      tableData: newTableData,
+    });
+  }, [formConfig]);  
 
   const handleTableChange = (e, id, rowIndex, columnKey) => {
     const { value } = e.target;
@@ -56,6 +77,7 @@ const DynamicFormBuilder = ({ formConfig }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Form State:", formState);
+    onNextPage()
     // Handle form submission here (e.g., send data to server)
   };
   const handleAddRow = (id) => {
@@ -97,6 +119,7 @@ const DynamicFormBuilder = ({ formConfig }) => {
               id={id}
               name={id}
               onChange={(e) => handleNormalChange(e, id)}
+              // readOnly={isreview}
             />
           </div>
         );
@@ -270,9 +293,6 @@ const DynamicFormBuilder = ({ formConfig }) => {
                 )}
               </tbody>
             </table>
-            {/* <button type="button" onClick={() => handleAddRow(id)}>
-              Add Row
-            </button> */}
             <button className='add' type="button" onClick={() => handleAddRow(id)}>+</button><p>Add More</p>
             <br></br>
             <br></br>
@@ -286,7 +306,7 @@ const DynamicFormBuilder = ({ formConfig }) => {
   return (
     <form onSubmit={handleSubmit}>
       {formConfig.map((element) => renderFormElement(element))}
-      <button type="submit" className='next'>Submit</button>
+      {isreview? <></>: <button type="submit" className='next'>Submit</button>}
     </form>
   );
 };

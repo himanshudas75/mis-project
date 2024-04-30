@@ -1,13 +1,7 @@
-// Navbar.js
-import { useState } from 'react';
 import React from 'react';
 import '../Styles/navbar.css';
 
-const NavbarSmall = ({current}) => {
-    const [activePage, setActivePage] = useState(current);
-    const handlePageChange = (page) => {
-        setActivePage(page);
-    };
+const NavbarSmall = ({ current }) => {
     return (
         <div>
             <nav className="navbar-small">
@@ -25,63 +19,18 @@ const NavbarSmall = ({current}) => {
             </nav>
             <hr id='hr'></hr>
             <div className='buttons'>
-                <div>
-                    <button
-                        type='button'
-                        className={activePage >= 1 ? 'active' : ''}
-                        onClick={() => handlePageChange(1)}
-                    >
-                        <a href='/details/page1'>o</a>
-                    </button>
-                </div>
-                <div>
-                    <button
-                        type='button'
-                        className={activePage >= 2 ? 'active' : ''}
-                        onClick={() => handlePageChange(2)}
-                    >
-                        <a href='/details/page2'>o</a>
-                    </button>
-                </div>
-                <div>
-                    <button
-                        type='button'
-                        className={activePage >= 3 ? 'active' : ''}
-                        onClick={() => handlePageChange(3)}
-                    >
-                        <a href='/details/page3'>o</a>
-                    </button>
-                </div>
-                <div>
-                    <button
-                        type='button'
-                        className={activePage >= 4 ? 'active' : ''}
-                        onClick={() => handlePageChange(4)}
-                    >
-                        <a href='/details/page4'>o</a>
-                    </button>
-                </div>
-                <div>
-                    <button
-                        type='button'
-                        className={activePage >= 5 ? 'active' : ''}
-                        onClick={() => handlePageChange(5)}
-                    >
-                        <a href='/details/page5'>o</a>
-                    </button>
-                </div>
-                <div>
-                    <button
-                        type='button'
-                        className={activePage >= 6 ? 'active' : ''}
-                        onClick={() => handlePageChange(6)}
-                    >
-                        <a href='/details/page6'>o</a>
-                    </button>
-                </div>
+                {[0, 1, 2, 3, 4, 5].map((pageNumber) => (
+                    <div key={pageNumber}>
+                        <button
+                            type='button'
+                            className={current >= pageNumber ? 'active' : ''}
+                            onClick={() => console.log(`Go to page ${pageNumber}`)}
+                        >
+                        </button>
+                    </div>
+                ))}
             </div>
         </div>
-
     );
 };
 
