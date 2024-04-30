@@ -133,7 +133,7 @@ const Page5 = () => {
 
                                     ) : (
                                         <>
-                                            <label htmlFor={`document-input-${doc.id}`} id="upload-label">Upload</label>
+                                            <label htmlFor={`document-input-${doc.id}`} className="upload-label">Upload</label>
                                             <input
                                                 id={`document-input-${doc.id}`}
                                                 type="file"

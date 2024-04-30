@@ -17,6 +17,8 @@ import Details from './details_';
 import AdminLogin from './Admin/adminLogin';
 import AdminDashboard from './Admin/applications';
 import AdminJobOpenings from './Admin/jobOpening';
+import DynamicFormBuilder from './DynamicFormBuilder';
+import Form from './Form';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -28,7 +30,7 @@ root.render(
         <Route path="/apply" element={<Apply />} />
         <Route path="/home" element={<Dashboard />} />
         <Route path="/details" element={<Details current = {localStorage.getItem('current')} />} />
-        <Route path="/details/page1" element={<Page1 />} />
+        <Route path="/details/page1" element={<Form />} />
         <Route path="/details/page2" element={<Page2 />} />
         <Route path="/details/page3" element={<Page3 />} />
         <Route path="/details/page4" element={<Page4 />} />

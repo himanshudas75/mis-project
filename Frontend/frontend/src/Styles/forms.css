@@ -183,6 +183,25 @@ hr{
     flex-direction: column;
 }
 
+.page3 input{
+    width: 15rem;
+    margin-right: 0;
+}
+.page3 select{
+    width: 15.75rem;
+    
+}
+
+.page3 table input{
+    width: 90%;
+    display: block;
+    margin: auto;
+}
+.page3 table select{
+    width: 90%;
+    display: block;
+    margin: auto;
+}
 .page3{
     display: flex;
     flex-direction: column;
@@ -199,7 +218,13 @@ hr{
     height: 2rem;
     margin: 0 1.1rem;
 }
-
+.page3 table button{
+    /* width: 1.5rem; */
+    padding: 0;
+    background-color: red;
+    margin: auto;
+    display:block;
+}
 #delete{
     background-image: url('../Resources/delete.png');
 }
@@ -236,7 +261,10 @@ td {
     text-align: center;
     vertical-align: middle;
 }
-
+.page3 table button span{
+    display: inline-block;
+    transform: rotate(-45deg);
+}
 .page3 form{
     margin: 0 17%;
 }
@@ -264,7 +292,7 @@ td {
     border: 1px solid #A8B1CE;
 }
 
-#upload-label{
+.upload-label{
     background-color: #a8b1ce7b;
     color: #1c2864c8;
     padding: 0.3rem 0.7rem;
@@ -314,4 +342,8 @@ td {
     color: transparent; 
     width: 2rem;
     height: 2rem;
+}
+
+.page3 .values{
+    margin-bottom: 0.5rem;
 }

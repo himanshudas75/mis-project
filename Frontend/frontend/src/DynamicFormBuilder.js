@@ -89,7 +89,7 @@ const DynamicFormBuilder = ({ formConfig }) => {
     switch (type) {
       case "text":
         return (
-          <div key={id}>
+          <div key={id} className="values">
             <label htmlFor={id}>{label}</label>
             <input
               type="text"
@@ -102,7 +102,7 @@ const DynamicFormBuilder = ({ formConfig }) => {
         );
       case "select":
         return (
-          <div key={id}>
+          <div key={id} className="values">
             <label htmlFor={id}>{label}</label>
             <select
               id={id}
@@ -120,8 +120,9 @@ const DynamicFormBuilder = ({ formConfig }) => {
         );
       case "checkbox":
         return (
-          <div key={id}>
+          <div key={id} className="values">
             <label>{label}</label>
+            
             {options.map((option) => (
               <div key={option.value}>
                 <input
@@ -140,7 +141,7 @@ const DynamicFormBuilder = ({ formConfig }) => {
         );
       case "date":
         return (
-          <div key={id}>
+          <div key={id} className="values">
             <label htmlFor={id}>{label}</label>
             <input
               type="date"
@@ -153,19 +154,24 @@ const DynamicFormBuilder = ({ formConfig }) => {
         );
       case "file":
         return (
-          <div key={id}>
+          <div key={id} className="values">
             <label htmlFor={id}>{label}</label>
-            <input
-              type="file"
-              id={id}
-              name={id}
-              onChange={(e) => handleNormalChange(e, id)}
-            />
+            <>
+              <label htmlFor={id} className="upload-label">Upload</label>
+              <input
+                type="file"
+                id={id}
+                style={{ display: 'none' }}
+                name={id}
+                onChange={(e) => handleNormalChange(e, id)}
+              />
+
+            </>
           </div>
         );
       case "number":
         return (
-          <div key={id}>
+          <div key={id} className="values">
             <label htmlFor={id}>{label}</label>
             <input
               type="number"
@@ -179,13 +185,14 @@ const DynamicFormBuilder = ({ formConfig }) => {
       case "table":
         return (
           <div key={id}>
-            <label>{label}</label>
+            <h1 style={{color:'#1C2864', fontWeight:'200', fontSize:'x-large'}}>{label}</h1>
             <table>
               <thead>
                 <tr>
                   {columns.map((column) => (
                     <th key={column.key}>{column.label}</th>
                   ))}
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -218,13 +225,17 @@ const DynamicFormBuilder = ({ formConfig }) => {
                               }
                             />
                           ) : column.type === "file" ? (
-                            <input
-                              type="file"
-                              name={`${id}[${rowIndex}][${column.key}]`}
-                              onChange={(e) =>
-                                handleTableChange(e, id, rowIndex, column.key)
-                              }
-                            />
+                            <>
+                              <label htmlFor={id} className="upload-label">Upload</label>
+                              <input
+                                type="file"
+                                id={id}
+                                style={{ display: 'none' }}
+                                name={`${id}[${rowIndex}][${column.key}]`}
+                                onChange={(e) => handleTableChange(e, id, rowIndex, column.key)}
+                              />
+
+                            </>
                           ) : column.type === "number" ? (
                             <input
                               type="number"
@@ -251,7 +262,7 @@ const DynamicFormBuilder = ({ formConfig }) => {
                           type="button"
                           onClick={() => handleRemoveRow(id, rowIndex)}
                         >
-                          Remove
+                          <span>+</span>
                         </button>
                       </td>
                     </tr>
@@ -259,9 +270,12 @@ const DynamicFormBuilder = ({ formConfig }) => {
                 )}
               </tbody>
             </table>
-            <button type="button" onClick={() => handleAddRow(id)}>
+            {/* <button type="button" onClick={() => handleAddRow(id)}>
               Add Row
-            </button>
+            </button> */}
+            <button className='add' type="button" onClick={() => handleAddRow(id)}>+</button><p>Add More</p>
+            <br></br>
+            <br></br>
           </div>
         );
       default:
@@ -272,7 +286,7 @@ const DynamicFormBuilder = ({ formConfig }) => {
   return (
     <form onSubmit={handleSubmit}>
       {formConfig.map((element) => renderFormElement(element))}
-      <button type="submit">Submit</button>
+      <button type="submit" className='next'>Submit</button>
     </form>
   );
 };
