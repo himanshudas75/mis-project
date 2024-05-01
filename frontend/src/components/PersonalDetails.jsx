@@ -166,7 +166,7 @@ const PersonalDetails = ({ moveToNext }) => {
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
-        onSubmit={onSubmit}
+        // onSubmit={onSubmit}
       >
         {(formik) => {
           {

@@ -1,10 +1,33 @@
 import { Formik } from "formik";
-import React from "react";
+import { React, useRef } from "react";
+
 import FormikControl from "./FormikControl";
-import { Button, HStack, Text, VStack, Box, Divider } from "@chakra-ui/react";
+import {
+  Button,
+  HStack,
+  Text,
+  VStack,
+  Box,
+  Divider,
+  FormControl,
+  FormLabel,
+  FormErrorMessage,
+  useDisclosure,
+} from "@chakra-ui/react";
+import {
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogContent,
+  AlertDialogOverlay,
+  AlertDialogCloseButton,
+} from "@chakra-ui/react";
 import * as Yup from "yup";
-import { Form } from "formik";
-const QualificationDetails = () => {
+import { Form, Field, FieldArray } from "formik";
+const QualificationDetails = ({ moveToNext }) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const cancelRef = useRef();
   const firstSelectOptions = [
     { key: "Please select your priority", value: "" },
     { key: "Dhanbad", value: "dhanbad" },
@@ -62,74 +85,75 @@ const QualificationDetails = () => {
       year_of_passing: "",
       score: "",
     },
+    pg: [],
   };
   const validationSchema = Yup.object({
-    cat_registration_number: Yup.string().required("Required"),
-    cat_percentile: Yup.string().required("Required"),
-    cat_quantitative_percentile: Yup.string().required("Required"),
-    cat_quantitative_score: Yup.string().required("Required"),
-    cat_verbal_percentile: Yup.string().required("Required"),
-    cat_verbal_score: Yup.string().required("Required"),
-    cat_data_interpretation_percentile: Yup.string().required("Required"),
-    cat_data_interpretation_score: Yup.string().required("Required"),
-    cat_score: Yup.string().required("Required"),
-    priority1: Yup.string().required("Required"),
-    priority2: Yup.string().required("Required"),
-    priority3: Yup.string().required("Required"),
-    agreement: Yup.string().required("Required"),
-    tenth_class: Yup.object({
-      school_name: Yup.string().required("Required"),
-      result_status: Yup.string().required("Required"),
-      grade_type: Yup.string().required("Required"),
-      year_of_passing: Yup.string().required("Required"),
-      // score: Yup.number().when(
-      //   "grade_type",
-      //   {
-      //     is: "percentage",
-      //     then: () => {
-      //       Yup.number().min(1).max(100).required("Required");
-      //     },
-      //   },
-      //   {
-      //     is: "cgpa",
-      //     then: () => {
-      //       Yup.number().min(1).max(10).required("Required");
-      //     },
-      //   }
-      // ),
-      score: Yup.string().required("Required"),
-    }),
-    twelfth_class: Yup.object({
-      college_name: Yup.string().required("Required"),
-      result_status: Yup.string().required("Required"),
-      grade_type: Yup.string().required("Required"),
-      year_of_passing: Yup.string().required("Required"),
-      score: Yup.string().required("Required"),
-    }),
-    ug: Yup.object({
-      name_of_the_exam: Yup.string().required("Required"),
-      college_name: Yup.string().required("Required"),
-      result_status: Yup.string().required("Required"),
-      grade_type: Yup.string().required("Required"),
-      year_of_passing: Yup.string().required("Required"),
-      score: Yup.string().required("Required"),
-    }),
+    //   cat_registration_number: Yup.string().required("Required"),
+    //   cat_percentile: Yup.string().required("Required"),
+    //   cat_quantitative_percentile: Yup.string().required("Required"),
+    //   cat_quantitative_score: Yup.string().required("Required"),
+    //   cat_verbal_percentile: Yup.string().required("Required"),
+    //   cat_verbal_score: Yup.string().required("Required"),
+    //   cat_data_interpretation_percentile: Yup.string().required("Required"),
+    //   cat_data_interpretation_score: Yup.string().required("Required"),
+    //   cat_score: Yup.string().required("Required"),
+    //   priority1: Yup.string().required("Required"),
+    //   priority2: Yup.string().required("Required"),
+    //   priority3: Yup.string().required("Required"),
+    //   agreement: Yup.string().required("Required"),
+    //   tenth_class: Yup.object({
+    //     school_name: Yup.string().required("Required"),
+    //     result_status: Yup.string().required("Required"),
+    //     grade_type: Yup.string().required("Required"),
+    //     year_of_passing: Yup.string().required("Required"),
+    //     // score: Yup.number().when(
+    //     //   "grade_type",
+    //     //   {
+    //     //     is: "percentage",
+    //     //     then: () => {
+    //     //       Yup.number().min(1).max(100).required("Required");
+    //     //     },
+    //     //   },
+    //     //   {
+    //     //     is: "cgpa",
+    //     //     then: () => {
+    //     //       Yup.number().min(1).max(10).required("Required");
+    //     //     },
+    //     //   }
+    //     // ),
+    //     score: Yup.string().required("Required"),
+    //   }),
+    //   twelfth_class: Yup.object({
+    //     college_name: Yup.string().required("Required"),
+    //     result_status: Yup.string().required("Required"),
+    //     grade_type: Yup.string().required("Required"),
+    //     year_of_passing: Yup.string().required("Required"),
+    //     score: Yup.string().required("Required"),
+    //   }),
+    //   ug: Yup.object({
+    //     name_of_the_exam: Yup.string().required("Required"),
+    //     college_name: Yup.string().required("Required"),
+    //     result_status: Yup.string().required("Required"),
+    //     grade_type: Yup.string().required("Required"),
+    //     year_of_passing: Yup.string().required("Required"),
+    //     score: Yup.string().required("Required"),
+    //   }),
     //write correct validations for score field - it is still being accepted as  a string
     //need to see dyanmic inputs - add pg education fields etc
+    pg: Yup.array().of(
+      Yup.object({
+        college_name: Yup.string().required("Required"),
+        score: Yup.string().required("Required"),
+      })
+    ),
   });
-  const onSubmit = (values) => {
+  const handleFinalSubmit = (values) => {
     console.log(values);
+    moveToNext();
   };
   return (
-    <Formik
-      initialValues={initialValues}
-      validationSchema={validationSchema}
-      onSubmit={onSubmit}
-    >
+    <Formik initialValues={initialValues} validationSchema={validationSchema}>
       {(formik) => {
-        {
-          /* console.log(formik.values); */
-        }
         return (
           <Form>
             <FormikControl
@@ -258,7 +282,7 @@ const QualificationDetails = () => {
               />
 
               <FormikControl
-                control="input"
+                control="nestedinput"
                 label="Result"
                 name="tenth_class.result_status"
                 isDisabled={true}
@@ -379,18 +403,133 @@ const QualificationDetails = () => {
 
             {/* need to add dyanmic fields for pg education details */}
             {/* need to resolve the errors in here */}
-            {/* <FormikControl
-              control="arrayfield"
-              label="PG Education Details"
-              name="pg"
-            /> */}
+            <Field name="pg">
+              {({ field, form }) => {
+                return (
+                  <FormControl
+                    isInvalid={form.errors["pg"] && form.touched["pg"]}
+                  >
+                    {formik.values.pg.length > 0 && (
+                      <>
+                        <Text>Details of PG Education</Text>
+                      </>
+                    )}
+                    <FieldArray name={"pg"}>
+                      {(fieldArrayprops) => {
+                        const { push, form, pop, remove } = fieldArrayprops;
+                        const { values } = form;
 
-            <Button
-              type="submit"
-              // isDisabled={!(formik.isValid && formik.dirty)}
-            >
-              Submit
+                        const { pg } = values;
+                        return (
+                          <div>
+                            {pg.map((educationObject, index) => {
+                              return (
+                                <Box key={index}>
+                                  <FormikControl
+                                    control="input"
+                                    name={`pg.${index}.college_name`}
+                                    label="College name"
+                                    isRequired={true}
+                                  />
+                                  {formik.errors &&
+                                  formik.errors.pg &&
+                                  formik.errors?.pg[index]?.college_name &&
+                                  formik.touched &&
+                                  formik.touched.pg &&
+                                  formik.touched?.pg[index]?.college_name ? (
+                                    <FormErrorMessage>
+                                      {formik.errors?.pg[index]?.college_name}
+                                    </FormErrorMessage>
+                                  ) : null}
+                                  <FormikControl
+                                    control="input"
+                                    name={`pg.${index}.score`}
+                                    label="Score"
+                                    isRequired={true}
+                                  />
+                                  {formik.errors &&
+                                  formik.errors.pg &&
+                                  formik.errors?.pg[index]?.score &&
+                                  formik.touched &&
+                                  formik.touched.pg &&
+                                  formik.touched?.pg[index]?.score ? (
+                                    <FormErrorMessage>
+                                      {formik.errors?.pg[index]?.score}
+                                    </FormErrorMessage>
+                                  ) : null}
+                                  {formik.values.pg.length > 0 && (
+                                    <Button
+                                      type="button"
+                                      onClick={() => remove(index)}
+                                    >
+                                      Remove
+                                    </Button>
+                                  )}
+                                  {formik.errors[
+                                    educationObject?.college_name
+                                  ] &&
+                                  formik.touched[
+                                    educationObject?.college_name
+                                  ] ? (
+                                    <FormErrorMessage>
+                                      formik.errors.pg[index].score
+                                    </FormErrorMessage>
+                                  ) : null}
+                                </Box>
+                              );
+                            })}
+
+                            <Button
+                              type="button"
+                              onClick={() =>
+                                push({ college_name: "", score: "" })
+                              }
+                            >
+                              Add PG Education details
+                            </Button>
+                          </div>
+                        );
+                      }}
+                    </FieldArray>
+                  </FormControl>
+                );
+              }}
+            </Field>
+
+            <Button onClick={onOpen} type="button" isDisabled={!formik.isValid}>
+              Save and next
             </Button>
+
+            <AlertDialog
+              isOpen={isOpen}
+              leastDestructiveRef={cancelRef}
+              onClose={onClose}
+            >
+              <AlertDialogOverlay>
+                <AlertDialogContent>
+                  <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                    Proceed to Next Stage
+                  </AlertDialogHeader>
+
+                  <AlertDialogBody>
+                    Are you sure? You can't undo this action afterwards.
+                  </AlertDialogBody>
+
+                  <AlertDialogFooter>
+                    <Button ref={cancelRef} onClick={onClose}>
+                      Cancel
+                    </Button>
+                    <Button
+                      type="submit"
+                      colorScheme="red"
+                      onClick={() => handleFinalSubmit(formik.values)}
+                    >
+                      Submit
+                    </Button>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialogOverlay>
+            </AlertDialog>
           </Form>
         );
       }}
