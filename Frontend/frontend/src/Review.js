@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import DynamicFormBuilder from './DynamicFormBuilder';
+import NavbarSmall from './Components/Navbar-small';
 
 const ReviewPage = ({ isreview }) => {
   const [formConfig, setFormConfig] = useState([])
   const [formState, setFormState] = useState([]);
+  const [pages, setPages] = useState(0);
 
   // useEffect(() => {
   //   fetchData();
@@ -32,6 +34,7 @@ const ReviewPage = ({ isreview }) => {
         throw new Error('Failed to fetch job openings');
       }
       const data = await response.json();
+      setPages(data.config.length)
       var config = [].concat(...data.config)
       var alldata = data.data.reduce((acc, curr) => {
         const mergedFormData = { ...acc.formData, ...curr.formData };
@@ -65,11 +68,10 @@ const ReviewPage = ({ isreview }) => {
     }
   }
 };
-console.log(formState)
-console.log(formConfig)
 return (
-  <div>
-    <h2>Review Page</h2>
+  <div className={isreview==='review' ? '' :'page3'}>
+    <NavbarSmall current={pages}/>
+    <h2>{isreview==='review'?'Review Page':isreview==='edit'? "Edit Page":"Details Page"}</h2>
     {formConfig.length && <DynamicFormBuilder formConfig={formConfig} fromItem={formState} path={isreview === 'edit' ? 'edit' : 'form'} />}
     {/* You can add a button here to navigate back to the form for editing */}
   </div>
