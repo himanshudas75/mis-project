@@ -146,7 +146,7 @@ def login():
 # @app.route('/logout')
 # def logout():
 #     session.pop('username', None)
-#     # return redirect(url_for('index'))
+    # return redirect(url_for('index'))
         
 ## RESET PASSWORD
 
@@ -415,26 +415,50 @@ def jobClosing():
 @app.route('/tempstore',methods=['POST'])
 def tempStore():
     try:
+        json_data = request.get_json()
+        email = json_data.get('email')
+        config = json_data.get('config')
+        data = json_data.get('data')
 
-            json_data = request.get_json()
-            email = json_data.get('email')
-            data = mongo4.db.tempdata.find_one({'email':email},{"id":0})
+        # Check if email already exists in the database
+        existing_data = mongo4.db.tempdata.find_one({'email': email})
+
+        if existing_data:
+            updated_data = {}
+            if config:
+                existing_config = existing_data.get('config', [])
+                existing_config.append(config)
+                updated_data['config'] = existing_config
             if data:
-               mongo4.db.tempdata.update_one({'email': email}, {'$set': {'data':json_data.get('data')}})
-            else:
-               mongo4.db.tempdata.insert_one({'email':email,"data":json_data})
-            return "temporary data updated succesfully", 200
-    except:
-        print("error occurred")  
-        return "Something Happen",500  
+                existing_data_list = existing_data.get('data', [])
+                existing_data_list.append(data)
+                updated_data['data'] = existing_data_list
 
-@app.route('/tempget',methods=['POST'])
+            # Update the document with the new config or data list
+            mongo4.db.tempdata.update_one({'email': email}, {'$set': updated_data})
+
+        else:
+            mongo4.db.tempdata.insert_one({'email': email, 'data': [data], 'config': [config]})
+
+        return "Temporary data updated successfully", 200
+    except Exception as e:
+        print("Error occurred:", e)
+        return "Something went wrong", 500
+
+
+@app.route('/tempget',methods=['GET'])
 def tempGet():
+    print("asdfg")
     try:
 
-        json_data= request.get_json()
-        email = json_data.get('email')
+        # json_data= request.get_json()
+        # email = json_data.get('email')
+        print("asdfg")
+        email = request.args.get('email')
+        print(email)
         data=mongo4.db.tempdata.find_one({'email':email},{"_id":0})
+        print("asdfg")
+        print(jsonify(data))
         if data:
             return data,200
         else:
@@ -443,5 +467,6 @@ def tempGet():
         print("error occurred")  
         return "Something Happen",500 
 
+        print("asdfg")
 if __name__ == '__main__':
     app.run(debug=True)

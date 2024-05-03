@@ -1,70 +1,79 @@
-import React, { useState } from 'react';
-import NavbarSmall from './Components/Navbar-small';
-import Page1 from './page1';
-import Page2 from './page2';
-import Page3 from './page3';
-import Page4 from './page4';
-import Page5 from './page5';
-import Page6 from './page6';
-// Import other page components
+import React, { useEffect, useState } from 'react';
+import DynamicFormBuilder from './DynamicFormBuilder';
 
-const Form = () => {
-  const [formData, setFormData] = useState({
-    // Initialize state to store data from each page
-    page1: {current_address: {},
-    permanent_address: {},
-firstName: 'Abhipsa'},
-    page2: {},
-    page3: {},
-    page4: {},
-    page5: {},
-    page6: {}
-    // Add more keys for other pages
-  });
+const ReviewPage = ({ isreview }) => {
+  const [formConfig, setFormConfig] = useState([])
+  const [formState, setFormState] = useState([]);
 
-  const handlePage1Submit = (data) => {
-    setFormData({ ...formData, page1: data });
-  };
+  // useEffect(() => {
+  //   fetchData();
+  // }, [isreview]); // Trigger fetch data when isreview changes
 
-  const handlePage2Submit = (data) => {
-    setFormData({ ...formData, page2: data });
-  };
+  useEffect(() => {
+    console.log("Form config updated:", formConfig);
+    console.log("Form state updated:", formState);
+    fetchData()
+  }, []);
 
-  const handlePage3Submit = (data) => {
-    setFormData({ ...formData, page3: data });
-  };
+  const fetchData = async () => {
+    if (isreview === 'review') {
+      console.log("review page started");
+      try {
+        console.log("try")
+        const email = encodeURIComponent(localStorage.getItem('user'));
+        const response = await fetch(`http://127.0.0.1:5000/tempget?email=abcd@efgh`, {
+          method: 'GET',
+          headers: {
+          'Content-Type': 'application/json'
+        },
+    });
 
-  const handlePage4Submit = (data) => {
-    setFormData({ ...formData, page4: data });
-  };
-
-  const handlePage5Submit = (data) => {
-    setFormData({ ...formData, page5: data });
-  };
-
-  const handlePage6Submit = (data) => {
-    setFormData({ ...formData, page6: data });
-  };
-  // Define similar functions for other pages
-
-  return (
-    <div>
-      {/* Render each page component with respective submit handlers */}
-      <Page1 onSubmit={handlePage1Submit} formData={formData.page1}/>
-      <Page2 onSubmit={handlePage2Submit} />
-      <Page3 onSubmit={handlePage3Submit} />
-      <Page4 onSubmit={handlePage4Submit} />
-      <Page5 onSubmit={handlePage5Submit} />
-      <Page6 onSubmit={handlePage6Submit} />
-      {/* Render other page components */}
-
-      {/* Review page */}
-      <div className="page3">
-      {/* <pre>{JSON.stringify(formData, null, 2)}</pre> */}
-        {/* <ReviewPage formData={formData} /> */}
-      </div>
-    </div>
-  );
+      if (!response.ok) {
+        throw new Error('Failed to fetch job openings');
+      }
+      const data = await response.json();
+      var config = [].concat(...data.config)
+      var alldata = data.data.reduce((acc, curr) => {
+        const mergedFormData = { ...acc.formData, ...curr.formData };
+        const mergedTableData = { ...acc.tableData, ...curr.tableData };
+        return { formData: mergedFormData, tableData: mergedTableData };
+      }, { formData: {}, tableData: {} });
+      setFormState(alldata);
+      setFormConfig(config)
+    } catch (error) {
+      console.error('Error fetching :', error);
+    }
+  } else if (isreview === 'view') {
+    try {
+      const response = await fetch('http://127.0.0.1:5000/details?email=abcd@efgh', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch job openings');
+      }
+      const data = await response.json();
+      // var dataArray = data.map((ele) => { return ele.data })
+      var config = data.config
+      console.log({"data": data.data})
+      setFormState(data.data);
+      setFormConfig(config)
+    } catch (error) {
+      console.error('Error fetching job openings:', error);
+    }
+  }
+};
+console.log(formState)
+console.log(formConfig)
+return (
+  <div>
+    <h2>Review Page</h2>
+    {formConfig.length && <DynamicFormBuilder formConfig={formConfig} fromItem={formState} path={isreview === 'edit' ? 'edit' : 'form'} />}
+    {/* You can add a button here to navigate back to the form for editing */}
+  </div>
+);
 };
 
-export default Form;
+export default ReviewPage;

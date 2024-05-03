@@ -19,6 +19,7 @@ import AdminDashboard from './Admin/applications';
 import AdminJobOpenings from './Admin/jobOpening';
 import DynamicFormBuilder from './DynamicFormBuilder';
 import Form from './Form';
+import ReviewPage from './Review';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -29,13 +30,15 @@ root.render(
         <Route path="/register" element={<Register />} />
         <Route path="/apply" element={<Apply />} />
         <Route path="/home" element={<Dashboard />} />
-        <Route path="/details" element={<Details current = {localStorage.getItem('current')} />} />
+        <Route path="/edit" element={<ReviewPage isreview={'edit'} />} />
+        <Route path="/view" element={<ReviewPage isreview={'view'} />} />
+        {/* <Route path="/details" element={<Details current = {localStorage.getItem('current')} />} /> */}
         <Route path="/details/page1" element={<Form />} />
-        <Route path="/details/page2" element={<Page2 />} />
+        {/* <Route path="/details/page2" element={<Page2 />} />
         <Route path="/details/page3" element={<Page3 />} />
         <Route path="/details/page4" element={<Page4 />} />
         <Route path="/details/page5" element={<Page5 />} />
-        <Route path="/details/page6" element={<Page6 />} />
+        <Route path="/details/page6" element={<Page6 />} /> */}
         <Route path="/admin" element={<AdminLogin />} />
         <Route path="/admin/applications" element={<AdminDashboard />} />
         <Route path="/admin/jobs" element={<AdminJobOpenings />} />

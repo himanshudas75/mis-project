@@ -25,7 +25,7 @@ const RegistrationForm = () => {
       headers: {
         'Content-Type': 'application/json', // Ensure 'Content-Type' header is set
       },
-      body : JSON.stringify({
+      body: JSON.stringify({
         salutation: formData.salutation,
         name: formData.name,
         gender: formData.gender,
@@ -38,8 +38,10 @@ const RegistrationForm = () => {
     })
       .then(response => {
         // Handle response
-        window.location.href = "/";
-        console.log(response);
+        if (response.status === 200) {
+          window.location.href = "/";
+          console.log(response);
+        }
       })
       .catch(error => {
         // Handle error

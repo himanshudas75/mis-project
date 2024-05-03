@@ -5,7 +5,7 @@ import './Styles/apply.css';
 import './Styles/forms.css'
 
 const options = [ // Example dropdown options
-    { value: 'option1', label: 'Option 1' },
+    { value: 'Electrical', label: 'Electrical Engineering' },
     { value: 'option2', label: 'Option 2' },
     { value: 'option3', label: 'Option 3' },
 ];

@@ -1,6 +1,7 @@
 import {React,useState} from "react";
 import DynamicFormBuilder from "./DynamicFormBuilder";
 import NavbarSmall from "./Components/Navbar-small";
+import ReviewPage from "./Review";
 
 const formConfig = [
   {
@@ -173,16 +174,16 @@ const Form = () => {
   const [submitted, setSubmitted] = useState(false)
 
   const handleNextPage = () => {
-    setCurrentPage((prevPage) => (prevPage + 1)%(formConfig.length));
-    if (currentPage === formConfig.length - 1) {
+    if (currentPage === formConfig.length-1) {
       setSubmitted(true)
     }
+    setCurrentPage((prevPage) => (prevPage + 1));
   };
 
   return (
     <div className="page3">
       {submitted ? (
-        <ReviewPage submittedData={submittedData} />
+        <ReviewPage isreview={'review'}/>
       ) : (
         <>
           <NavbarSmall current={currentPage} />
@@ -194,20 +195,10 @@ const Form = () => {
           <DynamicFormBuilder
             formConfig={formConfig[currentPage].data}
             onNextPage={handleNextPage}
+            path={'tempstore'}
           />
         </>
       )}
-    </div>
-  );
-};
-
-
-const ReviewPage = ({ submittedData }) => {
-  return (
-    <div>
-      <h2>Review Page</h2>
-      <DynamicFormBuilder formConfig={formConfig[0].data} isreview={true}/>
-      {/* You can add a button here to navigate back to the form for editing */}
     </div>
   );
 };

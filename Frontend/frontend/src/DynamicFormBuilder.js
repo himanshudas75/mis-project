@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-const DynamicFormBuilder = ({ formConfig ,onNextPage, isreview}) => {
+const DynamicFormBuilder = ({ formConfig, onNextPage, fromItem, path, isreview }) => {
   const initialFormData = formConfig.reduce((acc, curr) => {
     if (curr.type !== "table") {
       acc[curr.id] = curr.initialValue || "";
@@ -21,25 +21,34 @@ const DynamicFormBuilder = ({ formConfig ,onNextPage, isreview}) => {
   });
 
   useEffect(() => {
-    const newFormData = formConfig.reduce((acc, curr) => {
-      if (curr.type !== "table") {
-        acc[curr.id] = curr.initialValue || "";
-      }
-      return acc;
-    }, {});
+    if (fromItem) {
+      setFormState({
+        formData: fromItem.formData,
+        tableData: fromItem.tableData
+      });
+    }
+    else {
+      
+      const newFormData = formConfig.reduce((acc, curr) => {
+        if (curr.type !== "table") {
+          acc[curr.id] = curr.initialValue || "";
+        }
+        return acc;
+      }, {});
 
-    const newTableData = formConfig.reduce((acc, curr) => {
-      if (curr.type === "table") {
-        acc[curr.id] = curr.initialRows || [];
-      }
-      return acc;
-    }, {});
+      const newTableData = formConfig.reduce((acc, curr) => {
+        if (curr.type === "table") {
+          acc[curr.id] = curr.initialRows || [];
+        }
+        return acc;
+      }, {});
 
-    setFormState({
-      formData: newFormData,
-      tableData: newTableData,
-    });
-  }, [formConfig]);  
+      setFormState({
+        formData: newFormData,
+        tableData: newTableData,
+      });
+    }
+  }, [formConfig]);
 
   const handleTableChange = (e, id, rowIndex, columnKey) => {
     const { value } = e.target;
@@ -77,7 +86,31 @@ const DynamicFormBuilder = ({ formConfig ,onNextPage, isreview}) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Form State:", formState);
-    onNextPage()
+    localStorage.setItem('user', 'abcd@efgh')
+    var email = localStorage.getItem('user')
+    console.log(email)
+    try {
+      fetch(`http://127.0.0.1:5000/${path}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: email,
+          data: formState,
+          config: formConfig
+        }),
+      }).then((response) => {
+        // Handle response
+        if (response.status === 200) {
+          console.log(200);
+          if(isreview==='review' || isreview ==='edit') window.location.href = '/home'
+          onNextPage()
+        }
+      })
+    } catch (error) {
+      console.error('Error updating status:', error);
+    }
     // Handle form submission here (e.g., send data to server)
   };
   const handleAddRow = (id) => {
@@ -119,7 +152,7 @@ const DynamicFormBuilder = ({ formConfig ,onNextPage, isreview}) => {
               id={id}
               name={id}
               onChange={(e) => handleNormalChange(e, id)}
-              // readOnly={isreview}
+            // readOnly={isreview}
             />
           </div>
         );
@@ -145,7 +178,7 @@ const DynamicFormBuilder = ({ formConfig ,onNextPage, isreview}) => {
         return (
           <div key={id} className="values">
             <label>{label}</label>
-            
+
             {options.map((option) => (
               <div key={option.value}>
                 <input
@@ -208,7 +241,7 @@ const DynamicFormBuilder = ({ formConfig ,onNextPage, isreview}) => {
       case "table":
         return (
           <div key={id}>
-            <h1 style={{color:'#1C2864', fontWeight:'200', fontSize:'x-large'}}>{label}</h1>
+            <h1 style={{ color: '#1C2864', fontWeight: '200', fontSize: 'x-large' }}>{label}</h1>
             <table>
               <thead>
                 <tr>
@@ -306,7 +339,7 @@ const DynamicFormBuilder = ({ formConfig ,onNextPage, isreview}) => {
   return (
     <form onSubmit={handleSubmit}>
       {formConfig.map((element) => renderFormElement(element))}
-      {isreview? <></>: <button type="submit" className='next'>Submit</button>}
+      {isreview==='view' ? <></> : <button type="submit" className='next'>Submit</button>}
     </form>
   );
 };
