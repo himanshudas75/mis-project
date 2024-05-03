@@ -119,7 +119,7 @@ def login():
         print(username)
         password = request.json['password']
         print(password)
-        user = mongo.db.users.find_one({'username': username})
+        user = mongo.db.users.find_one({'email': username})
         
         if user and check_password_hash(user['password'], password):
         # if user:
@@ -207,11 +207,13 @@ def form():
     try:
         json_data = request.get_json()    
         email = json_data.get('email')
-        print(json_data.get('dob'))
+        # print(json_data.get('DateofBirth'))
         if email:
             for key in json_data:
                 if key != 'email':  # Skip the 'email' key
                     mongo.db.users.update_one({'email': email}, {'$set': {key: json_data.get(key)}})
+
+            mongo4.db.tempdata.delete_one({'email': email})
 
             return 'Data Inserted Successfully',200
         # Insert JSON data into MongoDB if email ID does not exist
@@ -243,11 +245,10 @@ def edit():
         print('error occurred')
         return "Something Happen",500
 
-@app.route('/details',methods=['POST'])
+@app.route('/details',methods=['GET'])
 def details():
     try:
-        json_data = request.get_json()    
-        email = json_data.get('email')
+        email = request.args.get('email')
         
         if email:
             data = mongo.db.users.find_one({'email': email},{'_id':0})
@@ -270,8 +271,8 @@ def apply():
         jobId = json_data.get('jobId')
         status = json_data.get('status')
         applicationId = json_data.get('applicationId')
-        data=mongo1.db.users.find_one({'email': email},{'department':department})
-
+        data = mongo1.db.users.find_one({'email': email, 'department': department}, {})
+        print(type(data))
         if data:
             return "Cannot Apply for this Department",403
         data = {
@@ -279,7 +280,8 @@ def apply():
             'jobId': jobId,
             'status': status,
             'applicationId': applicationId,
-            'data': json_data
+            'department': department,
+            'post':json_data.get('post')
         }
         mongo1.db.users.insert_one(data)
         return "Application Submitted Successfully",200
@@ -287,18 +289,20 @@ def apply():
         print('error occurred')
         return "Something Happen",500
 
-@app.route('/viewStatus',methods=['POST'])
+@app.route('/viewStatus',methods=['GET'])
 def view():
+    print("asdf")
     try:
-
-        json_data= request.get_json()
-        # mongo1.db.users.insert_one(json_data)
-        email = json_data.get('email')
-        data=mongo1.db.users.find_one({'email':email},{"_id":0})
+        print("asdf")
+        email = request.args.get('email')
+        print(email)
+        data=mongo1.db.users.find({'email':email},{"_id":0})
+        data = list(data)
         if data:
             return data,200
         else:
-            return "no positioned applied to",404
+            print("cghj")
+            return "no positioned applied to",405
     except: 
         print("error occurred")
         return "Something Happen",500
@@ -325,7 +329,8 @@ def adminLogin():
 def view_all():
     try:
 
-        data=mongo1.db.users.find_one({},{"_id":0})
+        data=mongo1.db.users.find({},{"_id":0})
+        data = list(data)
         if data:
             return data,200
         else:

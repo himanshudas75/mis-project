@@ -27,7 +27,7 @@ const RegistrationForm = () => {
       },
       body: JSON.stringify({
         salutation: formData.salutation,
-        name: formData.name,
+        username: formData.name,
         gender: formData.gender,
         contactNo: formData.contactNo,
         email: formData.email,

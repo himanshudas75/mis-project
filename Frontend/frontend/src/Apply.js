@@ -1,5 +1,5 @@
 // MainBody.js
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Navbar from './Components/Navbar';
 import './Styles/apply.css';
 import './Styles/forms.css'
@@ -15,7 +15,30 @@ const Apply = () => {
         adv: '',
         post: '',
         dept: '',
+        status: 'Pending',
     });
+    const [jobs, setJobs] = useState([])
+    useEffect(() => {
+        fetchJobs()
+      }, []);
+      const fetchJobs = async () => {
+        try {
+            const response = await fetch('http://127.0.0.1:5000/jobopeningget', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            if (!response.ok) {
+                throw new Error('Failed to fetch job openings');
+            }
+            const data = await response.json();
+            var dataArray = data.map((ele)=>{return ele.data})
+            setJobs(dataArray); 
+        } catch (error) {
+            console.error('Error fetching job openings:', error);
+        }
+    };
 
     const handleChange = (event) => {
         setFormData({ ...formData, [event.target.name]: event.target.value });
@@ -30,10 +53,11 @@ const Apply = () => {
                 'Content-Type': 'application/json', // Ensure 'Content-Type' header is set
             },
             body: JSON.stringify({
-                email: localStorage.getItem('user').email,
+                email: localStorage.getItem('user'),
                 jobId: formData.adv,
                 post: formData.post,
                 department: formData.dept,
+                status: formData.status
             }),
         })
             .then(response => {
@@ -65,12 +89,12 @@ const Apply = () => {
                 </div>
 
                 <div className='values'>
-                    <label htmlFor="dept">Post Applied for</label>
-                    <select name="dept" id="dept" value={formData.dept} onChange={handleChange} required>
+                    <label htmlFor="post">Post Applied for</label>
+                    <select name="post" id="post" value={formData.post} onChange={handleChange} required>
                         <option value="">Select an Option</option>
-                        {options.map((option) => (
-                            <option key={option.value} value={option.value}>
-                                {option.label}
+                        {jobs.map((job) => (
+                            <option key={job.data} value={job.data}>
+                                {job.data}
                             </option>
                         ))}
                     </select>

@@ -19,7 +19,9 @@ const Dashboard = () => {
 
   const fetchApplications = async () => {
     try {
-      const response = await fetch('http://127.0.0.1:5000/viewStatus', {
+      const email = localStorage.getItem('user')
+      console.log(email)
+      const response = await fetch(`http://127.0.0.1:5000/viewStatus?email=${email}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -29,6 +31,7 @@ const Dashboard = () => {
         throw new Error('Failed to fetch job openings');
       }
       const data = await response.json();
+      console.log(data)
       // var dataArray = data.map((ele)=>{return ele.data})
       setActivityData(data);
       setFilteredData(data);
@@ -40,7 +43,7 @@ const Dashboard = () => {
   const handleChange = (event) => {
     setSearchTerm(event.target.value);
     const filtered = activityData.filter((item) =>
-      item.advtNo.toLowerCase().includes(searchTerm.toLowerCase())
+      item.jobId.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredData(filtered);
   };
@@ -76,7 +79,7 @@ const Dashboard = () => {
               <tr key={item.id}>
                 <td>{item.post}</td>
                 <td>{item.department}</td>
-                <td>{item.advtNo}</td>
+                <td>{item.jobId}</td>
                 <td>{item.status}</td>
               </tr>
             ))}

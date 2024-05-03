@@ -26,7 +26,7 @@ const LoginForm = () => {
       .then((response) => {
         // Handle response
         if (response.status === 200) {
-          localStorage.setItem('user', response.data)
+          localStorage.setItem('user', formData.username)
           window.location.href = "/home";
           console.log(200);
         }
@@ -43,7 +43,7 @@ const LoginForm = () => {
     <form className="login-form" onSubmit={handleSubmit}>
       <h1>Login</h1>
       <div className="values">
-        <label htmlFor="username">Username *</label>
+        <label htmlFor="username">Email *</label>
         <input
           type="text"
           id="username"

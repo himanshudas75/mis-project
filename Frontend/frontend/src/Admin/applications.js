@@ -74,9 +74,9 @@ const AdminDashboard = () => {
                     </thead>
                     <tbody>
                         {applications.map((application) => (
-                            <tr key={application.id}>
-                                <td>{application.id}</td>
-                                <td style={{ width: '10rem' }}>{application.name}</td>
+                            <tr key={application.applicationId}>
+                                <td>{application.applicationId}</td>
+                                <td style={{ width: '10rem' }}>{application.email}</td>
                                 <td><a href='#'>{application.application}</a></td>
                                 <td style={{ width: '10rem' }}>{application.status}</td>
                                 <td>

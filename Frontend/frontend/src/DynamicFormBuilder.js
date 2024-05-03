@@ -83,12 +83,13 @@ const DynamicFormBuilder = ({ formConfig, onNextPage, fromItem, path, isreview }
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e, isreview) => {
     e.preventDefault();
     console.log("Form State:", formState);
     localStorage.setItem('user', 'abcd@efgh')
     var email = localStorage.getItem('user')
     console.log(email)
+    console.log(isreview)
     try {
       fetch(`http://127.0.0.1:5000/${path}`, {
         method: 'POST',
@@ -104,8 +105,9 @@ const DynamicFormBuilder = ({ formConfig, onNextPage, fromItem, path, isreview }
         // Handle response
         if (response.status === 200) {
           console.log(200);
+          console.log(isreview)
           if(isreview==='review' || isreview ==='edit') window.location.href = '/home'
-          onNextPage()
+          else onNextPage()
         }
       })
     } catch (error) {
@@ -152,7 +154,7 @@ const DynamicFormBuilder = ({ formConfig, onNextPage, fromItem, path, isreview }
               id={id}
               name={id}
               onChange={(e) => handleNormalChange(e, id)}
-            // readOnly={isreview}
+              readOnly={isreview==='view'}
             />
           </div>
         );
@@ -165,6 +167,7 @@ const DynamicFormBuilder = ({ formConfig, onNextPage, fromItem, path, isreview }
               name={id}
               value={formState.formData[id]}
               onChange={(e) => handleNormalChange(e, id)}
+              readOnly={isreview==='view'}
             >
               {options.map((option) => (
                 <option key={option.value} value={option.value}>
@@ -189,6 +192,7 @@ const DynamicFormBuilder = ({ formConfig, onNextPage, fromItem, path, isreview }
                   onChange={(e) => handleNormalChange(e, id)}
                   value={option.value} // Pass the value attribute here
                   data-value={option.value}
+                  readOnly={isreview==='view'}
                 />
                 <label htmlFor={option.value}>{option.label}</label>
               </div>
@@ -205,6 +209,7 @@ const DynamicFormBuilder = ({ formConfig, onNextPage, fromItem, path, isreview }
               name={id}
               value={formState.formData[id]}
               onChange={(e) => handleNormalChange(e, id)}
+              readOnly={isreview==='view'}
             />
           </div>
         );
@@ -220,6 +225,7 @@ const DynamicFormBuilder = ({ formConfig, onNextPage, fromItem, path, isreview }
                 style={{ display: 'none' }}
                 name={id}
                 onChange={(e) => handleNormalChange(e, id)}
+                readOnly={isreview==='view'}
               />
 
             </>
@@ -235,6 +241,7 @@ const DynamicFormBuilder = ({ formConfig, onNextPage, fromItem, path, isreview }
               name={id}
               value={formState.formData[id]}
               onChange={(e) => handleNormalChange(e, id)}
+              readOnly={isreview==='view'}
             />
           </div>
         );
@@ -248,7 +255,7 @@ const DynamicFormBuilder = ({ formConfig, onNextPage, fromItem, path, isreview }
                   {columns.map((column) => (
                     <th key={column.key}>{column.label}</th>
                   ))}
-                  <th>Action</th>
+                  {isreview!=='view' && <th>Action</th>}
                 </tr>
               </thead>
               <tbody>
@@ -264,6 +271,7 @@ const DynamicFormBuilder = ({ formConfig, onNextPage, fromItem, path, isreview }
                               onChange={(e) =>
                                 handleTableChange(e, id, rowIndex, column.key)
                               }
+                              readOnly={isreview==='view'}
                             >
                               {column.options.map((option) => (
                                 <option key={option.value} value={option.value}>
@@ -279,16 +287,18 @@ const DynamicFormBuilder = ({ formConfig, onNextPage, fromItem, path, isreview }
                               onChange={(e) =>
                                 handleTableChange(e, id, rowIndex, column.key)
                               }
+                              readOnly={isreview==='view'}
                             />
                           ) : column.type === "file" ? (
                             <>
-                              <label htmlFor={id} className="upload-label">Upload</label>
+                              <label htmlFor={id} className={"upload-label"}>Upload</label>
                               <input
                                 type="file"
                                 id={id}
                                 style={{ display: 'none' }}
                                 name={`${id}[${rowIndex}][${column.key}]`}
                                 onChange={(e) => handleTableChange(e, id, rowIndex, column.key)}
+                                readOnly={isreview==='view'}
                               />
 
                             </>
@@ -299,7 +309,9 @@ const DynamicFormBuilder = ({ formConfig, onNextPage, fromItem, path, isreview }
                               value={row[column.key] || ""}
                               onChange={(e) =>
                                 handleTableChange(e, id, rowIndex, column.key)
+                              
                               }
+                              readOnly={isreview==='view'}
                             />
                           ) : (
                             <input
@@ -309,17 +321,19 @@ const DynamicFormBuilder = ({ formConfig, onNextPage, fromItem, path, isreview }
                               onChange={(e) =>
                                 handleTableChange(e, id, rowIndex, column.key)
                               }
+                              readOnly={isreview==='view'}
                             />
                           )}
                         </td>
                       ))}
                       <td>
-                        <button
+                        {isreview!=='view' && <button
                           type="button"
                           onClick={() => handleRemoveRow(id, rowIndex)}
+                          disabled={isreview==='view'}
                         >
                           <span>+</span>
-                        </button>
+                        </button>}
                       </td>
                     </tr>
                   )
@@ -337,7 +351,7 @@ const DynamicFormBuilder = ({ formConfig, onNextPage, fromItem, path, isreview }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={(e)=>handleSubmit(e,isreview)}>
       {formConfig.map((element) => renderFormElement(element))}
       {isreview==='view' ? <></> : <button type="submit" className='next'>Submit</button>}
     </form>

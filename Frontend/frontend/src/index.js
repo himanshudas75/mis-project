@@ -32,7 +32,7 @@ root.render(
         <Route path="/home" element={<Dashboard />} />
         <Route path="/edit" element={<ReviewPage isreview={'edit'} />} />
         <Route path="/view" element={<ReviewPage isreview={'view'} />} />
-        {/* <Route path="/details" element={<Details current = {localStorage.getItem('current')} />} /> */}
+        <Route path="/details" element={<Details current = {localStorage.getItem('current')} />} />
         <Route path="/details/page1" element={<Form />} />
         {/* <Route path="/details/page2" element={<Page2 />} />
         <Route path="/details/page3" element={<Page3 />} />
