@@ -88,58 +88,58 @@ const QualificationDetails = ({ moveToNext }) => {
     pg: [],
   };
   const validationSchema = Yup.object({
-    //   cat_registration_number: Yup.string().required("Required"),
-    //   cat_percentile: Yup.string().required("Required"),
-    //   cat_quantitative_percentile: Yup.string().required("Required"),
-    //   cat_quantitative_score: Yup.string().required("Required"),
-    //   cat_verbal_percentile: Yup.string().required("Required"),
-    //   cat_verbal_score: Yup.string().required("Required"),
-    //   cat_data_interpretation_percentile: Yup.string().required("Required"),
-    //   cat_data_interpretation_score: Yup.string().required("Required"),
-    //   cat_score: Yup.string().required("Required"),
-    //   priority1: Yup.string().required("Required"),
-    //   priority2: Yup.string().required("Required"),
-    //   priority3: Yup.string().required("Required"),
-    //   agreement: Yup.string().required("Required"),
-    //   tenth_class: Yup.object({
-    //     school_name: Yup.string().required("Required"),
-    //     result_status: Yup.string().required("Required"),
-    //     grade_type: Yup.string().required("Required"),
-    //     year_of_passing: Yup.string().required("Required"),
-    //     // score: Yup.number().when(
-    //     //   "grade_type",
-    //     //   {
-    //     //     is: "percentage",
-    //     //     then: () => {
-    //     //       Yup.number().min(1).max(100).required("Required");
-    //     //     },
-    //     //   },
-    //     //   {
-    //     //     is: "cgpa",
-    //     //     then: () => {
-    //     //       Yup.number().min(1).max(10).required("Required");
-    //     //     },
-    //     //   }
-    //     // ),
-    //     score: Yup.string().required("Required"),
-    //   }),
-    //   twelfth_class: Yup.object({
-    //     college_name: Yup.string().required("Required"),
-    //     result_status: Yup.string().required("Required"),
-    //     grade_type: Yup.string().required("Required"),
-    //     year_of_passing: Yup.string().required("Required"),
-    //     score: Yup.string().required("Required"),
-    //   }),
-    //   ug: Yup.object({
-    //     name_of_the_exam: Yup.string().required("Required"),
-    //     college_name: Yup.string().required("Required"),
-    //     result_status: Yup.string().required("Required"),
-    //     grade_type: Yup.string().required("Required"),
-    //     year_of_passing: Yup.string().required("Required"),
-    //     score: Yup.string().required("Required"),
-    //   }),
-    //write correct validations for score field - it is still being accepted as  a string
-    //need to see dyanmic inputs - add pg education fields etc
+    cat_registration_number: Yup.string().required("Required"),
+    cat_percentile: Yup.string().required("Required"),
+    cat_quantitative_percentile: Yup.string().required("Required"),
+    cat_quantitative_score: Yup.string().required("Required"),
+    cat_verbal_percentile: Yup.string().required("Required"),
+    cat_verbal_score: Yup.string().required("Required"),
+    cat_data_interpretation_percentile: Yup.string().required("Required"),
+    cat_data_interpretation_score: Yup.string().required("Required"),
+    cat_score: Yup.string().required("Required"),
+    priority1: Yup.string().required("Required"),
+    priority2: Yup.string().required("Required"),
+    priority3: Yup.string().required("Required"),
+    agreement: Yup.string().required("Required"),
+    tenth_class: Yup.object({
+      school_name: Yup.string().required("Required"),
+      result_status: Yup.string().required("Required"),
+      grade_type: Yup.string().required("Required"),
+      year_of_passing: Yup.string().required("Required"),
+      // score: Yup.number().when(
+      //   "grade_type",
+      //   {
+      //     is: "percentage",
+      //     then: () => {
+      //       Yup.number().min(1).max(100).required("Required");
+      //     },
+      //   },
+      //   {
+      //     is: "cgpa",
+      //     then: () => {
+      //       Yup.number().min(1).max(10).required("Required");
+      //     },
+      //   }
+      // ),
+      score: Yup.string().required("Required"),
+    }),
+    twelfth_class: Yup.object({
+      college_name: Yup.string().required("Required"),
+      result_status: Yup.string().required("Required"),
+      grade_type: Yup.string().required("Required"),
+      year_of_passing: Yup.string().required("Required"),
+      score: Yup.string().required("Required"),
+    }),
+    ug: Yup.object({
+      name_of_the_exam: Yup.string().required("Required"),
+      college_name: Yup.string().required("Required"),
+      result_status: Yup.string().required("Required"),
+      grade_type: Yup.string().required("Required"),
+      year_of_passing: Yup.string().required("Required"),
+      score: Yup.string().required("Required"),
+    }),
+    // write correct validations for score field - it is still being accepted as  a string
+    // need to see dyanmic inputs - add pg education fields etc
     pg: Yup.array().of(
       Yup.object({
         college_name: Yup.string().required("Required"),
@@ -311,7 +311,6 @@ const QualificationDetails = ({ moveToNext }) => {
                 name="tenth_class.score"
               />
             </Box>
-            <Divider orientation="horizontal" />
 
             {/* class 12th details */}
 
@@ -465,16 +464,6 @@ const QualificationDetails = ({ moveToNext }) => {
                                       Remove
                                     </Button>
                                   )}
-                                  {formik.errors[
-                                    educationObject?.college_name
-                                  ] &&
-                                  formik.touched[
-                                    educationObject?.college_name
-                                  ] ? (
-                                    <FormErrorMessage>
-                                      formik.errors.pg[index].score
-                                    </FormErrorMessage>
-                                  ) : null}
                                 </Box>
                               );
                             })}
