@@ -1,7 +1,8 @@
 # app.py
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from flask_pymongo import PyMongo
-from werkzeug.security import generate_password_hash, check_password_hash
+from flask_bcrypt import Bcrypt
+# from Bcrypt import generate_password_hash, check_password_hashx
 from bson.objectid import ObjectId
 import random
 import string
@@ -26,6 +27,7 @@ app.config['MAIL_PASSWORD'] = 'Divij@2002'  # SMTP server password
 # app.secret_key = 'your_secret_key'  # Change this to a secret key for session management
 mongo = PyMongo(app)
 mail = Mail(app)
+bcrypt = Bcrypt(app)
 
 app.config['MONGO_URI'] = 'mongodb+srv://Divij:Divij2002@cluster0.aj0dc.mongodb.net/applicationDB'
 # app.config['MONGO_URI'] = 'mongodb://localhost:27017/applicationDB'
@@ -58,7 +60,7 @@ def signup():
             print(username)
             email = request.json['email']
             password = request.json['password']
-            hashed_password = generate_password_hash(password)
+            hashed_password = bcrypt.generate_password_hash(password)
             
             # if mongo.db.users.find_one({'username': username}):
             #     return 'Username already exists! Please choose another username.', 200
@@ -121,7 +123,7 @@ def login():
         print(password)
         user = mongo.db.users.find_one({'email': username})
         
-        if user and check_password_hash(user['password'], password):
+        if user and bcrypt.check_password_hash(user['password'], password):
         # if user:
             # session['username'] = username
 
@@ -186,7 +188,7 @@ def reset_password(token):
         if token_data and datetime.now() < token_data['expiry_time']:
                 new_password = request.json['new_password']
                 print(new_password)
-                hashed_password = generate_password_hash(new_password)
+                hashed_password = bcrypt.generate_password_hash(new_password)
                 mongo.db.users.update_one({'email': token_data['email']}, {'$set': {'password': hashed_password}})
                 mongo.db.password_reset_tokens.delete_one({'token': token})
                 
@@ -314,7 +316,7 @@ def adminLogin():
         password = request.json['password']
         print("haha")
         user = mongo2.db.user.find_one({'username':username})
-        if user and check_password_hash(user['password'],password):
+        if user and bcrypt.check_password_hash(user['password'],password):
             return "Admin Logged in",200
         else:
             return "Login unsuccessful",401
