@@ -291,11 +291,8 @@ def apply():
 
 @app.route('/viewStatus',methods=['GET'])
 def view():
-    print("asdf")
     try:
-        print("asdf")
         email = request.args.get('email')
-        print(email)
         data=mongo1.db.users.find({'email':email},{"_id":0})
         data = list(data)
         if data:
@@ -453,16 +450,13 @@ def tempStore():
 
 @app.route('/tempget',methods=['GET'])
 def tempGet():
-    print("asdfg")
     try:
 
         # json_data= request.get_json()
         # email = json_data.get('email')
-        print("asdfg")
         email = request.args.get('email')
         print(email)
         data=mongo4.db.tempdata.find_one({'email':email},{"_id":0})
-        print("asdfg")
         print(jsonify(data))
         if data:
             return data,200
@@ -471,7 +465,6 @@ def tempGet():
     except:
         print("error occurred")  
         return "Something Happen",500 
-
-        print("asdfg")
+    
 if __name__ == '__main__':
     app.run(debug=True)

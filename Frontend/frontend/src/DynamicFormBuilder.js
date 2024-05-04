@@ -86,10 +86,8 @@ const DynamicFormBuilder = ({ formConfig, onNextPage, fromItem, path, isreview }
   const handleSubmit = (e, isreview) => {
     e.preventDefault();
     console.log("Form State:", formState);
-    localStorage.setItem('user', 'abcd@efgh')
     var email = localStorage.getItem('user')
     console.log(email)
-    console.log(isreview)
     try {
       fetch(`http://127.0.0.1:5000/${path}`, {
         method: 'POST',
