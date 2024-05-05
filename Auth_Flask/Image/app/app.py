@@ -4,6 +4,7 @@ from flask_jwt_extended import JWTManager, create_access_token, jwt_required, ge
 from datetime import timedelta
 from hashlib import sha256
 import os
+import hashlib
 
 app = Flask(__name__)
 
@@ -18,30 +19,20 @@ app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(seconds=int(os.environ.get('J
 mongo = PyMongo(app)
 jwt = JWTManager(app)
 
-def get_roles(username):
-    user = mongo.db.users.find_one({'username': username})
-    if user:
-        return user.get('roles', {})
-    return {}
-
 def get_role_hash(username):
     user = mongo.db.users.find_one({'username': username})
     if user:
         return user.get('role_hash', '')
     return ''
 
-import hashlib
+def get_delegated_role_hash(username):
+    user = mongo.db.users.find_one({'username': username})
+    if user:
+        return user.get('delegated_role_hash', '')
+    return ''
 
 def sha256_hash(list1):
-  """Calculates the SHA-256 hash of a list.
-
-  Args:
-    list1: The list to hash.
-
-  Returns:
-    The SHA-256 hash of the list as a hexadecimal string.
-  """
-
+  
   sha256 = hashlib.sha256()
   for item in list1:
     sha256.update(item.encode())
@@ -78,9 +69,19 @@ def login():
         user = mongo.db.users.find_one({'username': username, 'password_hash': password_hash})
 
         if user:
-            roles = get_roles(username)
-            additional_claims = {'roles': roles, "last_role_update_hash" : sha256_hash(user.get('roles', {}))}
+            roles = user.get('roles', {})
+            delegated_roles = user.get('delegated_roles', {})
+            roles = [x for _, x in roles.items()]
+            delegated_roles = [x for _, x in delegated_roles.items()]
+            
+            additional_claims = {
+                'roles': roles, 
+                'delegated_roles' : delegated_roles, 
+                "last_role_update_hash" : sha256_hash(roles), 
+                "last_delegated_role_update_hash" : sha256_hash(delegated_roles)
+            }
             access_token = create_access_token(identity=username, additional_claims=additional_claims)
+            
             response = make_response(redirect(redirect_to))
             response.set_cookie('access_token', value=access_token, httponly=True)
             return response
@@ -106,6 +107,9 @@ def verify():
 
         if decoded_token.get('last_role_update_hash') != get_role_hash(identity):
             return jsonify({'message': 'Roles have been updated. Please login again'}), 401
+        
+        if decoded_token.get('last_delegated_role_update_hash') != get_delegated_role_hash(identity):
+            return jsonify({'message': 'Roles have been delegated/reverted. Please login again'}), 401
         
         return jsonify(logged_in_as=identity), 200
     except Exception as e:
