@@ -8,10 +8,6 @@ router
     .route('/eventDates')
     .get(isAuthenticated, hasRoles, catchAsync(action.getEventDates));
 
-router
-    .route('/course')
-    .get(isAuthenticated, hasRoles, catchAsync(action.getCourses));
-
 router.route('/keepAlive').get(catchAsync(action.keepAlive));
 
 module.exports = router;

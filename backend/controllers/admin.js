@@ -1,5 +1,5 @@
 const EventDate = require('../models/eventDate');
-const Department = require('../models/department');
+const Course = require('../models/course');
 
 module.exports.isAdmin = (req, res) => {
     console.log(req);
@@ -58,40 +58,7 @@ module.exports.deleteEventDate = async (req, res, next) => {
 module.exports.addCourses = async (req, res, next) => {
     const courses = req.body;
 
-    for (const course of courses) {
-        const d = course.department;
-        const p = course.programme;
-        const c = course.course;
-
-        const dep = await Department.findOne({ name: d });
-
-        if (dep) {
-            const programme = dep.programmes.find((item) => item.name === p);
-            if (programme) {
-                if (!programme.courses.includes(c)) {
-                    programme.courses.push(c);
-                }
-            } else {
-                dep.programmes.push({
-                    name: p,
-                    courses: [c],
-                });
-            }
-
-            await dep.save();
-        } else {
-            const obj = new Department({
-                name: d,
-                programmes: [
-                    {
-                        name: p,
-                        courses: [c],
-                    },
-                ],
-            });
-            await obj.save();
-        }
-    }
+    await Course.insertMany(courses);
 
     res.json({
         success: true,
@@ -100,7 +67,7 @@ module.exports.addCourses = async (req, res, next) => {
 };
 
 module.exports.deleteCourse = async (req, res, next) => {
-    await Department.deleteMany();
+    await Course.deleteMany();
 
     res.json({
         success: true,
