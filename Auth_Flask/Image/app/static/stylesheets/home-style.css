@@ -1,0 +1,85 @@
+/* home-style.css */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+}
+
+h1, h2, h3 {
+    color: #333;
+}
+
+.service-button, .logout-button {
+    padding: 10px 20px;
+    border: none;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.service-button {
+    background-color: #4CAF50; /* Green */
+}
+
+.service-button:hover {
+    background-color: #45a049;
+}
+
+.logout-button {
+    background-color: #f44336; /* Red */
+}
+
+.logout-button:hover {
+    background-color: #d73833;
+}
+
+.container {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+/* Add this block for styling flashed messages and the remove button with fading animation */
+.flashes-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    max-width: 400px;
+    z-index: 1000;
+  }
+  
+  .flash {
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    color: #fff;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    opacity: 1;
+    transition: opacity 0.5s ease-in-out;
+  }
+  
+  .flash.success {
+    background-color: #4CAF50; /* Green */
+  }
+  
+  .flash.error {
+    background-color: #f44336; /* Red */
+  }
+  
+  .remove-flash {
+    background: none;
+    border: none;
+    color: inherit;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  /* Add this block for the fading animation */
+  .flash.fade-out {
+    opacity: 0;
+  }
+  

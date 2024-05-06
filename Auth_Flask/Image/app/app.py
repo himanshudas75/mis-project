@@ -42,18 +42,26 @@ def sha256_hash(list1):
 @app.route('/')
 def home():
     token_cookie = request.cookies.get('access_token')
-
     if not token_cookie:
         return redirect('/login', code=302)
-
+    
     try:
         decoded_token = decode_token(token_cookie)
         identity = decoded_token[JWT_IDENTITY_CLAIM]
+        roles = decoded_token.get('roles', [])
+        delegated_roles = decoded_token.get('delegated_roles', [])
+        role_services = [mongo.db.roles.find_one({'role': role})['services'] for role in roles]
+
+        delegated_role_services = [mongo.db.roles.find_one({'role': role})['services'] for role in delegated_roles]
+        role_services = list(set(element for sublist in role_services for element in sublist))
+        delegated_role_services = list(set(element for sublist in delegated_role_services for element in sublist))
+        
         flash(f"Logged in as {identity}")
-        flash(token_cookie)
-        return render_template('home.html', username=identity)
+        return render_template('home.html', username=identity, role_services=role_services, delegated_role_services=delegated_role_services)
     except Exception as e:
+        flash("Something happened")
         return redirect('/login', code=302)
+
 
 
 @app.route('/login', methods=['GET', 'POST'])

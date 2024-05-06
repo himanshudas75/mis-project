@@ -3,16 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='stylesheets/login-signup.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='stylesheets/home-style.css') }}">
     <title>Home Page</title>
 </head>
 <body>
     <h1>Welcome to the Home Page</h1>
     <p>Hello, {{ username }}!</p>
-    
+
+    <!-- Service Buttons for Roles -->
+    <div class="container">
+        <h2>Your Roles</h2>
+        {% for service in role_services %}
+            <button class="service-button">{{ service }}</button>
+        {% endfor %}
+    </div>
+
+    <!-- Service Buttons for Delegated Roles -->
+    <div class="container">
+        <h2>Your Delegated Roles</h2>
+        {% for service in delegated_role_services %}
+            <button class="service-button">{{ service }}</button>
+        {% endfor %}
+    </div>
+
     <!-- Logout button -->
     <form action="/logout" method="GET">
-        <button type="submit">Logout</button>
+        <button type="submit" class="logout-button">Logout</button>
     </form>
 </body>
 </html>
