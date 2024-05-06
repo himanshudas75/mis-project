@@ -2,6 +2,8 @@
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from flask_pymongo import PyMongo
 from flask_bcrypt import Bcrypt
+from functools import wraps
+import jwt 
 # from Bcrypt import generate_password_hash, check_password_hashx
 from bson.objectid import ObjectId
 import random
@@ -47,6 +49,51 @@ app.config['MONGO_URI']='mongodb+srv://Divij:Divij2002@cluster0.aj0dc.mongodb.ne
 # app.config['MONGO_URI']='mongodb://localhost:27017/tempDB'
 mongo4= PyMongo(app)
 
+def parse_cookie(jwt_cookie):
+    decoded_token = jwt.decode(jwt_cookie, options={"verify_signature": False})
+    identity = decoded_token.get("identity")
+    roles = decoded_token.get("roles")
+    return identity, roles
+
+def extract_user_info(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        jwt_cookie = request.cookies.get("authentication")
+        if not jwt_cookie:
+            return jsonify({"message": "Token is missing"}), 401
+
+        try:
+            decoded_token = jwt.decode(jwt_cookie, options={"verify_signature": False})
+            return f(decoded_token, *args, **kwargs)
+        except jwt.ExpiredSignatureError:
+            return jsonify({"message": "Token expired"}), 401
+        except jwt.InvalidTokenError:
+            return jsonify({"message": "Invalid token"}), 401
+
+    return decorated_function
+
+def has_role(f):
+    @wraps(f)
+    def decorated_function(decoded_token, *args, **kwargs):
+
+        roles = decoded_token.get("roles")
+        assigned_role = "FACULTYRECRUITMENT"
+
+        for role in roles:
+            if(role == assigned_role):
+                return f(decoded_token, *args, **kwargs)
+            
+        return (
+                jsonify(
+                    {
+                        "message": "You do not have the necessary role to access this ticket"
+                    }
+                ),
+                403,
+            )
+        
+
+    return decorated_function
 # Routes
 @app.route('/home')
 def index():
@@ -309,6 +356,8 @@ def view():
 
 ##ADMIN API
 @app.route('/adminlogin',methods=['POST'])
+@extract_user_info
+@has_role
 def adminLogin():
     try:
 
@@ -325,6 +374,8 @@ def adminLogin():
         return "Something Happen",500
 
 @app.route('/getAllApply',methods=['GET']) #admin
+@extract_user_info
+@has_role
 def view_all():
     try:
 
@@ -339,6 +390,8 @@ def view_all():
         return "Something Happen",500
 
 @app.route('/updatestatus',methods=['POST']) #admin
+@extract_user_info
+@has_role
 def adminEdit():
     try:
 
@@ -373,6 +426,8 @@ def adminEdit():
 
 ## JOB OPENING
 @app.route('/jobopeningpost',methods=['POST']) #admin
+@extract_user_info
+@has_role
 def jobOpeningPost():
     try:
 
@@ -404,6 +459,8 @@ def jobOpeningGet():
 
 ## JOB CLOSING
 @app.route('/jobclosing',methods=['POST']) #admin
+@extract_user_info
+@has_role
 def jobClosing():
     try:
 
