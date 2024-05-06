@@ -41,7 +41,7 @@ def sha256_hash(list1):
 # Flask routes
 @app.route('/')
 def home():
-    token_cookie = request.cookies.get('access_token')
+    token_cookie = request.cookies.get('authentication')
     if not token_cookie:
         return redirect('/login', code=302)
     
@@ -91,7 +91,7 @@ def login():
             access_token = create_access_token(identity=username, additional_claims=additional_claims)
             
             response = make_response(redirect(redirect_to))
-            response.set_cookie('access_token', value=access_token, httponly=True)
+            response.set_cookie('authentication', value=access_token, httponly=True)
             return response
         else:
             flash('Invalid credentials. Please try again.', 'error')
@@ -100,7 +100,7 @@ def login():
 
 @app.route('/verify', methods=['GET'])
 def verify():
-    token_cookie = request.cookies.get('access_token')
+    token_cookie = request.cookies.get('authentication')
 
     if not token_cookie:
         return jsonify({'message': 'Token not found in the cookie'}), 401
@@ -126,7 +126,7 @@ def verify():
 @app.route('/logout', methods=['GET'])
 def logout():
     response = make_response(redirect('/'))
-    response.delete_cookie('access_token')
+    response.delete_cookie('authentication')
     return response
 
 if __name__ == '__main__':
