@@ -39,20 +39,11 @@ const userSchema = new Schema({
         type: Date,
         required: true,
     },
-    gender: {
-        type: String,
+    math_or_stat_degree: {
+        type: Boolean,
         required: true,
-        enum: ['M', 'F', 'T'],
     },
-    blood_group: {
-        type: String,
-        required: true,
-        enum: ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'],
-    },
-    father_name: {
-        type: String,
-    },
-    color_blindness: {
+    btech_degree: {
         type: Boolean,
         required: true,
     },

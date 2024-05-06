@@ -16,14 +16,17 @@ const complaintSchema = new Schema({
         required: true,
         unique: true,
     },
-    user: {
-        type: Schema.Types.ObjectId,
-        ref: 'User',
+    registered_mobile_number: {
+        type: String,
+        required: true,
+    },
+    registered_email: {
+        type: String,
+        required: true,
     },
     complaint_type: {
         type: String,
         required: true,
-        enum: ['Civil', 'Electric'],
     },
     complaint_details: {
         type: String,
@@ -32,11 +35,10 @@ const complaintSchema = new Schema({
     payment_type: {
         type: String,
         required: true,
-        enum: ['PayTM', 'GPay'],
     },
     screenshot: {
         type: imageSchema,
-        required: true,
+        // required: true,
     },
 });
 

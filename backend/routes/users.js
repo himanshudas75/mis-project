@@ -14,6 +14,8 @@ router.route('/verify').get(catchAsync(users.verify));
 
 router.route('/hasRoles').get(isAuthenticated, hasRoles, users.hasRoles);
 
+router.route('/getDetails').get(isAuthenticated, hasRoles, users.getDetails);
+
 router
     .route('/changePassword')
     .put(isAuthenticated, catchAsync(users.changePassword));

@@ -12,14 +12,12 @@ const multer = require('multer');
 const { storage } = require('../utils/cloudinary');
 const upload = multer({ storage: storage });
 
-router
-    .route('/register')
-    .post(
-        isAuthenticated,
-        upload.single('screenshot'),
-        validateComplaint,
-        catchAsync(complaints.register)
-    );
+router.route('/register').post(
+    isAuthenticated,
+    // upload.single('payment_screenshot'),
+    validateComplaint,
+    catchAsync(complaints.register)
+);
 
 router
     .route('/fetch')

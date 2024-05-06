@@ -9,8 +9,18 @@ const userCourseSchema = new Schema({
     },
     courses: [
         {
-            type: Schema.Types.ObjectId,
-            ref: 'Course',
+            course: {
+                type: String,
+                required: true,
+            },
+            programme: {
+                type: String,
+                required: true,
+            },
+            department: {
+                type: String,
+                required: true,
+            },
         },
     ],
 });
