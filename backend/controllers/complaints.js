@@ -54,6 +54,8 @@ module.exports.register = async (req, res, next) => {
 
     const savedComplaint = await complaint.save();
 
+    // Contact Grievance Management System
+
     res.json({
         success: true,
         message: 'Complaint Registered Successfully',

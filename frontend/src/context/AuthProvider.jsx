@@ -39,13 +39,12 @@ export const AuthProvider = ({ children }) => {
                 if (res.success) {
                     if (payload) {
                         // console.log(payload);
-
-                        setAuth({
+                        setAuth((prev) => ({
+                            ...prev,
                             identity: payload.identity,
                             roles: payload.roles,
                             steps: res.steps,
-                        });
-                        // console.log(payload);
+                        }));
                     }
                     // setAuth((prev) => ({
                     //     ...prev,
@@ -53,8 +52,10 @@ export const AuthProvider = ({ children }) => {
                     // }));
                 }
             } catch (err) {
+                console.log('HEREERROR');
                 console.error(err);
             }
+            console.log('AUTH IS', auth);
         }
 
         getStepsReached();

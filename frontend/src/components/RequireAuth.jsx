@@ -17,7 +17,6 @@ function RequireAuth() {
     const verified = import.meta.env.VITE_ROLE_VERIFIED;
 
     if (auth?.identity) {
-        console.log(auth);
         if (auth?.roles?.includes(unverified)) {
             return <VerifyEmail />;
         } else if (auth?.roles?.includes(verified)) {
