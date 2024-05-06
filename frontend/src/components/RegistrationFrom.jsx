@@ -6,7 +6,7 @@ import { Button, HStack, VStack } from "@chakra-ui/react";
 const RegistrationFrom = () => {
   const categoryOptions = [
     { key: "Please Select Your Category", value: "" },
-    { key: "General", value: "general" },
+    { key: "General", value: "eneral" },
     { key: "OBC(NCL)", value: "obcncl" },
     { key: "EWS", value: "ews" },
     { key: "SC", value: "sc" },

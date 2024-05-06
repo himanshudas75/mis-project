@@ -18,7 +18,7 @@ const steps = [
 
 const MultiStepForm = () => {
   const { nextStep, reset, activeStep } = useSteps({
-    initialStep: 0,
+    initialStep: 3,
   });
   const isLastStep = activeStep === steps.length - 1;
   const hasCompletedAllSteps = activeStep === steps.length;
