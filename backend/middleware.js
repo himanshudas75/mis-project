@@ -22,7 +22,18 @@ module.exports.isAuthenticated = (req, res, next) => {
 };
 
 module.exports.isAdmin = (req, res, next) => {
-    if (req.user.roles.includes('admin')) {
+    if (req.user.roles.includes(process.env.ROLE_ADMIN)) {
+        next();
+    } else {
+        return next({
+            statusCode: 401,
+            message: 'Unauthorized',
+        });
+    }
+};
+
+module.exports.hasRoles = (req, res, next) => {
+    if (req.user.roles.includes(process.env.ROLE_VERIFIED)) {
         next();
     } else {
         return next({

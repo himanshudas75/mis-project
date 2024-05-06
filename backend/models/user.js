@@ -64,9 +64,15 @@ const userSchema = new Schema({
         type: Date,
         default: Date.now,
     },
-    verified: {
-        type: Boolean,
-        default: false,
+    roles: {
+        type: [String],
+        required: true,
+        validate: {
+            validator: function (roles) {
+                return roles.length === new Set(roles).size;
+            },
+            message: 'Duplicate roles not allowed',
+        },
     },
 });
 
