@@ -30,7 +30,6 @@ passport.use(
             const payload = {
                 identity: jwt_payload.identity,
                 roles: jwt_payload.roles,
-                verified: jwt_payload.verified,
             };
 
             if (user) {

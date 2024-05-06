@@ -1,11 +1,14 @@
 const EventDate = require('../models/eventDate');
+const Department = require('../models/department');
 
-module.exports.verify = (req, res) => {
+module.exports.isAdmin = (req, res) => {
+    console.log(req);
+
     res.json({
         success: true,
-        message: 'Admin verified successfully',
+        message: 'Logged in user is an Admin',
         user: {
-            registration_number: req.user.registration_number,
+            registration_number: req.user.identity,
         },
     });
 };
@@ -49,5 +52,58 @@ module.exports.deleteEventDate = async (req, res, next) => {
         success: true,
         message: 'Event dated deleted successfully',
         event_date: eventDate,
+    });
+};
+
+module.exports.addCourses = async (req, res, next) => {
+    const courses = req.body;
+
+    for (const course of courses) {
+        const d = course.department;
+        const p = course.programme;
+        const c = course.course;
+
+        const dep = await Department.findOne({ name: d });
+
+        if (dep) {
+            const programme = dep.programmes.find((item) => item.name === p);
+            if (programme) {
+                if (!programme.courses.includes(c)) {
+                    programme.courses.push(c);
+                }
+            } else {
+                dep.programmes.push({
+                    name: p,
+                    courses: [c],
+                });
+            }
+
+            await dep.save();
+        } else {
+            const obj = new Department({
+                name: d,
+                programmes: [
+                    {
+                        name: p,
+                        courses: [c],
+                    },
+                ],
+            });
+            await obj.save();
+        }
+    }
+
+    res.json({
+        success: true,
+        message: 'Courses added successfully',
+    });
+};
+
+module.exports.deleteCourse = async (req, res, next) => {
+    await Department.deleteMany();
+
+    res.json({
+        success: true,
+        message: 'All courses deleted',
     });
 };

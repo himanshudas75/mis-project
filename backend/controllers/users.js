@@ -186,29 +186,29 @@ module.exports.verify = async (req, res, next) => {
                 registration_number,
             },
         });
+    } else {
+        const roles = user.roles
+            .filter((item) => item !== process.env.ROLE_UNVERIFIED)
+            .concat(process.env.ROLE_VERIFIED);
+
+        user.roles = roles;
+
+        const savedUser = await user.save();
+
+        res.clearCookie(process.env.AUTHENTICATION_COOKIE_NAME, {
+            // httpOnly: true,
+            sameSite: 'None',
+            secure: true,
+        });
+
+        res.json({
+            success: true,
+            message: 'User verified successfully',
+            user: {
+                registration_number,
+            },
+        });
     }
-
-    const roles = user.roles
-        .filter((item) => item !== process.env.ROLE_UNVERIFIED)
-        .concat(process.env.ROLE_VERIFIED);
-
-    user.roles = roles;
-
-    const savedUser = await user.save();
-
-    res.clearCookie(process.env.AUTHENTICATION_COOKIE_NAME, {
-        // httpOnly: true,
-        sameSite: 'None',
-        secure: true,
-    });
-
-    res.json({
-        success: true,
-        message: 'User verified successfully',
-        user: {
-            registration_number,
-        },
-    });
 };
 
 module.exports.isLoggedIn = (req, res) => {

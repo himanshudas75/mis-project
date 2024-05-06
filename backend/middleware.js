@@ -33,7 +33,9 @@ module.exports.isAdmin = (req, res, next) => {
 };
 
 module.exports.hasRoles = (req, res, next) => {
-    if (req.user.roles.includes(process.env.ROLE_VERIFIED)) {
+    const rolesToCheck = [process.env.ROLE_ADMIN, process.env.ROLE_VERIFIED];
+
+    if (req.user.roles.some((role) => rolesToCheck.includes(role))) {
         next();
     } else {
         return next({

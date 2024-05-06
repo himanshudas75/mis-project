@@ -67,12 +67,6 @@ const userSchema = new Schema({
     roles: {
         type: [String],
         required: true,
-        validate: {
-            validator: function (roles) {
-                return roles.length === new Set(roles).size;
-            },
-            message: 'Duplicate roles not allowed',
-        },
     },
 });
 
