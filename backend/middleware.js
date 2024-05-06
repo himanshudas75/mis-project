@@ -2,6 +2,7 @@ const {
     registerSchema,
     complaintSchema,
     eventDateSchema,
+    courseSchema,
 } = require('./schemas');
 const ExpressError = require('./utils/ExpressError');
 const passport = require('passport');
@@ -22,7 +23,20 @@ module.exports.isAuthenticated = (req, res, next) => {
 };
 
 module.exports.isAdmin = (req, res, next) => {
-    if (req.user.roles.includes('admin')) {
+    if (req.user.roles.includes(process.env.ROLE_ADMIN)) {
+        next();
+    } else {
+        return next({
+            statusCode: 401,
+            message: 'Unauthorized',
+        });
+    }
+};
+
+module.exports.hasRoles = (req, res, next) => {
+    const rolesToCheck = [process.env.ROLE_ADMIN, process.env.ROLE_VERIFIED];
+
+    if (req.user.roles.some((role) => rolesToCheck.includes(role))) {
         next();
     } else {
         return next({
@@ -44,9 +58,7 @@ module.exports.validateUser = (req, res, next) => {
 
 module.exports.validateComplaint = (req, res, next) => {
     const combined_req = { ...req.body, screenshot: req.file };
-    console.log(combined_req);
     const { error } = complaintSchema.validate(combined_req);
-    console.log(error);
 
     if (error) {
         const msg = error.details.map((el) => el.message).join(',');
@@ -58,6 +70,16 @@ module.exports.validateComplaint = (req, res, next) => {
 
 module.exports.validateEventDate = (req, res, next) => {
     const { error } = eventDateSchema.validate(req.body);
+    if (error) {
+        const msg = error.details.map((el) => el.message).join(',');
+        throw new ExpressError(400, msg);
+    } else {
+        next();
+    }
+};
+
+module.exports.validateCourse = (req, res, next) => {
+    const { error } = courseSchema.validate(req.body);
     if (error) {
         const msg = error.details.map((el) => el.message).join(',');
         throw new ExpressError(400, msg);

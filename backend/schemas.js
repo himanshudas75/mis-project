@@ -71,3 +71,13 @@ module.exports.eventDateSchema = Joi.object({
     event_name: Joi.string().required().escapeHTML(),
     date: Joi.string().escapeHTML(),
 });
+
+module.exports.courseSchema = Joi.array()
+    .items(
+        Joi.object({
+            course: Joi.string().required().escapeHTML(),
+            programme: Joi.string().required().escapeHTML(),
+            department: Joi.string().required().escapeHTML(),
+        }).required()
+    )
+    .max(2);

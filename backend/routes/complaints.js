@@ -2,7 +2,11 @@ const express = require('express');
 const router = express.Router();
 const catchAsync = require('../utils/catchAsync');
 const complaints = require('../controllers/complaints');
-const { validateComplaint, isAuthenticated } = require('../middleware');
+const {
+    hasRoles,
+    validateComplaint,
+    isAuthenticated,
+} = require('../middleware');
 
 const multer = require('multer');
 const { storage } = require('../utils/cloudinary');
@@ -17,8 +21,12 @@ router
         catchAsync(complaints.register)
     );
 
-router.route('/fetch').get(isAuthenticated, catchAsync(complaints.fetch));
+router
+    .route('/fetch')
+    .get(isAuthenticated, hasRoles, catchAsync(complaints.fetch));
 
-router.route('/reset').delete(isAuthenticated, catchAsync(complaints.reset));
+router
+    .route('/reset')
+    .delete(isAuthenticated, hasRoles, catchAsync(complaints.reset));
 
 module.exports = router;

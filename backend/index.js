@@ -42,8 +42,10 @@ const complaintRoutes = require('./routes/complaints');
 const adminRoutes = require('./routes/admin');
 const actionRoutes = require('./routes/actions');
 const applicationRoutes = require('./routes/application');
+const courseRoutes = require('./routes/courses');
 
 // Routes
+app.use('/api/course', courseRoutes);
 app.use('/api/application', applicationRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/actions', actionRoutes);

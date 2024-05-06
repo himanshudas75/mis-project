@@ -7,8 +7,9 @@ const accessSecret = process.env.ACCESS_TOKEN_SECRET;
 
 var cookieExtractor = function (req) {
     var token = null;
+
     if (req && req.cookies) {
-        token = req.cookies.jwt;
+        token = req.cookies[process.env.AUTHENTICATION_COOKIE_NAME];
     }
     return token;
 };

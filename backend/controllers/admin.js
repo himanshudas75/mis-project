@@ -1,11 +1,14 @@
 const EventDate = require('../models/eventDate');
+const Course = require('../models/course');
 
-module.exports.verify = (req, res) => {
+module.exports.isAdmin = (req, res) => {
+    console.log(req);
+
     res.json({
         success: true,
-        message: 'Admin verified successfully',
+        message: 'Logged in user is an Admin',
         user: {
-            registration_number: req.user.registration_number,
+            registration_number: req.user.identity,
         },
     });
 };
@@ -49,5 +52,25 @@ module.exports.deleteEventDate = async (req, res, next) => {
         success: true,
         message: 'Event dated deleted successfully',
         event_date: eventDate,
+    });
+};
+
+module.exports.addCourses = async (req, res, next) => {
+    const courses = req.body;
+
+    await Course.insertMany(courses);
+
+    res.json({
+        success: true,
+        message: 'Courses added successfully',
+    });
+};
+
+module.exports.deleteCourse = async (req, res, next) => {
+    await Course.deleteMany();
+
+    res.json({
+        success: true,
+        message: 'All courses deleted',
     });
 };

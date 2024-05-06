@@ -21,7 +21,7 @@ const registerBody = `
     Your Registration Number: REGNO_PLACEHOLDER <br>
     Your Password: PASS_PLACEHOLDER <br></b>
     <br><br>
-    Please Click Here to verify your registered email <br>
+    Please <a href="VERIFY_URL_PLACEHOLDER">Click Here</a> to verify your registered email <br>
     Until you verify the registered email address, you will not be able to login to the MBA Admission Portal <br>
     <br>
     Thanks <br>
