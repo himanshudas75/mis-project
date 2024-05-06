@@ -29,8 +29,9 @@ export const AuthProvider = ({ children }) => {
                     'Error decoding or parsing authentication cookie:',
                     error
                 );
+                return;
             }
-        }
+        } else return;
 
         async function getStepsReached() {
             try {
@@ -38,6 +39,7 @@ export const AuthProvider = ({ children }) => {
                 if (res.success) {
                     if (payload) {
                         // console.log(payload);
+
                         setAuth({
                             identity: payload.identity,
                             roles: payload.roles,

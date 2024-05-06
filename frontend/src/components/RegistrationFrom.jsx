@@ -4,11 +4,11 @@ import * as Yup from 'yup';
 import FormikControl from './FormikControl';
 import { Button, HStack, VStack } from '@chakra-ui/react';
 import useUser from '../hooks/useUser.js';
-import { useSnackbar } from 'notistack';
+// import { useSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
 
 const RegistrationFrom = () => {
-    const { enqueueSnackbar } = useSnackbar();
+    // const { enqueueSnackbar } = useSnackbar();
     const { register } = useUser();
     const navigate = useNavigate();
 
