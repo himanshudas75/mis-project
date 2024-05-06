@@ -1,10 +1,27 @@
-import React from "react";
+import { React, useRef } from "react";
 import { Formik, Form, Field, FieldArray } from "formik";
 import { Text } from "@chakra-ui/react";
 import FormikControl from "./FormikControl";
-import { FormControl, FormErrorMessage, Box, Button } from "@chakra-ui/react";
+import {
+  FormControl,
+  FormErrorMessage,
+  Box,
+  Button,
+  useDisclosure,
+} from "@chakra-ui/react";
 import * as Yup from "yup";
-const WorkExperience = () => {
+import {
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogContent,
+  AlertDialogOverlay,
+  AlertDialogCloseButton,
+} from "@chakra-ui/react";
+const WorkExperience = ({ moveToNext }) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const cancelRef = useRef();
   const initialValues = {
     has_workexperience: "",
     work_experience: [
@@ -51,13 +68,15 @@ const WorkExperience = () => {
       .integer("Duration must be an integer")
       .required("Required"),
   });
-  const onSubmit = (values) => {
+
+  const handleFinalSubmit = (values) => {
     // on the final onsubmit handler we need to
     //check if the has_workexperience is fasle /true
     // if false make the work experience array empty
     // I added one initial Object just because of error validation
 
     console.log(values);
+    moveToNext();
   };
   const hasWorkExperienceOptions = [
     { key: "Please select", value: "" },
@@ -65,11 +84,7 @@ const WorkExperience = () => {
     { key: "No", value: false },
   ];
   return (
-    <Formik
-      initialValues={initialValues}
-      validationSchema={validationSchema}
-      onSubmit={onSubmit}
-    >
+    <Formik initialValues={initialValues} validationSchema={validationSchema}>
       {(formik) => {
         return (
           <Form>
@@ -273,7 +288,44 @@ const WorkExperience = () => {
               </>
             )}
 
-            <Button type="submit">Submit</Button>
+            <Button
+              onClick={onOpen}
+              type="button"
+              // need to uncomment this later
+              // isDisabled={!(formik.isValid && formik.dirty)}
+            >
+              Save and Next
+            </Button>
+            <AlertDialog
+              isOpen={isOpen}
+              leastDestructiveRef={cancelRef}
+              onClose={onClose}
+            >
+              <AlertDialogOverlay>
+                <AlertDialogContent>
+                  <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                    Proceed to Next Stage
+                  </AlertDialogHeader>
+
+                  <AlertDialogBody>
+                    Are you sure? You can't undo this action afterwards.
+                  </AlertDialogBody>
+
+                  <AlertDialogFooter>
+                    <Button ref={cancelRef} onClick={onClose}>
+                      Cancel
+                    </Button>
+                    <Button
+                      type="submit"
+                      colorScheme="red"
+                      onClick={() => handleFinalSubmit(formik.values)}
+                    >
+                      Submit
+                    </Button>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialogOverlay>
+            </AlertDialog>
           </Form>
         );
       }}

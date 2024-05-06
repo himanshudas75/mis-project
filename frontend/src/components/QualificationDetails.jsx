@@ -485,7 +485,12 @@ const QualificationDetails = ({ moveToNext }) => {
               }}
             </Field>
 
-            <Button onClick={onOpen} type="button" isDisabled={!formik.isValid}>
+            <Button
+              onClick={onOpen}
+              type="button"
+              //need to uncomment this later
+              // isDisabled={!(formik.isValid && formik.dirty)}
+            >
               Save and next
             </Button>
 

@@ -5,6 +5,8 @@ import { Button, Flex, Heading } from "@chakra-ui/react";
 import { Step, Steps, useSteps } from "chakra-ui-steps";
 import PersonalDetails from "./PersonalDetails";
 import QualificationDetails from "./QualificationDetails";
+import WorkExperience from "./WorkExperience";
+import DocumentUpload from "../DocumentUpload";
 
 const steps = [
   { label: "PD" },
@@ -54,14 +56,14 @@ const MultiStepForm = () => {
         {/* work experience step */}
         <Step label={steps[2].label}>
           <Box sx={{ p: 8, bg, my: 8, rounded: "md" }}>
-            <QualificationDetails moveToNext={nextStep} />
+            <WorkExperience moveToNext={nextStep} />
           </Box>
         </Step>
 
         {/* du step */}
         <Step label={steps[3].label}>
           <Box sx={{ p: 8, bg, my: 8, rounded: "md" }}>
-            <QualificationDetails moveToNext={nextStep} />
+            <DocumentUpload moveToNext={nextStep} />
           </Box>
         </Step>
 

@@ -122,7 +122,6 @@ const Apply = () => {
           }
           return;
         };
-        useEffect(() => {}, [appliedPrograms]);
         return (
           <>
             <Box>
@@ -138,6 +137,7 @@ const Apply = () => {
                   label="Department"
                   options={departmentOptions}
                   type="select"
+                  isDisabled={disableAddButton}
                 />
 
                 <FormikControl
@@ -146,6 +146,7 @@ const Apply = () => {
                   label="Programme"
                   options={programmeOptions}
                   type="select"
+                  isDisabled={disableAddButton}
                 />
 
                 <FormikControl
@@ -154,6 +155,7 @@ const Apply = () => {
                   label="Course"
                   options={courseOptions}
                   type="select"
+                  isDisabled={disableAddButton}
                 />
               </HStack>
               <Button

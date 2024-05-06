@@ -13,6 +13,7 @@ import CheckBoxField from "./CheckBoxField";
 import NestedInputField from "./NestedInputField";
 import NestedDropDown from "./NestedDropDown";
 import ArrayField from "./ArrayField";
+import FileFieldInput from "./FilleFieldInput";
 const FormikControl = (props) => {
   const { control, ...rest } = props;
   switch (control) {
@@ -34,6 +35,8 @@ const FormikControl = (props) => {
     //   return <DateSelector {...rest} />;
     case "arrayfield":
       return <ArrayField {...rest} />;
+    case "filefield":
+      return <FileFieldInput {...rest} />;
     default:
       return null;
   }

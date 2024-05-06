@@ -10,6 +10,7 @@ import Apply from "./components/ApplicationForm";
 import MultiStepForm from "./components/MultiStepForm";
 import QualificationDetails from "./components/QualificationDetails";
 import WorkExperience from "./components/WorkExperience";
+import DocumentUpload from "./DocumentUpload";
 function App() {
   return (
     <BrowserRouter>
@@ -28,7 +29,6 @@ function App() {
         <Route path="/mba_admission/apply" element={<Apply />} />
 
         <Route path="/mba_admission/details" element={<MultiStepForm />} />
-        <Route path="/mba_admission/we" element={<WorkExperience />} />
         <Route path="*" element={<NotFound />}></Route>
       </Routes>
     </BrowserRouter>
