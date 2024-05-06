@@ -324,7 +324,7 @@ def adminLogin():
         print("error occurred")
         return "Something Happen",500
 
-@app.route('/getAllApply',methods=['GET'])
+@app.route('/getAllApply',methods=['GET']) #admin
 def view_all():
     try:
 
@@ -338,7 +338,7 @@ def view_all():
         print("error occurred")
         return "Something Happen",500
 
-@app.route('/updatestatus',methods=['POST'])
+@app.route('/updatestatus',methods=['POST']) #admin
 def adminEdit():
     try:
 
@@ -358,21 +358,21 @@ def adminEdit():
         print('error occurred')
         return "Something Happen",500
     
-@app.route('/getAllApply',methods=['POST'])
-def adminView():
-    try:
+# @app.route('/getAllApply',methods=['POST'])
+# def adminView():
+#     try:
 
-        data=mongo1.db.users.find_one({},{"_id":0})
-        if data:
-            return data,200
-        else:
-            return "No application found",404
-    except: 
-        print("error occurred")
-        return "Something Happen",500
+#         data=mongo1.db.users.find_one({},{"_id":0})
+#         if data:
+#             return data,200
+#         else:
+#             return "No application found",404
+#     except: 
+#         print("error occurred")
+#         return "Something Happen",500
 
 ## JOB OPENING
-@app.route('/jobopeningpost',methods=['POST'])
+@app.route('/jobopeningpost',methods=['POST']) #admin
 def jobOpeningPost():
     try:
 
@@ -391,7 +391,7 @@ def jobOpeningPost():
         print("error occurred") 
         return "Something Happen",500   
 
-@app.route('/jobopeningget',methods=['GET'])
+@app.route('/jobopeningget',methods=['GET']) #
 def jobOpeningGet():
     try:
 
@@ -403,7 +403,7 @@ def jobOpeningGet():
         return "Something Happen",500
 
 ## JOB CLOSING
-@app.route('/jobclosing',methods=['POST'])
+@app.route('/jobclosing',methods=['POST']) #admin
 def jobClosing():
     try:
 
