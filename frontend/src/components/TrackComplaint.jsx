@@ -3,13 +3,19 @@ import React from 'react';
 import FormikControl from './FormikControl';
 import * as Yup from 'yup';
 import { Button, Box, HStack } from '@chakra-ui/react';
-import { Link } from 'react-router-dom';
+import { Link, useAsyncError } from 'react-router-dom';
+import useComplaint from '../hooks/useComplaint';
+import { useState } from 'react';
+
 const TrackComplaint = () => {
+    const { track } = useComplaint();
     const initialValues = {
         entity: '',
         order_no: '',
         registered_email_id: '',
     };
+    const [status, setStatus] = useState([]);
+
     //   ran into an error
     //saying that '<Formik validationSchema /> TypeError: branch is not a function'
     //resolve this by using a function as the value of then:
@@ -26,8 +32,32 @@ const TrackComplaint = () => {
                 Yup.string().email('Invalid Email Format').required('Required'),
         }),
     });
-    const onSubmit = (values) => {
-        console.log(values);
+    const onSubmit = async (values) => {
+        try {
+            const res = await track(values);
+            if (res) {
+                if (res.success) {
+                    // enqueueSnackbar('User registered successfully!', {
+                    //     variant: 'success',
+                    // });
+                    console.log(res.status);
+                    setStatus(res.status);
+                } else {
+                    // enqueueSnackbar(res.message, {
+                    //     variant: 'error',
+                    // });
+                }
+            } else {
+                // enqueueSnackbar('No response from server', {
+                //     variant: 'error',
+                // });
+            }
+        } catch (err) {
+            console.error(err);
+            // enqueueSnackbar('Something went wrong, please try again', {
+            //     variant: 'error',
+            // });
+        }
     };
     const entityOptions = [
         { key: 'Order Number', value: 'order_no' },
@@ -90,6 +120,13 @@ const TrackComplaint = () => {
                                 </HStack>
                             </Form>
                         </Box>
+                        {status.map((c) => {
+                            return (
+                                <>
+                                    <p>{c}</p>
+                                </>
+                            );
+                        })}
                     </>
                 );
             }}

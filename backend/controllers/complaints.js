@@ -1,6 +1,7 @@
 const Complaint = require('../models/complaint');
 const User = require('../models/user');
 const { cloudinary } = require('../utils/cloudinary');
+// const axios = require('axios');
 
 module.exports.register = async (req, res, next) => {
     const {
@@ -56,6 +57,22 @@ module.exports.register = async (req, res, next) => {
     const savedComplaint = await complaint.save();
 
     // Contact Grievance Management System
+    // const data = {
+    //     type: 'PG Complaint',
+    //     description: req.user.identity,
+    // };
+    // const config = {
+    //     withCredentials: true,
+    //     headers: {
+    //         'Access-Control-Allow-Origin': '*',
+    //         'Content-Type': 'application/json',
+    //     },
+    // };
+    // try {
+    //     const res = await axios.post(process.env.API_TIKCET_SEND, data, config);
+    // } catch (e) {
+    //     console.log(e);
+    // }
 
     res.json({
         success: true,
@@ -86,6 +103,41 @@ module.exports.fetch = async (req, res, next) => {
         success: true,
         message: 'Complaint fetched successfully',
         complaint: complaint,
+    });
+};
+
+module.exports.track = async (req, res, next) => {
+    const { entity, order_no, registered_email_id } = req.body;
+
+    const status = ['Not Found'];
+
+    if (entity === 'order_no') {
+        const complaint = await Complaint.findOne({ order_number: order_no });
+        if (complaint) {
+            status.pop();
+            status.push(complaint.complaint_status);
+        }
+    } else if (entity === 'registered_email_id') {
+        const complaints = await Complaint.find({
+            registered_email: registered_email_id,
+        });
+        if (complaints.length === 0) {
+        } else {
+            status.pop();
+            for (const c of complaints) {
+                status.push(
+                    `Order: ${c?.order_number}, Status: ${c?.complaint_status}`
+                );
+                console.log(c);
+                console.log(status);
+            }
+        }
+    }
+
+    res.json({
+        success: true,
+        message: 'Status fetched successfully',
+        status: status,
     });
 };
 

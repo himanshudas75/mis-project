@@ -1,6 +1,9 @@
 import axios from '../api/axios';
+import useAuth from './useAuth';
 
 const useApplication = () => {
+    const { auth, setAuth } = useAuth();
+
     const submit = async (data) => {
         try {
             const res = await axios.post(
@@ -8,6 +11,7 @@ const useApplication = () => {
                 JSON.stringify(data)
             );
 
+            setAuth({ ...auth, steps: data.steps_reached });
             return res.data;
         } catch (err) {
             console.log(err?.response?.data);

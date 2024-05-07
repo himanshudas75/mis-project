@@ -1,6 +1,7 @@
 const Application = require('../models/application');
 const User = require('../models/user');
 const { cloudinary } = require('../utils/cloudinary');
+// const axios = require('axios');
 
 module.exports.submit = async (req, res, next) => {
     const data = req.body;
@@ -19,9 +20,28 @@ module.exports.submit = async (req, res, next) => {
 
         await find_form.save();
 
-        if (find_form.steps_reached === 4) {
-            // Contact grievance management system
-        }
+        // if (find_form.steps_reached === 4) {
+        //     const data = {
+        //         type: 'PG Application Submit',
+        //         description: req.user.identity,
+        //     };
+        //     const config = {
+        //         withCredentials: true,
+        //         headers: {
+        //             'Access-Control-Allow-Origin': '*',
+        //             'Content-Type': 'application/json',
+        //         },
+        //     };
+        //     try {
+        //         const res = await axios.post(
+        //             process.env.API_TIKCET_SEND,
+        //             data,
+        //             config
+        //         );
+        //     } catch (e) {
+        //         console.log(e);
+        //     }
+        // }
     } else {
         const new_data = { registration_number: req.user.identity, ...data };
         delete new_data.registration_no;

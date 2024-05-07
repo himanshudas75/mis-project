@@ -18,7 +18,24 @@ const useComplaint = () => {
         }
     };
 
-    return { register };
+    const track = async (data) => {
+        try {
+            console.log(data);
+            delete data.screenshot;
+
+            const res = await axios.post(
+                '/complaint/track',
+                JSON.stringify(data)
+            );
+
+            return res.data;
+        } catch (err) {
+            console.log(err?.response?.data);
+            return err?.response?.data;
+        }
+    };
+
+    return { register, track };
 };
 
 export default useComplaint;

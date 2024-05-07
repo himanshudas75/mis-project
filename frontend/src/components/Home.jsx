@@ -46,6 +46,9 @@ const Home = () => {
                     <Link to="/track_complaint">
                         <MenuItem>Track Complaint</MenuItem>
                     </Link>
+                    <Link to="/change_password">
+                        <MenuItem>Change Password</MenuItem>
+                    </Link>
                 </MenuList>
             </Menu>
             <Text>

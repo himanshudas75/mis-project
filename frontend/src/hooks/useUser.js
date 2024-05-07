@@ -49,6 +49,7 @@ const useUser = () => {
 
             return res.data;
         } catch (err) {
+            console.log(err);
             console.log(err?.response?.data);
             return err?.response?.data;
         }
@@ -76,7 +77,22 @@ const useUser = () => {
         }
     };
 
-    return { login, logout, register, getDetails };
+    const changePassword = async (data) => {
+        try {
+            const res = await axios.put(
+                '/changePassword',
+                JSON.stringify(data)
+            );
+            setAuth({});
+
+            return res.data;
+        } catch (err) {
+            console.log(err?.response?.data);
+            return err?.response?.data;
+        }
+    };
+
+    return { login, logout, register, getDetails, changePassword };
 };
 
 export default useUser;

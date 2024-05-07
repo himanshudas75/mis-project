@@ -100,8 +100,9 @@ module.exports.register = async (req, res, next) => {
 
     res.cookie(process.env.AUTHENTICATION_COOKIE_NAME, accessToken, {
         // httpOnly: true,
-        sameSite: 'None',
-        secure: true,
+        // sameSite: 'None',
+        // secure: true,
+        domain: process.env.COOKIE_DOMAIN,
         maxAge: 24 * 60 * 60 * 1000,
     });
 
@@ -148,8 +149,9 @@ module.exports.login = async (req, res, next) => {
 
     res.cookie(process.env.AUTHENTICATION_COOKIE_NAME, accessToken, {
         // httpOnly: true,
-        sameSite: 'None',
-        secure: true,
+        // sameSite: 'None',
+        // secure: true,
+        domain: process.env.COOKIE_DOMAIN,
         maxAge: 24 * 60 * 60 * 1000,
     });
 
@@ -205,8 +207,9 @@ module.exports.verify = async (req, res, next) => {
 
         res.clearCookie(process.env.AUTHENTICATION_COOKIE_NAME, {
             // httpOnly: true,
-            sameSite: 'None',
-            secure: true,
+            // sameSite: 'None',
+            // secure: true,
+            domain: process.env.COOKIE_DOMAIN,
         });
 
         res.json({
@@ -246,8 +249,9 @@ module.exports.logout = async (req, res, next) => {
 
     res.clearCookie(process.env.AUTHENTICATION_COOKIE_NAME, {
         // httpOnly: true,
-        sameSite: 'None',
-        secure: true,
+        // sameSite: 'None',
+        // secure: true,
+        domain: process.env.COOKIE_DOMAIN,
     });
 
     res.json({
@@ -256,12 +260,19 @@ module.exports.logout = async (req, res, next) => {
     });
 };
 
-module.exports.changePassword = async (req, res) => {
+module.exports.changePassword = async (req, res, next) => {
     const { password } = req.body;
     const registration_number = req.user.identity;
     const user = await User.findOne({ registration_number });
     user.password = hashSync(password, 12);
     await user.save();
+
+    res.clearCookie(process.env.AUTHENTICATION_COOKIE_NAME, {
+        // httpOnly: true,
+        // sameSite: 'None',
+        // secure: true,
+        domain: process.env.COOKIE_DOMAIN,
+    });
 
     res.json({
         success: true,
@@ -284,8 +295,9 @@ module.exports.deleteUser = async (req, res) => {
     if (!cookies || !cookies[process.env.AUTHENTICATION_COOKIE_NAME]) {
         res.clearCookie(process.env.AUTHENTICATION_COOKIE_NAME, {
             // httpOnly: true,
-            sameSite: 'None',
-            secure: true,
+            // sameSite: 'None',
+            // secure: true,
+            domain: process.env.COOKIE_DOMAIN,
         });
     }
 
