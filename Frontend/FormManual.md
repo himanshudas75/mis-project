@@ -1,4 +1,3 @@
-```markdown
 # Form Manual
 
 ## DynamicFormBuilder Component
