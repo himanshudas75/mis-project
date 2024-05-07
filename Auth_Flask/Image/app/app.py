@@ -42,8 +42,9 @@ def sha256_hash(list1):
 @app.route('/')
 def home():
     token_cookie = request.cookies.get('authentication')
+
     if not token_cookie:
-        return redirect('/login', code=302)
+        return redirect('/login', code=401)
     
     try:
         decoded_token = decode_token(token_cookie)
