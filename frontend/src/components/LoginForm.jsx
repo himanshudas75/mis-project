@@ -98,7 +98,6 @@ const LoginForm = () => {
               >
                 Login
               </Button>
-              <Button type="button">Forgot Your Password?</Button>
             </VStack>
           </Form>
         );

@@ -111,76 +111,84 @@ const RegisterComplaint = (props) => {
                 </Link>
               </HStack>
             </Box>
-            <Text>Register Complaint</Text>
-            <Form>
-              <HStack>
-                <VStack>
-                  <FormikControl
-                    control="input"
-                    label="Order Numer (Please enter NA if the order number is not available)"
-                    name="order_no"
-                    type="text"
-                    placeholder="Please enter the order number"
-                  />
-                  <FormikControl
-                    control="input"
-                    label="Registered Contact number"
-                    name="contact_no"
-                    type="text"
-                    placeholder="Please enter the registered contact number"
-                  />
-                  <FormikControl
-                    control="select"
-                    label="Complaint Type"
-                    name="complaint_type"
-                    options={complaintTypeOptions}
-                    type="select"
-                  />
-                </VStack>
+            <Text
+              fontWeight="bold"
+              className="bg-blue-500 text-white text-md pb-1 text-center mt-3"
+              align="center"
+            >
+              Register Complaint
+            </Text>
+            <VStack align="center">
+              <Form>
+                <HStack align="center" spacing={10}>
+                  <VStack align="center" spacing={6}>
+                    <FormikControl
+                      control="input"
+                      label="Order Numer (Please enter NA if the order number is not available)"
+                      name="order_no"
+                      type="text"
+                      placeholder="Please enter the order number"
+                    />
+                    <FormikControl
+                      control="input"
+                      label="Registered Contact number"
+                      name="contact_no"
+                      type="text"
+                      placeholder="Please enter the registered contact number"
+                    />
+                    <FormikControl
+                      control="select"
+                      label="Complaint Type"
+                      name="complaint_type"
+                      options={complaintTypeOptions}
+                      type="select"
+                    />
+                  </VStack>
 
-                <VStack>
-                  <FormikControl
-                    control="input"
-                    label="Registered Email Id"
-                    name="registered_email_id"
-                    type="email"
-                    placeholder="Please enter the registered email id"
-                  />
+                  <VStack>
+                    <FormikControl
+                      control="input"
+                      label="Registered Email Id"
+                      name="registered_email_id"
+                      type="email"
+                      placeholder="Please enter the registered email id"
+                    />
 
-                  <FormikControl
-                    control="select"
-                    label="Payment Type"
-                    name="payment_type"
-                    type="select"
-                    options={paymentTypeOptions}
-                  />
+                    <FormikControl
+                      control="select"
+                      label="Payment Type"
+                      name="payment_type"
+                      type="select"
+                      options={paymentTypeOptions}
+                    />
 
-                  {/* <FormikControl
+                    {/* <FormikControl
                                         control="filefield"
                                         label="Upload Screenshot of the payment (image or pdf, max size 1MB)"
                                         name="payment_screenshot"
                                     /> */}
-                </VStack>
-              </HStack>
+                  </VStack>
+                </HStack>
 
-              <FormikControl
-                control="textarea"
-                label="Complaint Details"
-                name="complaint_details"
-                type="textarea"
-                placeholder="Please breifly describe your issue along with all the details"
-              />
+                <FormikControl
+                  control="textarea"
+                  label="Complaint Details"
+                  name="complaint_details"
+                  type="textarea"
+                  placeholder="Please breifly describe your issue along with all the details"
+                />
 
-              <HStack>
-                <Button
-                  type="submit"
-                  isDisabled={!(formik.isValid && formik.dirty)}
-                >
-                  Submit
-                </Button>
-                <Button type="reset">Reset</Button>
-              </HStack>
-            </Form>
+                <HStack>
+                  <Button
+                    type="submit"
+                    isDisabled={!(formik.isValid && formik.dirty)}
+                  >
+                    Submit
+                  </Button>
+                  <Button type="reset">Reset</Button>
+                </HStack>
+              </Form>
+            </VStack>
           </>
         );
       }}
