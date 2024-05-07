@@ -50,16 +50,20 @@ def home():
         identity = decoded_token[JWT_IDENTITY_CLAIM]
         roles = decoded_token.get('roles', [])
         delegated_roles = decoded_token.get('delegated_roles', [])
+        
         role_services = [mongo.db.roles.find_one({'role': role})['services'] for role in roles]
-
         delegated_role_services = [mongo.db.roles.find_one({'role': role})['services'] for role in delegated_roles]
+        
         role_services = list(set(element for sublist in role_services for element in sublist))
         delegated_role_services = list(set(element for sublist in delegated_role_services for element in sublist))
         
+        role_map = { x.upper() : x + "." + os.environ.get('domain_name', "localhost:5000") for x in role_services}
+        delegated_role_map = { x.upper() : x + "." +  os.environ.get('domain_name', 'localhost:5000') for x in delegated_role_services}
+
         flash(f"Logged in as {identity}")
-        return render_template('home.html', username=identity, role_services=role_services, delegated_role_services=delegated_role_services)
+        return render_template('home.html', username=identity, role_map=role_map, delegated_role_map=delegated_role_map)
     except Exception as e:
-        flash("Something happened")
+        flash("Something happened " + str(e))
         return redirect('/login', code=302)
 
 
@@ -91,7 +95,7 @@ def login():
             access_token = create_access_token(identity=username, additional_claims=additional_claims)
             
             response = make_response(redirect(redirect_to))
-            response.set_cookie('authentication', value=access_token, httponly=True)
+            response.set_cookie('authentication', value=access_token, domain=os.environ.get('domain_name'))
             return response
         else:
             flash('Invalid credentials. Please try again.', 'error')

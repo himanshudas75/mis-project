@@ -1,85 +1,90 @@
 /* home-style.css */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    margin: 0;
-    padding: 20px;
-    color: #333;
+  font-family: sans-serif;
+  background-color: #CDDEFF;
+  margin: 0;
+  padding: 20px;
+  color: #333;
 }
 
 h1, h2, h3 {
-    color: #333;
+  color: #5A81FA; /* Matching the header colors from login-signup.css */
 }
 
 .service-button, .logout-button {
-    padding: 10px 20px;
-    border: none;
-    color: white;
-    cursor: pointer;
-    transition: background-color 0.3s;
+  padding: 10px 20px;
+  border: none;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-size: 2vh;
+  width: 40%; /* Match the login button width */
+  margin: 10px auto; /* Centering the buttons */
+  display: block;
+  text-align: center;
 }
 
 .service-button {
-    background-color: #4CAF50; /* Green */
+  background-color: #2C3D8F; /* Matching the sign-in button color */
 }
 
 .service-button:hover {
-    background-color: #45a049;
+  background-color: #5A81FA; /* Lighter shade for hover, similar to login page */
 }
 
 .logout-button {
-    background-color: #f44336; /* Red */
+  background-color: #f44336; /* Red for logout to make it distinct */
 }
 
 .logout-button:hover {
-    background-color: #d73833;
+  background-color: #d73833;
 }
 
 .container {
-    margin-top: 20px;
-    margin-bottom: 20px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  background: white; /* Light background for container */
+  padding: 20px; /* Padding for spacing around buttons */
+  border-radius: 10px; /* Rounded corners for the container */
 }
 
-/* Add this block for styling flashed messages and the remove button with fading animation */
 .flashes-container {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    max-width: 400px;
-    z-index: 1000;
-  }
-  
-  .flash {
-    padding: 15px;
-    margin-bottom: 15px;
-    border-radius: 5px;
-    color: #fff;
-    position: relative;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    opacity: 1;
-    transition: opacity 0.5s ease-in-out;
-  }
-  
-  .flash.success {
-    background-color: #4CAF50; /* Green */
-  }
-  
-  .flash.error {
-    background-color: #f44336; /* Red */
-  }
-  
-  .remove-flash {
-    background: none;
-    border: none;
-    color: inherit;
-    font-size: 16px;
-    cursor: pointer;
-  }
-  
-  /* Add this block for the fading animation */
-  .flash.fade-out {
-    opacity: 0;
-  }
-  
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  max-width: 400px;
+  z-index: 1000;
+}
+
+.flash {
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  color: #fff;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  opacity: 1;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.flash.success {
+  background-color: #4CAF50;
+}
+
+.flash.error {
+  background-color: #f44336;
+}
+
+.remove-flash {
+  background: none;
+  border: none;
+  color: inherit;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.flash.fade-out {
+  opacity: 0;
+}

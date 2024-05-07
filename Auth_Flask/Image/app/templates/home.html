@@ -5,30 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='stylesheets/home-style.css') }}">
     <title>Home Page</title>
+    <script>
+        function redirectToService(url) {
+            window.location.href = url;
+        }
+    </script>
 </head>
 <body>
-    <h1>Welcome to the Home Page</h1>
-    <p>Hello, {{ username }}!</p>
+    <div class="containers">
+        <div class="container1">
+            <h1>Welcome to the Home Page</h1>
+            <p>Hello, {{ username }}!</p>
+        </div>
+        <div class="container2">
+            <!-- Service Buttons for Roles -->
+            <div class="container">
+                <h2>Your Roles</h2>
+                {% for service_name, service_url in role_map.items() %}
+                    <button class="service-button" onclick="redirectToService('{{ service_url }}')">{{ service_name }}</button>
+                {% endfor %}
+            </div>
 
-    <!-- Service Buttons for Roles -->
-    <div class="container">
-        <h2>Your Roles</h2>
-        {% for service in role_services %}
-            <button class="service-button">{{ service }}</button>
-        {% endfor %}
+            <!-- Service Buttons for Delegated Roles -->
+            <div class="container">
+                <h2>Your Delegated Roles</h2>
+                {% for service_name, service_url in delegated_role_map.items() %}
+                    <button class="service-button" onclick="redirectToService('{{ service_url }}')">{{ service_name }}</button>
+                {% endfor %}
+            </div>
+
+            <!-- Logout button -->
+            <form action="/logout" method="GET">
+                <button type="submit" class="logout-button">Logout</button>
+            </form>
+        </div>
     </div>
-
-    <!-- Service Buttons for Delegated Roles -->
-    <div class="container">
-        <h2>Your Delegated Roles</h2>
-        {% for service in delegated_role_services %}
-            <button class="service-button">{{ service }}</button>
-        {% endfor %}
-    </div>
-
-    <!-- Logout button -->
-    <form action="/logout" method="GET">
-        <button type="submit" class="logout-button">Logout</button>
-    </form>
 </body>
 </html>

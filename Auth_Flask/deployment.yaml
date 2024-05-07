@@ -47,3 +47,4 @@ data:
   JWT_SECRET_KEY: "very_secret_key"
   JWT_IDENTITY_CLAIM: "identity"
   JWT_ACCESS_TOKEN_EXPIRES: "600"
+  # DOMAIN_NAME: "kubernetes.docker.internal"

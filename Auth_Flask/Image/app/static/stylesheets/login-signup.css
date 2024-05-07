@@ -10,7 +10,7 @@ body {
    
     flex-direction: column;
     background: #5A81FA;
-    padding-bottom: 30px;
+    padding-top: 9%;
 
 }
 .container2{
@@ -18,7 +18,7 @@ body {
     flex-direction: column;
     background: #CDDEFF;
     align-items: center;
-    padding-bottom: 30px;
+    padding-top: 5%;
    
 }
 .head1{
