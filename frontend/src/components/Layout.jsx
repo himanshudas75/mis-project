@@ -18,7 +18,7 @@ function Layout() {
       <Header />
       <NavBar />
       <main className="main m-4">
-        {auth && auth.identity && <Logout />}
+        {auth && auth.identity && <Logout className="m-5" />}
         <Outlet />
       </main>
       <Footer />

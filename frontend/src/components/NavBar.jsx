@@ -115,12 +115,11 @@ const NavBar = () => {
       <Box>
         <Link
           to="/login"
-          className="hover:bg-white focus:bg-white focus:text-blue-500 focus:p-1"
+          className="hover:bg-white focus:bg-white focus:text-blue-500 focus:p-1 mr-3 ml-1"
         >
           LOGIN
         </Link>
       </Box>
-      <Spacer />
       <Spacer />
 
       <Box>
@@ -131,6 +130,7 @@ const NavBar = () => {
           REGISTRATION
         </Link>
       </Box>
+      <Spacer />
     </Flex>
   );
 };

@@ -64,7 +64,14 @@ const LoginForm = () => {
       {(formik) => {
         return (
           <Form>
-            <VStack>
+            <Text
+              fontWeight="bold"
+              className="red pb-1 text-center text-lg"
+              align="center"
+            >
+              Login Form
+            </Text>
+            <VStack align="center">
               <FormikControl
                 control="input"
                 label="Registration Number"
