@@ -57,8 +57,8 @@ def home():
         role_services = list(set(element for sublist in role_services for element in sublist))
         delegated_role_services = list(set(element for sublist in delegated_role_services for element in sublist))
         
-        role_map = { x.upper() : x + "." + os.environ.get('domain_name', "localhost:5000") for x in role_services}
-        delegated_role_map = { x.upper() : x + "." +  os.environ.get('domain_name', 'localhost:5000') for x in delegated_role_services}
+        role_map = { x.upper() : x + "." + os.environ.get('DOMAIN_NAME', "localhost:5000") for x in role_services}
+        delegated_role_map = { x.upper() : x + "." +  os.environ.get('DOMAIN_NAME', 'localhost:5000') for x in delegated_role_services}
 
         flash(f"Logged in as {identity}")
         return render_template('home.html', username=identity, role_map=role_map, delegated_role_map=delegated_role_map)
@@ -95,7 +95,7 @@ def login():
             access_token = create_access_token(identity=username, additional_claims=additional_claims)
             
             response = make_response(redirect(redirect_to))
-            response.set_cookie('authentication', value=access_token, domain=os.environ.get('domain_name'))
+            response.set_cookie('authentication', value=access_token, domain=os.environ.get('DOMAIN_NAME'))
             return response
         else:
             flash('Invalid credentials. Please try again.', 'error')
