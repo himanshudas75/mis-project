@@ -27,6 +27,7 @@ import {
     AlertDialogCloseButton,
 } from '@chakra-ui/react';
 
+import useAuth from '../hooks/useAuth.js';
 import useCourse from '../hooks/useCourse.js';
 import { useNavigate } from 'react-router-dom';
 
@@ -34,10 +35,11 @@ import { useNavigate } from 'react-router-dom';
 const Apply = () => {
     const { add } = useCourse();
     const navigate = useNavigate();
+    const { auth } = useAuth();
 
     const { isOpen, onOpen, onClose } = useDisclosure();
     const cancelRef = useRef();
-    const [appliedPrograms, setappliedPrograms] = useState([]);
+    const [appliedPrograms, setappliedPrograms] = useState(auth.courses);
     const [disableAddButton, setdisableAddButton] = useState(false);
     const initialValues = {
         department: '',
@@ -162,7 +164,7 @@ const Apply = () => {
                 return (
                     <>
                         <Box>
-                            <Link to="/mba_admission/home">
+                            <Link to="/">
                                 <Button>Back to Applicant Home</Button>
                             </Link>
                         </Box>
@@ -256,6 +258,10 @@ const Apply = () => {
                                                                     )
                                                             )
                                                         }
+                                                        isDisabled={
+                                                            auth.courses
+                                                                .length > 0
+                                                        }
                                                     >
                                                         Delete
                                                     </Button>
@@ -269,7 +275,9 @@ const Apply = () => {
                         <Button
                             onClick={onOpen}
                             type="button"
-                            isDisabled={appliedPrograms < 1}
+                            isDisabled={
+                                auth.courses.length > 0 || appliedPrograms < 1
+                            }
                         >
                             Submit Final Programme Selection
                         </Button>

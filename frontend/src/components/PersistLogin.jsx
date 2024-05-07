@@ -2,12 +2,15 @@ import { Outlet } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import useAuth from '../hooks/useAuth';
 import useApplication from '../hooks/useApplication';
+import useCourse from '../hooks/useCourse';
 
 function PersistLogin() {
     const [isLoading, setIsLoading] = useState(true);
     // const refresh = useRefreshToken();
     const { auth, setAuth } = useAuth();
     const { getSteps } = useApplication();
+    const { get } = useCourse();
+
     let isMounted = true;
 
     // const [persist] = useLocalStorage('persist', false);
@@ -42,21 +45,16 @@ function PersistLogin() {
 
                     // console.log('Before await I have', isMounted);
                     const res = await getSteps();
+                    const res2 = await get();
                     // console.log('After await I have', isMounted);
 
-                    if (res.success) {
+                    if (res.success && res2.success) {
                         if (payload) {
-                            // console.log(
-                            //     'MY DATA',
-                            //     payload.identity,
-                            //     payload.roles,
-                            //     res.steps
-                            // );
                             setAuth((prev) => ({
-                                ...prev,
                                 identity: payload.identity,
                                 roles: payload.roles,
                                 steps: res.steps,
+                                courses: res2.courses,
                             }));
                         }
                     }

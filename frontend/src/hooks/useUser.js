@@ -1,24 +1,25 @@
 import axios from '../api/axios';
 import useAuth from './useAuth';
 import useApplication from './useApplication';
+import useCourse from './useCourse';
 
 const useUser = () => {
     const { setAuth } = useAuth();
     const { getSteps } = useApplication();
+    const { get } = useCourse();
 
     const register = async (data) => {
         try {
             const res = await axios.post('/register', JSON.stringify(data));
-            const res2 = await getSteps();
-
             const identity = res.data.user.identity;
+
             const roles = res.data.user.roles;
-            const steps = res2.steps;
 
             setAuth((prev) => ({
                 identity,
                 roles,
-                steps,
+                steps: 0,
+                courses: [],
             }));
 
             return res.data;
@@ -32,15 +33,18 @@ const useUser = () => {
         try {
             const res = await axios.post('/login', JSON.stringify(data));
             const res2 = await getSteps();
+            const res3 = await get();
 
             const identity = res.data.user.identity;
             const roles = res.data.user.roles;
             const steps = res2.steps;
+            const courses = res3.courses;
 
             setAuth((prev) => ({
                 identity,
                 roles,
                 steps,
+                courses,
             }));
 
             return res.data;

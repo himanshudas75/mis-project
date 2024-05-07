@@ -43,13 +43,19 @@ module.exports.getAllCourses = async (req, res, next) => {
 };
 
 module.exports.getUserCourses = async (req, res, next) => {
+    console.log(req.user);
     const courses = await UserCourse.findOne({
         registration_number: req.user.identity,
     }).populate('courses');
 
+    var c = [];
+    if (courses) {
+        c = courses.courses;
+    }
+
     res.json({
         success: true,
         message: 'Courses fetched successfully',
-        courses: courses.courses,
+        courses: c,
     });
 };
