@@ -21,7 +21,7 @@ const Dashboard = () => {
     try {
       const email = localStorage.getItem('user')
       console.log(email)
-      const response = await fetch(`http://127.0.0.1:5000/viewStatus?email=${email}`, {
+      const response = await fetch(`${process.env.BACKEND_PROXY}/viewStatus?email=${email}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

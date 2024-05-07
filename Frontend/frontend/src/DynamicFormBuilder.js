@@ -118,7 +118,7 @@ const DynamicFormBuilder = ({ formConfig, onNextPage, fromItem, path, isreview }
         var email = localStorage.getItem('user')
         console.log(email)
         try {
-            fetch(`http://127.0.0.1:5000/${path}`, {
+            fetch(`${process.env.BACKEND_PROXY}/${path}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

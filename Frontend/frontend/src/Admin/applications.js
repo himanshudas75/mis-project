@@ -11,7 +11,7 @@ const AdminDashboard = () => {
 
     const fetchApplications = async () => {
         try {
-            const response = await fetch('http://127.0.0.1:5000/getAllApply', {
+            const response = await fetch(`${process.env.BACKEND_PROXY}/getAllApply`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -36,7 +36,7 @@ const AdminDashboard = () => {
                 )
             );
             var email = localStorage.getItem('user')
-            fetch('http://127.0.0.1:5000/updatestatus', {
+            fetch(`${process.env.BACKEND_PROXY}/updatestatus`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

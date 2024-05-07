@@ -10,7 +10,7 @@ const AdminJobOpenings = () => {
 
     const fetchJobOpenings = async () => {
         try {
-            const response = await fetch('http://127.0.0.1:5000/jobopeningget', {
+            const response = await fetch(`${process.env.BACKEND_PROXY}/jobopeningget`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -34,7 +34,7 @@ const AdminJobOpenings = () => {
                     job.id === id ? { ...job, status: newStatus } : job
                 )
             );
-            fetch('http://127.0.0.1:5000/jobclosing', {
+            fetch(`${process.env.BACKEND_PROXY}/jobclosing`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -66,7 +66,7 @@ const AdminJobOpenings = () => {
     const handleSaveJob = async (index) => {
         const jobToSave = jobOpenings[index];
         if (jobToSave.isNew) {
-            fetch('http://127.0.0.1:5000/jobopeningpost', {
+            fetch(`${process.env.BACKEND_PROXY}/jobopeningpost`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json', // Ensure 'Content-Type' header is set
