@@ -2,9 +2,12 @@ import datetime
 import hashlib
 from flask import Flask, request, jsonify, make_response, render_template, redirect, flash
 from flask_pymongo import PyMongo
-from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity, decode_token
+from flask_bcrypt import Bcrypt
+from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity, decode_token
 from datetime import timedelta
 from hashlib import sha256
+from bson.json_util import dumps
+from bson.json_util import loads
 import os
 
 app = Flask(__name__)
@@ -92,11 +95,11 @@ def login():
             access_token = create_access_token(identity=username, user_claims={'roles': roles})
             response = make_response(redirect(redirect_to))
             response.set_cookie('access_token', value=access_token, httponly=True)
-            return response
+            return response,200
         else:
-            flash('Invalid credentials. Please try again.', 'error')
+            flash('Invalid credentials. Please try again.', 'error'),400
         
-    return render_template('login.html')
+    return render_template('login.html'),200
 
 # @app.route('/verify', methods=['GET'])
 # def verify():
@@ -131,6 +134,7 @@ def logout():
     response.delete_cookie('access_token')
     return response
 
+<<<<<<< HEAD
 @app.route('/create_role', methods=['POST'])
 def create_role():
     data = request.json
@@ -202,6 +206,111 @@ def update_user():
     password_hash = sha256(password.encode()).hexdigest()
     
     
+=======
+
+@jwt_required()
+def authenticateToken():
+    pass
+
+@app.route('/roles', methods=['GET'])
+@jwt_required()
+def get_roles():
+    try:
+        roles = mongo.db.roles.find({})
+        roles = [role['role'] for role in roles]
+        print(type(roles))
+        print(roles)
+        return loads(dumps(roles)), 200
+    except Exception as e:
+        return jsonify({'message': str(e)}), 500
+
+@app.route('/roles', methods=['POST'])
+@jwt_required()
+def create_role():
+    try:
+        data = request.json
+        role = mongo.db.roles.insert_one(data)
+        return jsonify({'message': 'Role created successfully', 'id': str(role.inserted_id)}), 201
+    except Exception as e:
+        return jsonify({'message': str(e)}), 400
+
+@app.route('/roles/<id>', methods=['PUT'])
+@jwt_required()
+def update_role(id):
+    try:
+        data = request.json
+        role = mongo.db.roles.update_one({'_id': id}, {'$set': data})
+        if role.modified_count > 0:
+            return jsonify({'message': 'Role updated successfully'}), 200
+        else:
+            return jsonify({'message': 'Role not found'}), 404
+    except Exception as e:
+        return jsonify({'message': str(e)}), 400
+
+@app.route('/roles/<id>', methods=['DELETE'])
+@jwt_required()
+def delete_role(id):
+    try:
+        role = mongo.db.roles.delete_one({'_id': id})
+        if role.deleted_count > 0:
+            return jsonify({'message': 'Role deleted successfully'}), 200
+        else:
+            return jsonify({'message': 'Role not found'}), 404
+    except Exception as e:
+        return jsonify({'message': str(e)}), 500
+
+@app.route('/users', methods=['GET'])
+@jwt_required()
+def get_users():
+    try:
+        users = mongo.db.users.find({})
+        # users = (user['user'] for user in users)
+        users = (user['username'] for user in users)
+        return loads(dumps(users)), 200
+    except Exception as e:
+        return jsonify({'message': str(e)}), 500
+@app.route('/users', methods=['POST'])
+@jwt_required()
+def create_user():
+    try:
+        data = request.json
+        hashed_password = bcrypt.generate_password_hash(data['password']).decode('utf-8')
+        data['password_hash'] = hashed_password
+        del data['password']
+        user = mongo.db.users.insert_one(data)
+        return jsonify({'message': 'User created successfully', 'id': str(user.inserted_id)}), 201
+    except Exception as e:
+        return jsonify({'message': str(e)}), 400
+
+@app.route('/users/<id>', methods=['PUT'])
+@jwt_required()
+def update_user(id):
+    try:
+        data = request.json
+        if 'password' in data:
+            hashed_password = bcrypt.generate_password_hash(data['password']).decode('utf-8')
+            data['password_hash'] = hashed_password
+            del data['password']
+        updated_user = mongo.db.users.update_one({'_id': id}, {'$set': data})
+        if updated_user.modified_count > 0:
+            return jsonify({'message': 'User updated successfully'}), 200
+        else:
+            return jsonify({'message': 'User not found'}), 404
+    except Exception as e:
+        return jsonify({'message': str(e)}), 400
+
+@app.route('/users/<id>', methods=['DELETE'])
+@jwt_required()
+def delete_user(id):
+    try:
+        deleted_user = mongo.db.users.delete_one({'_id': id})
+        if deleted_user.deleted_count > 0:
+            return jsonify({'message': 'User deleted successfully'}), 200
+        else:
+            return jsonify({'message': 'User not found'}), 404
+    except Exception as e:
+        return jsonify({'message': str(e)}), 500
+>>>>>>> fbf7105 (User and Roles frontend and backend)
 
 if __name__ == '__main__':
     app.run(debug=True)
