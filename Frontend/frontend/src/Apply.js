@@ -37,7 +37,7 @@ const Apply = () => {
       }, []);
       const fetchJobs = async () => {
         try {
-            const response = await fetch(`http://127.0.0.1:5000jobopeningget`, {
+            const response = await fetch(`http://127.0.0.1:5000/jobopeningget`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -61,7 +61,7 @@ const Apply = () => {
     const handleSubmit = (event) => {
         event.preventDefault();
         // Handle login form submission here (e.g., send data to server)
-        fetch(`http://127.0.0.1:5000apply`, {
+        fetch(`http://127.0.0.1:5000/apply`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json', // Ensure 'Content-Type' header is set

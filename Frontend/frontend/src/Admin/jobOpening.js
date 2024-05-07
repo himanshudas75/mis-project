@@ -48,6 +48,10 @@ const AdminJobOpenings = () => {
                     window.location.reload();
                     console.log(200);
                 }
+                if (response.status == 401) {
+                    alert("User Not Authorized for the Provided Request");
+                    window.location.reload();
+                }
             })
             .catch((error) => {
                 // Handle error
@@ -80,6 +84,10 @@ const AdminJobOpenings = () => {
                 .then(response => {
                     // Handle response
                     if(response.status===200){
+                        window.location.reload();
+                    }
+                    if (response.status == 401) {
+                        alert("User Not Authorized for the Provided Request");
                         window.location.reload();
                     }
                     console.log(response);

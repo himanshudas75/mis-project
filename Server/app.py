@@ -13,10 +13,16 @@ from flask_mail import Mail, Message
 import json
 from bson.json_util import dumps,loads
 from flask_cors import CORS
+from flask_jwt_extended import decode_token,JWTManager
 # from flask_cors import cross_origin
+import os
 
 app = Flask(__name__)
 CORS(app)
+app.config['SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY', "abcd")
+app.config['JWT_IDENTITY_CLAIM'] = JWT_IDENTITY_CLAIM = os.environ.get('JWT_IDENTITY_CLAIM', "identity")
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(seconds=int(os.environ.get('JWT_ACCESS_TOKEN_EXPIRES', 3600)))
+jwt=JWTManager(app)
 # app.config['CORS_HEADERS']= 'Content-Type'
 app.config['MONGO_URI'] = "mongodb+srv://Divij:Divij2002@cluster0.aj0dc.mongodb.net/userDB"  # MongoDB URI
 # app.config['MONGO_URI'] = "mongodb://localhost:27017/userDB"
@@ -50,20 +56,21 @@ app.config['MONGO_URI']='mongodb+srv://Divij:Divij2002@cluster0.aj0dc.mongodb.ne
 mongo4= PyMongo(app)
 
 def parse_cookie(jwt_cookie):
-    decoded_token = jwt.decode(jwt_cookie, options={"verify_signature": False})
+    decoded_token = decode_token(jwt_cookie)
     identity = decoded_token.get("identity")
-    roles = decoded_token.get("roles")
+    roles = decoded_token.get("roles",[])
     return identity, roles
 
 def extract_user_info(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        jwt_cookie = request.cookies.get("authentication")
+        jwt_cookie = request.cookies.get('authentication')
+        print(jwt_cookie)
         if not jwt_cookie:
             return jsonify({"message": "Token is missing"}), 401
 
         try:
-            decoded_token = jwt.decode(jwt_cookie, options={"verify_signature": False})
+            decoded_token = decode_token(jwt_cookie)
             return f(decoded_token, *args, **kwargs)
         except jwt.ExpiredSignatureError:
             return jsonify({"message": "Token expired"}), 401
@@ -77,11 +84,15 @@ def has_role(f):
     def decorated_function(decoded_token, *args, **kwargs):
 
         roles = decoded_token.get("roles")
-        assigned_role = "FACULTYRECRUITMENT"
+        assigned_role = "faculty_recruitment_admin"
+
+        del_roles = decoded_token.get("delegated_roles")
 
         for role in roles:
             if(role == assigned_role):
                 return f(decoded_token, *args, **kwargs)
+        if assigned_role in del_roles:
+            return f(decoded_token, *args, **kwargs)
             
         return (
                 jsonify(
@@ -412,18 +423,18 @@ def adminEdit():
         print('error occurred')
         return "Something Happen",500
     
-# @app.route('/getAllApply',methods=['POST'])
-# def adminView():
-#     try:
+@app.route('/getAllApply',methods=['POST'])
+def adminView():
+    try:
 
-#         data=mongo1.db.users.find_one({},{"_id":0})
-#         if data:
-#             return data,200
-#         else:
-#             return "No application found",404
-#     except: 
-#         print("error occurred")
-#         return "Something Happen",500
+        data=mongo1.db.users.find_one({},{"_id":0})
+        if data:
+            return data,200
+        else:
+            return "No application found",404
+    except: 
+        print("error occurred")
+        return "Something Happen",500
 
 ## JOB OPENING
 @app.route('/jobopeningpost',methods=['POST']) #admin

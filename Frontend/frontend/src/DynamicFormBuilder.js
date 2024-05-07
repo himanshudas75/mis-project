@@ -258,8 +258,9 @@ const DynamicFormBuilder = ({ formConfig, onNextPage, fromItem, path, isreview }
                                                 href={URL.createObjectURL(file)}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
+                                                style={{marginLeft:'1rem'}}
                                             >
-                                                {"view"}
+                                                {"View"}
                                             </a>
                                         </li>
                                     ))}
@@ -354,6 +355,7 @@ const DynamicFormBuilder = ({ formConfig, onNextPage, fromItem, path, isreview }
                                                                     href={URL.createObjectURL(row[column.key])}
                                                                     target="_blank"
                                                                     rel="noopener noreferrer"
+                                                                    style={{marginLeft:'1rem'}}
                                                                 >
                                                                     View
                                                                 </a>
