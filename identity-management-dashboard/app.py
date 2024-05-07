@@ -7,11 +7,12 @@ from flask_jwt_extended import JWTManager, jwt_required, create_access_token, ge
 from datetime import timedelta
 from hashlib import sha256
 from bson.json_util import dumps
+from flask_cors import CORS
 from bson.json_util import loads
 import os
 
 app = Flask(__name__)
-
+CORS(app)
 # Flask configuration
 app.config['MONGO_URI'] = os.environ.get('MONGO_URI', 'mongodb+srv://Divij:Divij2002@cluster0.aj0dc.mongodb.net/todoListDatabase')  # Replace with your MongoDB URI
 app.config['SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY', 'abcd')  # Change this to a secure key
@@ -99,41 +100,53 @@ def logout():
 
 
 @app.route('/roles', methods=['GET'])
-@jwt_required()
+# @jwt_required()
 def get_role():
-    roles = mongo.db.role_db.find({})
+    # print("Here we go")
+    # return("1234")
+    roles = mongo.db.roles.find({})
     return jsonify([{'role': role['role'], 'services': role['services']} for role in roles]), 200
 
 @app.route('/roles', methods=['POST'])
-@jwt_required()
+# @jwt_required()
 def create_role():
-    role_data = request.get_json()
-    role = role_data.get('role')
-    services = role_data.get('services')
+    print("2")
+    role_data = request.json
+    print(role_data)
+    role = request.json['role']
+    print(role)
+    services = request.json['services']
+    roles =mongo.db.roles.find({})
+    # print(roles)
+    for r in roles:
+        print("1")
+        if(r['role']==role):
+            mongo.db.roles.update_one({'role': role}, {'$set': {'services': services}})
+            return jsonify({'message': 'Role updated successfully'}), 200
     if not role or not services:
         return jsonify({'error': 'Role name and services are required'}), 400
-    mongo.db.role_db.insert_one({'role': role, 'services': services})
+    mongo.db.roles.insert_one({'role': role, 'services': services})
     return jsonify({'message': 'Role created successfully'}), 201
 
 @app.route('/roles/<role>', methods=['PUT'])
-@jwt_required()
+# @jwt_required()
 def modify_role(role):
-    new_services = request.get_json().get('services')
+    new_services = request.json['services']
     if not new_services:
         return jsonify({'error': 'New services are required'}), 400
-    mongo.db.role_db.update_one({'role': role}, {'$set': {'services': new_services}})
+    mongo.db.roles.update_one({'role': role}, {'$set': {'services': new_services}})
     return jsonify({'message': 'Role updated successfully'}), 200
 
 @app.route('/roles/<role_name>', methods=['DELETE'])
-@jwt_required()
+# @jwt_required()
 def delete_role(role_name):
-    # First, delete the role from the role_db collection.
-    result = mongo.db.role_db.delete_one({'role_name': role_name})
+    # First, delete the role from the roles collection.
+    result = mongo.db.roles.delete_one({'role': role_name})
     if result.deleted_count == 0:
         return jsonify({'error': 'Role not found'}), 404
 
     # Find all users who have this role in their roles or delegated_roles list.
-    affected_users = mongo.db.identity_db.find({
+    affected_users = mongo.db.users.find({
         '$or': [
             {'roles': role_name},
             {'delegated_roles': role_name}
@@ -145,7 +158,7 @@ def delete_role(role_name):
         if role_name in user['roles']:
             new_roles = [role for role in user['roles'] if role != role_name]
             new_role_hash = sha256_hash(new_roles)
-            mongo.db.identity_db.update_one(
+            mongo.db.users.update_one(
                 {'_id': user['_id']},
                 {'$set': {'roles': new_roles, 'role_hash': new_role_hash}}
             )
@@ -154,7 +167,7 @@ def delete_role(role_name):
         if role_name in user['delegated_roles']:
             new_delegated_roles = [role for role in user['delegated_roles'] if role != role_name]
             new_delegated_role_hash = sha256_hash(new_delegated_roles)
-            mongo.db.identity_db.update_one(
+            mongo.db.users.update_one(
                 {'_id': user['_id']},
                 {'$set': {'delegated_roles': new_delegated_roles, 'delegated_role_hash': new_delegated_role_hash}}
             )
@@ -165,16 +178,16 @@ def delete_role(role_name):
 # User Management Code
 
 @app.route('/users', methods=['GET'])
-@jwt_required()
+# @jwt_required()
 def get_users():
-    users = mongo.db.identity_db.find({}, {'password_hash': 0})  # Exclude password hashes from the result
+    users = mongo.db.users.find({}, {'password_hash': 0})  # Exclude password hashes from the result
     return jsonify([{'username': user['username'], 'email': user['email'], 'roles': user['roles'], 'delegated_roles': user.get('delegated_roles', [])} for user in users]), 200
 
 
 @app.route('/users', methods=['POST'])
-@jwt_required()
+# @jwt_required()
 def create_user():
-    user_data = request.get_json()
+    user_data = request.json
     username = user_data.get('username')
     name = user_data.get('name')
     email = user_data.get('email')
@@ -196,7 +209,7 @@ def create_user():
     delegated_role_hash = sha256_hash(delegated_roles)
 
     # Insert into database
-    mongo.db.identity_db.insert_one({
+    mongo.db.users.insert_one({
         'username': username,
         'name' : name,
         'email': email,
@@ -213,30 +226,30 @@ def create_user():
 
 
 @app.route('/users/<username>/details', methods=['PUT'])
-@jwt_required()
+# @jwt_required()
 def modify_user_details(username):
-    user_updates = request.get_json()
+    user_updates = request.json
     allowed_fields = {'email', 'phone_number', 'expiry_date'}  # Define allowable fields to update
     updates = {field: value for field, value in user_updates.items() if field in allowed_fields}
     
     if not updates:
         return jsonify({'error': 'No valid fields to update'}), 400
     
-    result = mongo.db.identity_db.update_one({'username': username}, {'$set': updates})
+    result = mongo.db.users.update_one({'username': username}, {'$set': updates})
     if result.modified_count == 0:
         return jsonify({'error': 'User not found or no changes made'}), 404
     
     return jsonify({'message': 'User details updated successfully'}), 200
 
 @app.route('/users/<username>/roles', methods=['PUT'])
-@jwt_required()
+# @jwt_required()
 def modify_user_roles(username):
-    new_roles = request.get_json().get('roles')
+    new_roles = request.json.get('roles')
     if not isinstance(new_roles, list):
         return jsonify({'error': 'Roles must be provided in a list'}), 400
     
     new_role_hash = sha256_hash(new_roles)
-    result = mongo.db.identity_db.update_one(
+    result = mongo.db.users.update_one(
         {'username': username},
         {'$set': {'roles': new_roles, 'role_hash': new_role_hash}}
     )
@@ -247,15 +260,15 @@ def modify_user_roles(username):
     return jsonify({'message': 'User roles updated successfully'}), 200
 
 @app.route('/users/<username>/delegated_roles', methods=['PUT'])
-@jwt_required()
+# @jwt_required()
 def modify_user_delegated_roles(username):
-    new_delegated_roles = request.get_json().get('delegated_roles')
+    new_delegated_roles = request.json.get('delegated_roles')
     
     if not isinstance(new_delegated_roles, list):
         return jsonify({'error': 'Delegated roles must be provided in a list'}), 400
     
     new_delegated_role_hash = sha256_hash(new_delegated_roles)
-    result = mongo.db.identity_db.update_one(
+    result = mongo.db.users.update_one(
         {'username': username},
         {'$set': {'delegated_roles': new_delegated_roles, 'delegated_role_hash': new_delegated_role_hash}}
     )
@@ -266,9 +279,9 @@ def modify_user_delegated_roles(username):
     return jsonify({'message': 'User delegated roles updated successfully'}), 200
 
 @app.route('/users/<username>', methods=['DELETE'])
-@jwt_required()
+# @jwt_required()
 def delete_user(username):
-    mongo.db.identity_db.delete_one({'username': username})
+    mongo.db.users.delete_one({'username': username})
     return jsonify({'message': 'User deleted successfully'}), 200
 
 

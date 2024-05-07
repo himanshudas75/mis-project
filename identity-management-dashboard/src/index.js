@@ -14,10 +14,10 @@ root.render(
     {/* <App /> */}
     <BrowserRouter>
       <Routes>
-        <Route path="/" exact component={Dashboard} />
-        <Route path="/manage-roles" component={ManageRoles} />
-        <Route path="/manage-users" component={ManageUsers} />
-        <Route path="/delegate-roles" component={DelegateRoles} />
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/manage-roles" element={<ManageRoles />} />
+        <Route path="/manage-users" element={<ManageUsers />} />
+        <Route path="/delegate-roles" element={<DelegateRoles />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>

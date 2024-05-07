@@ -18,7 +18,7 @@ function DelegateRoleForm({ username, initialRoles, onSave }) {
     const updatedRoles = roles.split(',').map(role => role.trim());
     
     try {
-      const response = await fetch(`http://127.0.0.1:5000/users/${username}/delegated_roles`, {
+      const response = await fetch(`/users/${username}/delegated_roles`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'

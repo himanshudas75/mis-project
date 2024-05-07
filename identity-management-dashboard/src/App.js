@@ -30,7 +30,7 @@ function App() {
         </header>
         <main>
           <Switch>
-            <Route path="/" exact component={Dashboard} />
+            <Route path="/" element={<Dashboard/>} />
             <Route path="/manage-roles" component={ManageRoles} />
             <Route path="/manage-users" component={ManageUsers} />
             <Route path="/delegate-roles" component={DelegateRoles} />

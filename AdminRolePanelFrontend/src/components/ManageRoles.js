@@ -11,13 +11,12 @@ function ManageRoles() {
 
   const fetchRoles = async () => {
     try {
-      console.log("!");
-      const response = await fetch('http://127.0.0.1:5000/roles', {
+      const response = await fetch('/roles', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'
         },
-        // credentials: 'include' // Necessary for cookies to be sent with requests
+        credentials: 'include' // Necessary for cookies to be sent with requests
       });
       if (!response.ok) throw new Error('Network response was not ok.');
       const data = await response.json();
@@ -30,12 +29,12 @@ function ManageRoles() {
 
   const deleteRole = async (roleName) => {
     try {
-      const response = await fetch(`http://127.0.0.1:5000/roles/${roleName}`, {
+      const response = await fetch(`/roles/${roleName}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json'
         },
-        // credentials: 'include' // Necessary for cookies to be sent with requests
+        credentials: 'include' // Necessary for cookies to be sent with requests
       });
       if (!response.ok) throw new Error('Failed to delete role.');
       fetchRoles(); // Re-fetch roles after deletion

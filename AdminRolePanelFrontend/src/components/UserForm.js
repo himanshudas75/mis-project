@@ -36,7 +36,7 @@ function UserForm({ user = null, fetchUsers }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const url = isEditing ? `http://127.0.0.1:5000/users/${formData.username}` : 'http://127.0.0.1:5000/users';
+    const url = isEditing ? `/users/${formData.username}` : '/users';
     const method = isEditing ? 'PUT' : 'POST';
     const data = {
       ...formData,
@@ -50,7 +50,7 @@ function UserForm({ user = null, fetchUsers }) {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(data),
-        // credentials: 'include'
+        credentials: 'include'
       });
 
       if (!response.ok) {

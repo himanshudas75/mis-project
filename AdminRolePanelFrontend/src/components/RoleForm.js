@@ -16,34 +16,32 @@ function RoleForm({ role = null, fetchRoles }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const servicesArray = services.split(',').map(service => service.trim());
-    const endpoint = isEditing ? `http://127.0.0.1:5000/roles/${roleName}` : 'http://127.0.0.1:5000/roles';
+    const servicesArray = services.split(',').map(service => service.trim()); // Convert services string to array
+    const endpoint = isEditing ? `/roles/${roleName}` : '/roles';
     const method = isEditing ? 'PUT' : 'POST';
-    console.log(roleName);
+
     try {
       const response = await fetch(endpoint, {
         method: method,
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ role: roleName, services: servicesArray }),
-        // credentials: 'include'
+        body: JSON.stringify({ roleName, services: servicesArray }),
+        credentials: 'include'
       });
-  
+
       if (!response.ok) {
-        const errorMessage = await response.text();
-        throw new Error(`Failed to save the role: ${response.status} - ${errorMessage}`);
+        throw new Error('Failed to save the role');
       }
-  
+
       setRoleName('');
       setServices('');
       setIsEditing(false);
-      fetchRoles();
+      fetchRoles(); // Refresh roles after successful operation
     } catch (error) {
       console.error('Error submitting the form:', error);
     }
   };
-  
 
   const handleCancel = () => {
     // Reset form if canceling edit
