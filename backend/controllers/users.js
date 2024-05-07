@@ -38,21 +38,30 @@ const generatePassword = () => {
     return crypto.randomBytes(8).toString('hex');
 };
 
+module.exports.getDetails = async (req, res, next) => {
+    const user = await User.findOne({ registration_number: req.user.identity });
+    res.json({
+        success: true,
+        message: 'User fetched successfully',
+        user: user,
+    });
+};
+
 module.exports.register = async (req, res, next) => {
     const {
-        first_name,
-        midde_name,
-        last_name,
+        firstname,
+        middlename,
+        lastname,
         category,
         divyang,
-        mobile_number,
+        mobilenumber,
         email,
-        date_of_birth,
-        gender,
-        blood_group,
-        father_name,
-        color_blindness,
+        dob,
+        mathorstatdegree,
+        btechdegree,
     } = req.body;
+
+    console.log('HERE');
 
     const check_email = await User.findOne({ email });
     if (check_email) {
@@ -67,18 +76,16 @@ module.exports.register = async (req, res, next) => {
     const roles = [process.env.ROLE_UNVERIFIED];
 
     const user = new User({
-        first_name: first_name,
-        midde_name: midde_name,
-        last_name: last_name,
+        first_name: firstname,
+        middle_name: middlename,
+        last_name: lastname,
         category: category,
         divyang: divyang,
-        mobile_number: mobile_number,
+        mobile_number: mobilenumber,
         email: email,
-        date_of_birth: date_of_birth,
-        gender: gender,
-        blood_group: blood_group,
-        father_name: father_name,
-        color_blindness: color_blindness,
+        date_of_birth: dob,
+        math_or_stat_degree: mathorstatdegree,
+        btech_degree: btechdegree,
         registration_number: registration_number,
         password: hashSync(password, 12),
         roles: roles,

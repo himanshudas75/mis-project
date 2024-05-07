@@ -26,7 +26,11 @@ const upload = multer({ storage: storage });
 // router.route('/reset').delete(isAuthenticated, catchAsync(complaints.reset));
 
 router
-    .route('/form_1')
-    .post(isAuthenticated, hasRoles, catchAsync(application.form_1));
+    .route('/submit')
+    .post(isAuthenticated, hasRoles, catchAsync(application.submit));
+
+router
+    .route('/getSteps')
+    .get(isAuthenticated, hasRoles, catchAsync(application.getSteps));
 
 module.exports = router;

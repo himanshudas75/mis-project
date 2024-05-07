@@ -4,7 +4,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 const express = require('express');
 
-// const cors = require('cors');
+const cors = require('cors');
 const mongoSanitize = require('express-mongo-sanitize');
 const cookieParser = require('cookie-parser');
 const path = require('path');
@@ -18,12 +18,12 @@ require('./models/user');
 
 const app = express();
 
-// app.use(
-//     cors({
-//         credentials: true,
-//         origin: ['http://127.0.0.1:5173', 'http://localhost:5173'],
-//     })
-// );
+app.use(
+    cors({
+        credentials: true,
+        origin: ['http://127.0.0.1:5173', 'http://localhost:5173'],
+    })
+);
 
 app.set('trust proxy', 1);
 app.use(express.urlencoded({ extended: true }));

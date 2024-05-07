@@ -8,17 +8,17 @@ module.exports.addCourses = async (req, res, next) => {
     };
 
     const courses = req.body;
-    const course_ids = [];
+    // const course_ids = [];
 
-    for (const course of courses) {
-        const found_course = await Course.findOne(course);
-        if (found_course) course_ids.push(found_course._id);
-        else return next(err);
-    }
+    // for (const course of courses) {
+    //     const found_course = await Course.findOne(course);
+    //     if (found_course) course_ids.push(found_course._id);
+    //     else return next(err);
+    // }
 
     const userCourse = new UserCourse({
         registration_number: req.user.identity,
-        courses: course_ids,
+        courses: courses,
     });
 
     await userCourse.save();
