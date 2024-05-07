@@ -48,6 +48,7 @@ const AdminDashboard = () => {
             }).then((response) => {
                 // Handle response
                 if (response.status === 200) {
+                    alert("User Not Authorized for the Provided Request");
                     window.location.reload();
                     console.log(200);
                 }
