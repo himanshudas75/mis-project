@@ -1,6 +1,9 @@
 import axios from '../api/axios';
+import useTickets from './useTickets';
 
 const useComplaint = () => {
+    const { submitTicket } = useTickets();
+
     const register = async (data) => {
         try {
             console.log(data);
@@ -10,6 +13,12 @@ const useComplaint = () => {
                 '/complaint/register',
                 JSON.stringify(data)
             );
+
+            const to_submit = {
+                type: 'PG Complaint',
+                description: data.order_no,
+            };
+            const res2 = await submitTicket(to_submit);
 
             return res.data;
         } catch (err) {
