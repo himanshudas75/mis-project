@@ -14,6 +14,7 @@ import DocumentUpload from './DocumentUpload';
 import Layout from './components/Layout';
 import RequireAuth from './components/RequireAuth';
 import PersistLogin from './components/PersistLogin.jsx';
+import RequireNoAuth from './components/RequireNoAuth.jsx';
 
 function App() {
     return (
@@ -24,11 +25,13 @@ function App() {
                         <Route element={<RequireAuth />}>
                             <Route path="/" element={<Home />} />
                         </Route>
-                        <Route
-                            path="/register"
-                            element={<RegistrationFrom />}
-                        />
-                        <Route path="/login" element={<LoginForm />} />
+                        <Route element={<RequireNoAuth />}>
+                            <Route
+                                path="/register"
+                                element={<RegistrationFrom />}
+                            />
+                            <Route path="/login" element={<LoginForm />} />
+                        </Route>
 
                         <Route element={<RequireAuth />}>
                             <Route

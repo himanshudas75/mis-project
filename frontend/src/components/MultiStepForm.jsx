@@ -75,11 +75,11 @@ const MultiStepForm = () => {
                 </Step>
 
                 {/* pt step */}
-                <Step label={steps[4].label}>
+                {/* <Step label={steps[4].label}>
                     <Box sx={{ p: 8, bg, my: 8, rounded: 'md' }}>
                         <QualificationDetails moveToNext={nextStep} />
                     </Box>
-                </Step>
+                </Step> */}
             </Steps>
 
             {hasCompletedAllSteps && (

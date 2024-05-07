@@ -124,8 +124,8 @@ module.exports.register = async (req, res, next) => {
         success: true,
         message: 'User created successfully',
         user: {
-            registration_number: registration_number,
-            password: password,
+            identity: registration_number,
+            roles: roles,
         },
         accessToken: accessToken,
     });
@@ -157,7 +157,8 @@ module.exports.login = async (req, res, next) => {
         success: true,
         message: 'Logged in successfully',
         user: {
-            registration_number,
+            identity: registration_number,
+            roles: roles,
         },
         accessToken: accessToken,
     });

@@ -1,13 +1,25 @@
 import axios from '../api/axios';
 import useAuth from './useAuth';
+import useApplication from './useApplication';
 
 const useUser = () => {
     const { setAuth } = useAuth();
+    const { getSteps } = useApplication();
 
     const register = async (data) => {
         try {
-            console.log(data);
             const res = await axios.post('/register', JSON.stringify(data));
+            const res2 = await getSteps();
+
+            const identity = res.data.user.identity;
+            const roles = res.data.user.roles;
+            const steps = res2.steps;
+
+            setAuth((prev) => ({
+                identity,
+                roles,
+                steps,
+            }));
 
             return res.data;
         } catch (err) {
@@ -18,8 +30,18 @@ const useUser = () => {
 
     const login = async (data) => {
         try {
-            console.log(data);
             const res = await axios.post('/login', JSON.stringify(data));
+            const res2 = await getSteps();
+
+            const identity = res.data.user.identity;
+            const roles = res.data.user.roles;
+            const steps = res2.steps;
+
+            setAuth((prev) => ({
+                identity,
+                roles,
+                steps,
+            }));
 
             return res.data;
         } catch (err) {
