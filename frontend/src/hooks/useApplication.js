@@ -18,6 +18,7 @@ const useApplication = () => {
     const getSteps = async () => {
         try {
             const res = await axios.get('/application/getSteps');
+            // console.log('ABCD', res.data);
             return res.data;
         } catch (err) {
             console.log(err?.response?.data);
