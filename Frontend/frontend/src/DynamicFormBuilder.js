@@ -62,10 +62,9 @@ const DynamicFormBuilder = ({ formConfig, onNextPage, fromItem, path, isreview }
             });
         }
     }, [formConfig]);
-
     const handleTableFileChange = (e, id, rowIndex, columnKey) => {
-        const files = e.target.files[0];
-
+        const file = e.target.files[0]; // Get the first file from the FileList
+        const previewUrl = file ? URL.createObjectURL(file) : null; // Create preview URL if file exists
         setFormState((prevState) => ({
             ...prevState,
             tableData: {
@@ -74,7 +73,8 @@ const DynamicFormBuilder = ({ formConfig, onNextPage, fromItem, path, isreview }
                     if (index === rowIndex) {
                         return {
                             ...row,
-                            [columnKey]: files,
+                            [columnKey]: file,
+                            previewUrl: previewUrl,
                         };
                     }
                     return row;
@@ -243,9 +243,9 @@ const DynamicFormBuilder = ({ formConfig, onNextPage, fromItem, path, isreview }
                         />
                     </div>
                 );
-            case "file":
-                return (
-                    <div key={id} className="values">
+                case "file":
+                    return (
+                        <div key={id} className="values">
                         <label htmlFor={id}>{label}</label>
                         <>
                             {formState.formData[id] && formState.formData[id].length > 0 && (
@@ -278,7 +278,7 @@ const DynamicFormBuilder = ({ formConfig, onNextPage, fromItem, path, isreview }
 
                         </>
                     </div>
-                );
+                    );
             case "number":
                 return (
                     <div key={id} className="values">
@@ -339,33 +339,26 @@ const DynamicFormBuilder = ({ formConfig, onNextPage, fromItem, path, isreview }
                                                         />
                                                     ) : column.type === "file" ? (
                                                         <>
-                                                            <label htmlFor={id} className={"upload-label"} name={`${id}[${rowIndex}][${column.key}]`}>Upload</label>
-                                                            {console.log(row)}
-                                                            {row[column.key] && (
-                                                                <ul>
-                                                                    <li>
-                                                                            { row[column.key] &&
-                                                                            <a
-                                                                                href={URL.createObjectURL(row[column.key])}
-                                                                                target="_blank"
-                                                                                rel="noopener noreferrer"
-                                                                            >
-                                                                                {'view'}
-                                                                            </a>}
-                                                                        </li>
-                                                                </ul>
-                                                            )}
+                                                            <label htmlFor={`${id}-${rowIndex}-${column.key}`} className="upload-label">Upload</label>
                                                             <input
                                                                 type="file"
-                                                                id={id}
+                                                                id={`${id}-${rowIndex}-${column.key}`}
                                                                 style={{ display: 'none' }}
                                                                 name={`${id}[${rowIndex}][${column.key}]`}
                                                                 onChange={(e) => handleTableFileChange(e, id, rowIndex, column.key)}
                                                                 readOnly={isreview === 'view'}
                                                             />
-
+                                                            {/* View uploaded file */}
+                                                            {row[column.key] && (
+                                                                <a
+                                                                    href={URL.createObjectURL(row[column.key])}
+                                                                    target="_blank"
+                                                                    rel="noopener noreferrer"
+                                                                >
+                                                                    View
+                                                                </a>
+                                                            )}
                                                         </>
-
                                                     ) : column.type === "number" ? (
                                                         <input
                                                             type="number"
