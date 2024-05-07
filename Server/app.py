@@ -294,25 +294,23 @@ def edit():
         print('error occurred')
         return "Something Happen",500
 
-@app.route('/details',methods=['GET'])
+@app.route('/details', methods=['GET'])
 def details():
     try:
         email = request.args.get('email')
-        print(email)
         if email:
-            
-            data = mongo.db.users.find_one({'email': email},{'_id':0})
-            # data = list(data)
-            print(data)
-            return data,200
-        # Insert JSON data into MongoDB if email ID does not exist
-        # mongo.db.users.insert_one(json_data)
-        
-        return 'User Not Found', 404
-    except:
-        print('error occurred')
-        return "Something Happen",500
-
+            data = mongo.db.users.find_one({'email': email}, {'_id': 0})
+            if data:
+                # Serialize data using bson.json_util
+                json_data = dumps(data)
+                return json_data, 200
+            else:
+                return 'User Not Found', 404
+        else:
+            return 'Email parameter is missing', 400
+    except Exception as e:
+        print('Error occurred:', e)
+        return "Something went wrong", 500
 @app.route('/apply',methods=['POST'])
 def apply():
     try:
