@@ -2,9 +2,12 @@ import datetime
 import hashlib
 from flask import Flask, request, jsonify, make_response, render_template, redirect, flash
 from flask_pymongo import PyMongo
-from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity, decode_token
+from flask_bcrypt import Bcrypt
+from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity, decode_token
 from datetime import timedelta
 from hashlib import sha256
+from bson.json_util import dumps
+from bson.json_util import loads
 import os
 
 app = Flask(__name__)
@@ -92,11 +95,11 @@ def login():
             access_token = create_access_token(identity=username, user_claims={'roles': roles})
             response = make_response(redirect(redirect_to))
             response.set_cookie('access_token', value=access_token, httponly=True)
-            return response
+            return response,200
         else:
-            flash('Invalid credentials. Please try again.', 'error')
+            flash('Invalid credentials. Please try again.', 'error'),400
         
-    return render_template('login.html')
+    return render_template('login.html'),200
 
 # @app.route('/verify', methods=['GET'])
 # def verify():
