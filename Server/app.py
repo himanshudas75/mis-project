@@ -11,7 +11,7 @@ import string
 from datetime import datetime, timedelta
 from flask_mail import Mail, Message
 import json
-from bson.json_util import dumps
+from bson.json_util import dumps,loads
 from flask_cors import CORS
 # from flask_cors import cross_origin
 
@@ -298,10 +298,13 @@ def edit():
 def details():
     try:
         email = request.args.get('email')
-        
+        print(email)
         if email:
+            
             data = mongo.db.users.find_one({'email': email},{'_id':0})
-            return jsonify(data),200
+            # data = list(data)
+            print(data)
+            return data,200
         # Insert JSON data into MongoDB if email ID does not exist
         # mongo.db.users.insert_one(json_data)
         

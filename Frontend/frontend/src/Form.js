@@ -78,7 +78,7 @@ const formConfig = [
         ],
         initialRows: [
           { name: "gaurav", age: "18", gender: "Male" },
-          { name: "Abhipsa", age: "18", gender: "Male" }, // Initial row with empty values
+          { name: "Abhipsa", age: "18", gender: "Female" }, // Initial row with empty values
         ],
       },
       ]

@@ -248,14 +248,14 @@ const DynamicFormBuilder = ({ formConfig, onNextPage, fromItem, path, isreview }
                             {formData[id] && formData[id].length > 0 && (
                                 <ul>
                                     {formData[id].map((file, index) => (
-                                        <li key={index}>
+                                        <li key={index} style={{listStyle: 'none'}}>
                                             {/* Display link to uploaded document */}
                                             <a
                                                 href={URL.createObjectURL(file)}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
                                             >
-                                                {file.name}
+                                                {"view"}
                                             </a>
                                         </li>
                                     ))}
@@ -335,7 +335,7 @@ const DynamicFormBuilder = ({ formConfig, onNextPage, fromItem, path, isreview }
                                                         />
                                                     ) : column.type === "file" ? (
                                                         <>
-                                                            <label htmlFor={id} className={"upload-label"}>Upload</label>
+                                                            <label htmlFor={`${id}-${rowIndex}-${column.key}`} className={"upload-label"}>Upload</label>
                                                             {formData[id] && formData[id].length > 0 && (
                                                                 <ul>
                                                                     {formData[id].map((file, index) => (
@@ -357,7 +357,7 @@ const DynamicFormBuilder = ({ formConfig, onNextPage, fromItem, path, isreview }
                                                                 id={id}
                                                                 style={{ display: 'none' }}
                                                                 name={`${id}[${rowIndex}][${column.key}]`}
-                                                                onChange={(e) => handleTableChange(e, id,rowIndex, column.key)}
+                                                                onChange={(e) => handleTableChange(e, id,rowIndex, `${id}-${rowIndex}-${column.key}`)}
                                                                 multiple
                                                                 readOnly={isreview === 'view'}
                                                             />

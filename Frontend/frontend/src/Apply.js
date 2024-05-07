@@ -4,10 +4,24 @@ import Navbar from './Components/Navbar';
 import './Styles/apply.css';
 import './Styles/forms.css'
 
-const options = [ // Example dropdown options
-    { value: 'Electrical', label: 'Electrical Engineering' },
-    { value: 'option2', label: 'Option 2' },
-    { value: 'option3', label: 'Option 3' },
+const options = [ 
+    { value: 'Applied Geology', label: 'Applied Geology' },
+    { value: 'Applied Geophysics', label: 'Applied Geophysics' },
+    { value: 'Chemical Engineering', label: 'Chemical Engineering' },
+    { value: 'Chemistry and Chemical Biology', label: 'Chemistry and Chemical Biology' },
+    { value: 'Civil Engineering', label: 'Civil Engineering' },
+    { value: 'Computer Science and Engineering', label: 'Computer Science and Engineering' },
+    { value: 'Electrical Engineering', label: 'Electrical Engineering' },
+    { value: 'Electronics Engineering', label: 'Electronics Engineering' },
+    { value: 'Environmental Science & Engineering', label: 'Environmental Science & Engineering' },
+    { value: 'Fuel, Minerals and Metallurgical Engineering', label: 'Fuel, Minerals and Metallurgical Engineering' },
+    { value: 'Humanities and Social Sciences', label: 'Humanities and Social Sciences' },
+    { value: 'Management Studies and Industrial Engineering', label: 'Management Studies and Industrial Engineering' },
+    { value: 'Mathematics and Computing', label: 'Mathematics and Computing' },
+    { value: 'Mechanical Engineering', label: 'Mechanical Engineering' },
+    { value: 'Mining Engineering', label: 'Mining Engineering' },
+    { value: 'Petroleum Engineering', label: 'Petroleum Engineering' },
+    { value: 'Physics', label: 'Physics' },
 ];
 
 const Apply = () => {
@@ -62,6 +76,8 @@ const Apply = () => {
         })
             .then(response => {
                 // Handle response
+                alert("Application Submitted!")
+                window.location.href = '/home'
                 console.log(response);
             })
             .catch(error => {

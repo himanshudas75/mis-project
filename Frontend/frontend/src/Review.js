@@ -22,8 +22,8 @@ const ReviewPage = ({ isreview }) => {
       console.log("review page started");
       try {
         console.log("try")
-        const email = encodeURIComponent(localStorage.getItem('user'));
-        const response = await fetch(`http://127.0.0.1:5000/tempget?email=abcd@efgh`, {
+        const email = localStorage.getItem('user');
+        const response = await fetch(`http://127.0.0.1:5000/tempget?email=${email}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json'
@@ -48,7 +48,8 @@ const ReviewPage = ({ isreview }) => {
       }
     } else if (isreview === 'view' || isreview==='edit') {
       try {
-        const response = await fetch('http://127.0.0.1:5000/details?email=abcd@efgh', {
+        const email = localStorage.getItem('user');
+        const response = await fetch(`http://127.0.0.1:5000/details?email=${email}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
