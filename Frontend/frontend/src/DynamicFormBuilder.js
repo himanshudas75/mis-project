@@ -13,9 +13,12 @@ const DynamicFormBuilder = ({ formConfig, onNextPage, fromItem, path, isreview }
         const files = e.target.files;
         // Convert FileList to an array
         const fileList = Array.from(files);
-        setFormData((prevData) => ({
+        setFormState((prevData) => ({
             ...prevData,
-            [id]: fileList,
+            formData:{
+                ...prevData.formData,
+                [id]: fileList,
+            }
         }));
     };
     const initialTableData = formConfig.reduce((acc, curr) => {
@@ -59,10 +62,10 @@ const DynamicFormBuilder = ({ formConfig, onNextPage, fromItem, path, isreview }
             });
         }
     }, [formConfig]);
+
     const handleTableFileChange = (e, id, rowIndex, columnKey) => {
-        const files = e.target.files;
-        // Convert FileList to an array
-        const {fileList} = Array.from(files); //Not working for Table
+        const files = e.target.files[0];
+
         setFormState((prevState) => ({
             ...prevState,
             tableData: {
@@ -71,7 +74,7 @@ const DynamicFormBuilder = ({ formConfig, onNextPage, fromItem, path, isreview }
                     if (index === rowIndex) {
                         return {
                             ...row,
-                            [columnKey]: fileList,
+                            [columnKey]: files,
                         };
                     }
                     return row;
@@ -245,11 +248,12 @@ const DynamicFormBuilder = ({ formConfig, onNextPage, fromItem, path, isreview }
                     <div key={id} className="values">
                         <label htmlFor={id}>{label}</label>
                         <>
-                            {formData[id] && formData[id].length > 0 && (
+                            {formState.formData[id] && formState.formData[id].length > 0 && (
                                 <ul>
-                                    {formData[id].map((file, index) => (
-                                        <li key={index} style={{listStyle: 'none'}}>
+                                    {formState.formData[id].map((file, index) => (
+                                        <li key={index} style={{ listStyle: 'none' }}>
                                             {/* Display link to uploaded document */}
+                                            {console.log(file)}
                                             <a
                                                 href={URL.createObjectURL(file)}
                                                 target="_blank"
@@ -335,21 +339,20 @@ const DynamicFormBuilder = ({ formConfig, onNextPage, fromItem, path, isreview }
                                                         />
                                                     ) : column.type === "file" ? (
                                                         <>
-                                                            <label htmlFor={`${id}-${rowIndex}-${column.key}`} className={"upload-label"}>Upload</label>
-                                                            {formData[id] && formData[id].length > 0 && (
+                                                            <label htmlFor={id} className={"upload-label"} name={`${id}[${rowIndex}][${column.key}]`}>Upload</label>
+                                                            {console.log(row)}
+                                                            {row[column.key] && (
                                                                 <ul>
-                                                                    {formData[id].map((file, index) => (
-                                                                        <li key={index}>
-                                                                            {/* Display link to uploaded document */}
+                                                                    <li>
+                                                                            { row[column.key] &&
                                                                             <a
-                                                                                href={URL.createObjectURL(file)}
+                                                                                href={URL.createObjectURL(row[column.key])}
                                                                                 target="_blank"
                                                                                 rel="noopener noreferrer"
                                                                             >
-                                                                                {file.name}
-                                                                            </a>
+                                                                                {'view'}
+                                                                            </a>}
                                                                         </li>
-                                                                    ))}
                                                                 </ul>
                                                             )}
                                                             <input
@@ -357,12 +360,12 @@ const DynamicFormBuilder = ({ formConfig, onNextPage, fromItem, path, isreview }
                                                                 id={id}
                                                                 style={{ display: 'none' }}
                                                                 name={`${id}[${rowIndex}][${column.key}]`}
-                                                                onChange={(e) => handleTableChange(e, id,rowIndex, `${id}-${rowIndex}-${column.key}`)}
-                                                                multiple
+                                                                onChange={(e) => handleTableFileChange(e, id, rowIndex, column.key)}
                                                                 readOnly={isreview === 'view'}
                                                             />
 
                                                         </>
+
                                                     ) : column.type === "number" ? (
                                                         <input
                                                             type="number"
