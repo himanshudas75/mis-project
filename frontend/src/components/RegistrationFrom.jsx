@@ -39,7 +39,7 @@ const RegistrationFrom = () => {
         divyang: '',
         dob: '',
         btechdegree: '',
-        mathorstatdegree: '',
+        mathorstatdegree: 'true',
     };
     const validationSchema = Yup.object({
         firstname: Yup.string().required('Required'),

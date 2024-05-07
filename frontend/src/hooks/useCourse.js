@@ -1,9 +1,12 @@
 import axios from '../api/axios';
-
+import useAuth from './useAuth';
 const useCourse = () => {
+    const { auth, setAuth } = useAuth();
     const add = async (data) => {
         try {
             const res = await axios.post('/course/add', JSON.stringify(data));
+
+            auth.courses.concat(data);
 
             return res.data;
         } catch (err) {

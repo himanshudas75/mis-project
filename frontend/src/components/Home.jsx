@@ -23,8 +23,19 @@ const Home = () => {
             <Menu>
                 <MenuButton as={Button}>Applicant Home</MenuButton>
                 <MenuList>
+                    {auth.courses.length > 0 ? (
+                        <Link to="/details">
+                            <MenuItem>Start filling form</MenuItem>
+                        </Link>
+                    ) : (
+                        ''
+                    )}
                     <Link to="/apply">
-                        <MenuItem>Start Application</MenuItem>
+                        <MenuItem>
+                            {auth.courses.length > 0
+                                ? 'View Application'
+                                : 'Start Application'}
+                        </MenuItem>
                     </Link>
                     <Link to="/instructions">
                         <MenuItem>Instruction</MenuItem>
@@ -35,13 +46,6 @@ const Home = () => {
                     <Link to="/track_complaint">
                         <MenuItem>Track Complaint</MenuItem>
                     </Link>
-                    {auth.courses.length > 0 ? (
-                        <Link to="/details">
-                            <MenuItem>Start filling form</MenuItem>
-                        </Link>
-                    ) : (
-                        ''
-                    )}
                 </MenuList>
             </Menu>
             <Text>
