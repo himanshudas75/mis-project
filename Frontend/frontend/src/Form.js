@@ -99,8 +99,8 @@ const formConfig = [
           { "label": "Sanctioned Date", "key": "sanctionedDate", "type": "date" },
           {
             "label": "Status", "key": "status", "type": "select", "options": [{ label: "Pending", value: "male" },
-            { label: "Female", value: "female" },
-            { label: "Trans", value: "Trans" },]
+            { label: "Completed", value: "Completed" },
+            ]
           }
         ],
         "initialRows": [

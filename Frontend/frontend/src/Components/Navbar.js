@@ -5,7 +5,7 @@ import '../Styles/navbar.css';
 const Navbar = () => {
   const handleLogout =()=>{
     localStorage.clear();
-    fetch(`${process.env.BACKEND_PROXY}/logout`, {
+    fetch(`http://127.0.0.1:5000/logout`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json", // Ensure 'Content-Type' header is set

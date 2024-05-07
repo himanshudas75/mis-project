@@ -23,7 +23,7 @@ const ReviewPage = ({ isreview }) => {
       try {
         console.log("try")
         const email = localStorage.getItem('user');
-        const response = await fetch(`${process.env.BACKEND_PROXY}/tempget?email=${email}`, {
+        const response = await fetch(`http://127.0.0.1:5000/tempget?email=${email}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json'
@@ -49,7 +49,7 @@ const ReviewPage = ({ isreview }) => {
     } else if (isreview === 'view' || isreview==='edit') {
       try {
         const email = localStorage.getItem('user');
-        const response = await fetch(`${process.env.BACKEND_PROXY}/details?email=${email}`, {
+        const response = await fetch(`http://127.0.0.1:5000/details?email=${email}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
