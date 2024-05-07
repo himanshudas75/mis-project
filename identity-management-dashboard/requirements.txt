@@ -1,1 +1,5 @@
 flask_bcrypt
+Flask
+Flask-PyMongo
+Flask-JWT-Extended
+gunicorn
