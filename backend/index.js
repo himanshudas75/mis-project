@@ -44,13 +44,14 @@ const actionRoutes = require('./routes/actions');
 const applicationRoutes = require('./routes/application');
 const courseRoutes = require('./routes/courses');
 
+const base_url = process.env.BASE_API_URL;
 // Routes
-app.use('/api/course', courseRoutes);
-app.use('/api/application', applicationRoutes);
-app.use('/api/admin', adminRoutes);
-app.use('/api/actions', actionRoutes);
-app.use('/api/complaint/', complaintRoutes);
-app.use('/api/', userRoutes);
+app.use(`${base_url}course`, courseRoutes);
+app.use(`${base_url}application`, applicationRoutes);
+app.use(`${base_url}admin`, adminRoutes);
+app.use(`${base_url}actions`, actionRoutes);
+app.use(`${base_url}complaint`, complaintRoutes);
+app.use(`${base_url}`, userRoutes);
 
 app.use((err, req, res, next) => {
     const status = err.statusCode || 500;

@@ -45,6 +45,7 @@ module.exports.register = async (req, res, next) => {
         complaint_details: complaint_details,
         payment_type: payment_type,
         user: req.user._id,
+        complaint_status: 'Pending',
     });
 
     // complaint.screenshot = {
