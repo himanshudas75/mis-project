@@ -36,6 +36,10 @@ const complaintSchema = new Schema({
         type: String,
         required: true,
     },
+    complaint_status: {
+        type: String,
+        required: true,
+    },
     screenshot: {
         type: imageSchema,
         // required: true,
