@@ -8,78 +8,9 @@ import useUser from '../hooks/useUser.js';
 import { useNavigate } from 'react-router-dom';
 
 const RegistrationFrom = () => {
-<<<<<<< HEAD
-  const categoryOptions = [
-    { key: "Please Select Your Category", value: "" },
-    { key: "General", value: "eneral" },
-    { key: "OBC(NCL)", value: "obcncl" },
-    { key: "EWS", value: "ews" },
-    { key: "SC", value: "sc" },
-    { key: "ST", value: "st" },
-  ];
-  const divyangOptions = [
-    { key: "Please Select Divyang", value: "" },
-    { key: "Yes", value: true },
-    { key: "No", value: false },
-  ];
-  const btechRadioOptions = [
-    { key: "Yes", value: "true" },
-    { key: "No", value: "false" },
-  ];
-  const initialValues = {
-    firstname: "",
-    middlename: "",
-    lastname: "",
-    email: "",
-    category: "",
-    mobilenumber: "",
-    divyang: "",
-    dob: "",
-    btechdegree: "",
-    mathorstatdegree: "",
-  };
-  const validationSchema = Yup.object({
-    firstname: Yup.string().required("Required"),
-    lastname: Yup.string().required("Required"),
-    middlename: Yup.string().required("Required"),
-    email: Yup.string().email("Invalid email format").required("Required"),
-    category: Yup.string().required("Required"),
-    mobilenumber: Yup.string()
-      .length(10, "Phone number need to be 10 numbers")
-      .required("Required"),
-    divyang: Yup.boolean().required("Required"),
-    dob: Yup.date().required("Required"),
-    btechdegree: Yup.boolean().required("Required"),
-    mathorstatdegree: Yup.string().when("btechdegree", {
-      is: "false",
-      then: Yup.string().required("Required"),
-    }),
-  });
-  const onSubmit = (values) => {
-    console.log(values);
-  };
-  return (
-    <Formik
-      initialValues={initialValues}
-      validationSchema={validationSchema}
-      onSubmit={onSubmit}
-    >
-      {(formik) => {
-        return (
-          <Form>
-            <HStack spacing="40px" mb="5px">
-              <VStack>
-                <FormikControl
-                  control="input"
-                  label="First Name"
-                  name="firstname"
-                  type="text"
-                />
-=======
     // const { enqueueSnackbar } = useSnackbar();
     const { register } = useUser();
     const navigate = useNavigate();
->>>>>>> 465a855d46adf669548209eab83d16f1dcc8b62f
 
     const categoryOptions = [
         { key: 'Please Select Your Category', value: '' },
@@ -108,7 +39,7 @@ const RegistrationFrom = () => {
         divyang: '',
         dob: '',
         btechdegree: '',
-        mathorstatdegree: 'true',
+        mathorstatdegree: '',
     };
     const validationSchema = Yup.object({
         firstname: Yup.string().required('Required'),
@@ -129,7 +60,6 @@ const RegistrationFrom = () => {
     });
     const onSubmit = async (values) => {
         try {
-            console.log(values);
             const res = await register(values);
             if (res) {
                 if (res.success) {
