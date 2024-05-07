@@ -12,7 +12,17 @@ const useCourse = () => {
         }
     };
 
-    return { add };
+    const get = async () => {
+        try {
+            const res = await axios.get('/course/get');
+            return res.data;
+        } catch (err) {
+            console.log(err?.response?.data);
+            return err?.response?.data;
+        }
+    };
+
+    return { add, get };
 };
 
 export default useCourse;

@@ -14,7 +14,10 @@ import {
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import Logout from './Logout';
+import useAuth from '../hooks/useAuth';
+
 const Home = () => {
+    const { auth } = useAuth();
     return (
         <>
             <Menu>
@@ -32,6 +35,13 @@ const Home = () => {
                     <Link to="/track_complaint">
                         <MenuItem>Track Complaint</MenuItem>
                     </Link>
+                    {auth.courses.length > 0 ? (
+                        <Link to="/details">
+                            <MenuItem>Start filling form</MenuItem>
+                        </Link>
+                    ) : (
+                        ''
+                    )}
                 </MenuList>
             </Menu>
             <Text>

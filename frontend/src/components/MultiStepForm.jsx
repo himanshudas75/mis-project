@@ -8,13 +8,13 @@ import QualificationDetails from './QualificationDetails';
 import WorkExperience from './WorkExperience';
 import DocumentUpload from '../DocumentUpload';
 import useAuth from '../hooks/useAuth';
+import ApplicationCompleted from './ApplicationCompleted';
 
 const steps = [
     { label: 'PD' },
     { label: 'QN' },
     { label: 'WE' },
     { label: 'DU' },
-    { label: 'PT' },
 ];
 
 const MultiStepForm = () => {
@@ -75,11 +75,11 @@ const MultiStepForm = () => {
                 </Step>
 
                 {/* pt step */}
-                <Step label={steps[4].label}>
+                {/* <Step label={steps[4].label}>
                     <Box sx={{ p: 8, bg, my: 8, rounded: 'md' }}>
                         <QualificationDetails moveToNext={nextStep} />
                     </Box>
-                </Step>
+                </Step> */}
             </Steps>
 
             {hasCompletedAllSteps && (
@@ -90,11 +90,7 @@ const MultiStepForm = () => {
                 </Box>
             )}
             <Flex width="100%" justify="flex-end" gap={4}>
-                {hasCompletedAllSteps ? (
-                    <Button size="sm" onClick={reset}>
-                        Reset
-                    </Button>
-                ) : null}
+                {hasCompletedAllSteps ? <ApplicationCompleted /> : null}
             </Flex>
         </Flex>
     );

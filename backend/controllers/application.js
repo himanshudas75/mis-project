@@ -18,6 +18,10 @@ module.exports.submit = async (req, res, next) => {
         // console.log(data);
 
         await find_form.save();
+
+        if (find_form.steps_reached === 4) {
+            // Contact grievance management system
+        }
     } else {
         const new_data = { registration_number: req.user.identity, ...data };
         delete new_data.registration_no;

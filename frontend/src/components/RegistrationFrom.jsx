@@ -108,7 +108,7 @@ const RegistrationFrom = () => {
         divyang: '',
         dob: '',
         btechdegree: '',
-        mathorstatdegree: '',
+        mathorstatdegree: 'true',
     };
     const validationSchema = Yup.object({
         firstname: Yup.string().required('Required'),
@@ -129,6 +129,7 @@ const RegistrationFrom = () => {
     });
     const onSubmit = async (values) => {
         try {
+            console.log(values);
             const res = await register(values);
             if (res) {
                 if (res.success) {

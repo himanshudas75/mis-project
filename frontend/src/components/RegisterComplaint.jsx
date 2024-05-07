@@ -103,10 +103,10 @@ const RegisterComplaint = (props) => {
                     <>
                         <Box>
                             <HStack>
-                                <Link to="/mba_admission/home">
+                                <Link to="/">
                                     <Button>Back to Applicant Home</Button>
                                 </Link>
-                                <Link to="/mba_admission/track_complaint">
+                                <Link to="/track_complaint">
                                     <Button>Track Complaint</Button>
                                 </Link>
                             </HStack>
