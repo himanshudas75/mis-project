@@ -270,3 +270,7 @@ def modify_user_delegated_roles(username):
 def delete_user(username):
     mongo.db.identity_db.delete_one({'username': username})
     return jsonify({'message': 'User deleted successfully'}), 200
+
+
+if __name__ == "__main__":
+    app.run(debug=True)

@@ -6,16 +6,18 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import reportWebVitals from './reportWebVitals';
 import Dashboard from './components/Dashboard';
 import ManageUsers from './components/ManageUsers';
-import Login from './components/Login';
+import ManageRoles from './components/ManageRoles';
+import DelegateRoles from './components/DelegateRoles';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     {/* <App /> */}
     <BrowserRouter>
       <Routes>
-      <Route path="/" element={<Dashboard />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/users" element={<ManageUsers />} />
+        <Route path="/" exact component={Dashboard} />
+        <Route path="/manage-roles" component={ManageRoles} />
+        <Route path="/manage-users" component={ManageUsers} />
+        <Route path="/delegate-roles" component={DelegateRoles} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
