@@ -64,7 +64,9 @@ def home():
         return render_template('home.html', username=identity, role_map=role_map, delegated_role_map=delegated_role_map)
     except Exception as e:
         flash("Something happened " + str(e))
-        return redirect('/login', code=302)
+        response = make_response(redirect('/login', code = 402))
+        response.delete_cookie('authentication')
+        return response
 
 
 
@@ -129,7 +131,7 @@ def verify():
 
 @app.route('/logout', methods=['GET'])
 def logout():
-    response = make_response(redirect('/'))
+    response = make_response(redirect('/', code = 200))
     response.delete_cookie('authentication')
     return response
 

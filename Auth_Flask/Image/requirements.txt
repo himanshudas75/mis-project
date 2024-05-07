@@ -2,3 +2,4 @@ Flask
 Flask-PyMongo
 Flask-JWT-Extended
 gunicorn
+flask_bcrypt
