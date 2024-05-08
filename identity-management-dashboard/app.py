@@ -180,8 +180,9 @@ def delete_role(role_name):
 @app.route('/users', methods=['GET'])
 # @jwt_required()
 def get_users():
+    print("1")
     users = mongo.db.users.find({}, {'password_hash': 0})  # Exclude password hashes from the result
-    return jsonify([{'username': user['username'], 'email': user['email'], 'roles': user['roles'], 'delegated_roles': user.get('delegated_roles', [])} for user in users]), 200
+    return jsonify([{'username': user['username'],'name':user['name'] , 'email': user['email'], 'roles': user['roles'], 'delegated_roles': user.get('delegated_roles', [])} for user in users]), 200
 
 
 @app.route('/users', methods=['POST'])
@@ -189,16 +190,71 @@ def get_users():
 def create_user():
     user_data = request.json
     username = user_data.get('username')
-    name = user_data.get('name')
-    email = user_data.get('email')
+    users = mongo.db.users.find({'username':username})
+    mon_name=[]
+    for us in users:
+        mon_name=us
+    name = user_data.get('name') 
+    email = user_data.get('email') 
     password = user_data.get('password')
     phone_number = user_data.get('phone_number')
-    expiry_date = user_data.get('expiry_date')
-    roles = user_data.get('roles', [])
-    delegated_roles = user_data.get('delegated_roles', [])
+    # expiry_date = user_data.get('expiry_date')
+    roles = user_data.get('roles')
+    delegated_roles = user_data.get('delegated_roles')
 
     # Validate required fields
-    if not all([username, name, email, password, phone_number, expiry_date, roles, delegated_roles]):
+    print(mon_name['email'])
+    print(type(roles))
+    print(mon_name)
+    
+    allowed_fields = []  # Define allowable fields to update
+    if email:
+        allowed_fields.append('email')
+    if name:
+        allowed_fields.append('name')
+    if roles[0]:
+        allowed_fields.append('roles')
+    if phone_number:
+        allowed_fields.append('phone_number')
+    if delegated_roles[0]:
+        allowed_fields.append('delegated_roles')
+    updates = {field: value for field, value in user_data.items() if field in allowed_fields}
+    print(updates)
+    if mon_name:
+        result = mongo.db.users.update_one({'username': username}, {'$set': updates})
+        if roles[0]:
+            new_role_hash = sha256_hash(updates['roles'])
+            i = 0
+            role_map = {}
+            for role in roles:
+                c = f'{i}'
+                role_map[c] = role
+                i = i + 1
+            result = mongo.db.users.update_one(
+                {'username': username},
+                {'$set': {'roles': role_map, 'role_hash': new_role_hash}}
+            )
+        if delegated_roles[0]:
+            new_delegated_role_hash = sha256_hash(updates['delegated_roles'])
+            i = 0
+            role_map = {}
+            for role in delegated_roles:
+                c = f'{i}'
+                role_map[c] = role
+                i = i + 1
+            result = mongo.db.users.update_one(
+                {'username': username},
+                {'$set': {'delegated_roles': role_map, 'delegated_role_hash': new_delegated_role_hash}}
+            )
+        if password:
+            password_hash = sha256(password.encode()).hexdigest()
+            result = mongo.db.users.update_one(
+                {'username': username},
+                {'$set':{'password_hash':password_hash}}
+            )
+        return jsonify({'message': 'User Updated'}),200
+    print("2")
+    if not all([username, name, email, password, phone_number, roles ]):
         return jsonify({'error': 'Username, email, and password are required'}), 400
 
     # Hash the password
@@ -214,7 +270,6 @@ def create_user():
         'name' : name,
         'email': email,
         'phone_number': phone_number,
-        'expiry': expiry_date,
         'password_hash': password_hash,
         'roles': roles,
         'role_hash': role_hash,

@@ -24,7 +24,7 @@ function DelegateRoleForm({ username, initialRoles, onSave }) {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({ delegated_roles: updatedRoles }),
-        credentials: 'include'
+        // credentials: 'include'
       });
 
       if (!response.ok) {

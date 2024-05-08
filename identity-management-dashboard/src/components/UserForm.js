@@ -7,7 +7,8 @@ function UserForm({ user = null, fetchUsers }) {
     email: '',
     password: '',
     phone_number: '',
-    roles: ''
+    roles: '',
+    delegated_roles: ''
   });
   const [isEditing, setIsEditing] = useState(false);
 
@@ -20,7 +21,8 @@ function UserForm({ user = null, fetchUsers }) {
         email: user.email || '',
         password: '',
         phone_number: user.phone_number || '',
-        roles: user.roles.join(', ')
+        roles: user.roles.join(', '),
+        delegated_roles: user.delegated_roles.join(', ')
       });
       setIsEditing(true);
     }
@@ -40,7 +42,8 @@ function UserForm({ user = null, fetchUsers }) {
     const method = isEditing ? 'PUT' : 'POST';
     const data = {
       ...formData,
-      roles: formData.roles.split(',').map(role => role.trim())
+      roles: formData.roles.split(',').map(role => role.trim()),
+      delegated_roles: formData.delegated_roles.split(',').map(role => role.trim())
     };
 
     try {
@@ -56,7 +59,9 @@ function UserForm({ user = null, fetchUsers }) {
       if (!response.ok) {
         throw new Error('Failed to save the user');
       }
-
+      if (response.status==200) {
+        // window.location.reload();
+      }
       // Reset form and refresh user list
       setFormData({
         username: '',
@@ -64,7 +69,8 @@ function UserForm({ user = null, fetchUsers }) {
         email: '',
         password: '',
         phone_number: '',
-        roles: ''
+        roles: '',
+        delegated_roles: ''
       });
       setIsEditing(false);
       fetchUsers();
@@ -81,7 +87,8 @@ function UserForm({ user = null, fetchUsers }) {
       email: '',
       password: '',
       phone_number: '',
-      roles: ''
+      roles: '',
+      delegated_roles: ''
     });
     setIsEditing(false);
   };
@@ -106,7 +113,7 @@ function UserForm({ user = null, fetchUsers }) {
           name="name"
           value={formData.name}
           onChange={handleChange}
-          required
+          
         />
       </label>
       <label>
@@ -116,7 +123,7 @@ function UserForm({ user = null, fetchUsers }) {
           name="email"
           value={formData.email}
           onChange={handleChange}
-          required
+          
         />
       </label>
       <label>
@@ -126,7 +133,6 @@ function UserForm({ user = null, fetchUsers }) {
           name="password"
           value={formData.password}
           onChange={handleChange}
-          required={!isEditing}
         />
       </label>
       <label>
@@ -145,10 +151,20 @@ function UserForm({ user = null, fetchUsers }) {
           name="roles"
           value={formData.roles}
           onChange={handleChange}
-          required
+          
         />
       </label>
-      <button type="submit">{isEditing ? 'Update User' : 'Add User'}</button>
+      <label>
+        Delegated Roles (comma-separated):
+        <input
+          type="text"
+          name="delegated_roles"
+          value={formData.delegated_roles}
+          onChange={handleChange}
+          
+        />
+      </label>
+      <button type="submit">{isEditing ? 'Update User' : 'Add/Update User'}</button>
       {isEditing && <button type="button" onClick={handleCancel}>Cancel</button>}
     </form>
   );

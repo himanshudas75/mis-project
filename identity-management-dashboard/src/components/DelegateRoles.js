@@ -16,7 +16,7 @@ function DelegateRoles() {
         headers: {
           'Content-Type': 'application/json'
         },
-        credentials: 'include'
+        // credentials: 'include'
       });
       if (!response.ok) throw new Error('Failed to fetch users');
       const data = await response.json();

@@ -18,7 +18,7 @@ function ManageUsers() {
         headers: {
           'Content-Type': 'application/json'
         },
-        credentials: 'include' // if cookies are used for the session
+        // credentials: 'include' // if cookies are used for the session
       });
       if (!response.ok) throw new Error('Network response was not ok.');
       const data = await response.json();
@@ -36,7 +36,7 @@ function ManageUsers() {
         headers: {
           'Content-Type': 'application/json'
         },
-        credentials: 'include'
+        // credentials: 'include'
       });
       if (!response.ok) throw new Error('Failed to delete user.');
       fetchUsers();  // Re-fetch users after deletion
