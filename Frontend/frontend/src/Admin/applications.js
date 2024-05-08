@@ -48,9 +48,12 @@ const AdminDashboard = () => {
             }).then((response) => {
                 // Handle response
                 if (response.status === 200) {
-                    alert("User Not Authorized for the Provided Request");
                     window.location.reload();
                     console.log(200);
+                }
+                if (response.status === 401) {
+                    alert("User Not Authorized for the Provided Request");
+                    window.location.reload();
                 }
             })
         } catch (error) {
@@ -66,9 +69,9 @@ const AdminDashboard = () => {
                 <table>
                     <thead>
                         <tr>
-                            <th>Id</th>
+                            <th>Job Id</th>
                             <th style={{ width: '10rem' }}>Name</th>
-                            <th>Application</th>
+                            <th>Application ID</th>
                             <th style={{ width: '10rem' }}>Status</th>
                             <th>Action</th>
                         </tr>
@@ -76,9 +79,9 @@ const AdminDashboard = () => {
                     <tbody>
                         {applications.map((application) => (
                             <tr key={application.applicationId}>
-                                <td>{application.applicationId}</td>
+                                <td>{application.jobId}</td>
                                 <td style={{ width: '10rem' }}>{application.email}</td>
-                                <td><a href='#'>{application.application}</a></td>
+                                <td><a href='#'>{application.applicationId}</a></td>
                                 <td style={{ width: '10rem' }}>{application.status}</td>
                                 <td>
                                     <select

@@ -4,6 +4,8 @@ from flask_pymongo import PyMongo
 from flask_bcrypt import Bcrypt
 from functools import wraps
 import jwt 
+import random
+import string
 # from Bcrypt import generate_password_hash, check_password_hashx
 from bson.objectid import ObjectId
 import random
@@ -11,6 +13,7 @@ import string
 from datetime import datetime, timedelta
 from flask_mail import Mail, Message
 import json
+import uuid
 from bson.json_util import dumps,loads
 from flask_cors import CORS
 from flask_jwt_extended import decode_token,JWTManager
@@ -327,11 +330,12 @@ def apply():
     try:
         json_data= request.get_json()
         # mongo1.db.users.insert_one(json_data)
+        alphanumeric_set = string.ascii_letters + string.digits
         email = json_data.get('email')
         department = json_data.get('department')
         jobId = json_data.get('jobId')
         status = json_data.get('status')
-        applicationId = json_data.get('applicationId')
+        applicationId = ''.join(random.choices(alphanumeric_set, k=6))
         data = mongo1.db.users.find_one({'email': email, 'department': department}, {})
         print(type(data))
         if data:
@@ -368,8 +372,8 @@ def view():
 
 ##ADMIN API
 @app.route('/adminlogin',methods=['POST'])
-@extract_user_info
-@has_role
+# @extract_user_info
+# @has_role
 def adminLogin():
     try:
 
@@ -386,9 +390,11 @@ def adminLogin():
         return "Something Happen",500
 
 @app.route('/getAllApply',methods=['GET']) #admin
-@extract_user_info
-@has_role
 def view_all():
+    # print("jj")
+    # token_cookie = request.cookies.get('authentication')
+    # # decoded_token = decode_token(token_cookie)
+    # print(token_cookie)
     try:
 
         data=mongo1.db.users.find({},{"_id":0})
@@ -402,8 +408,8 @@ def view_all():
         return "Something Happen",500
 
 @app.route('/updatestatus',methods=['POST']) #admin
-@extract_user_info
-@has_role
+# @extract_user_info
+# @has_role
 def adminEdit():
     try:
 
@@ -438,8 +444,8 @@ def adminView():
 
 ## JOB OPENING
 @app.route('/jobopeningpost',methods=['POST']) #admin
-@extract_user_info
-@has_role
+# @extract_user_info
+# @has_role
 def jobOpeningPost():
     try:
 
@@ -471,8 +477,8 @@ def jobOpeningGet():
 
 ## JOB CLOSING
 @app.route('/jobclosing',methods=['POST']) #admin
-@extract_user_info
-@has_role
+# @extract_user_info
+# @has_role
 def jobClosing():
     try:
 

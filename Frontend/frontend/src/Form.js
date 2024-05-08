@@ -98,7 +98,7 @@ const formConfig = [
           { "label": "Funding Agency", "key": "fundingAgency" },
           { "label": "Sanctioned Date", "key": "sanctionedDate", "type": "date" },
           {
-            "label": "Status", "key": "status", "type": "select", "options": [{ label: "Pending", value: "male" },
+            "label": "Status", "key": "status", "type": "select", "options": [{ label: "Pending", value: "Pending" },
             { label: "Completed", value: "Completed" },
             ]
           }
@@ -126,7 +126,8 @@ const formConfig = [
           { "label": "No. of CO-PI", "key": "numOfCOPI", "type": "number" },
           { "label": "Funding Agency", "key": "fundingAgency" },
           { "label": "Sanctioned Date", "key": "sanctionedDate", "type": "date" },
-          { "label": "Status", "key": "status", "type": "select", "options": ["Pending", "Approved", "Rejected"] }
+          { "label": "Status", "key": "status", "type": "select", "options": [{ label: "Pending", value: "Pending" },
+          { label: "Completed", value: "Completed" }] }
         ],
         "initialRows": [
           {
@@ -150,7 +151,8 @@ const formConfig = [
           { "label": "Funding Agency", "key": "fundingAgency" },
           { "label": "Role (CI/CO-CI)", "key": "role" },
           { "label": "Duration", "key": "duration" },
-          { "label": "Status", "key": "status", "type": "select", "options": ["Pending", "Approved", "Rejected"] }
+          { "label": "Status", "key": "status", "type": "select", "options": [{ label: "Pending", value: "Pending" },
+          { label: "Completed", value: "Completed" }] }
         ],
         "initialRows": [
           {
